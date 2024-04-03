@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome file</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="xslice-tutorial">xSlice Tutorial</h1>
+<p>(100 points)</p>
+<p>In this tutorial, you will learn how to use  <em><strong>xSlice</strong></em> to locate the bug in the source code based on coverage information. The program you need to work on is called <em><strong>wordcount</strong></em>.</p>
+<h3 id="compile-the-program">Compile the program</h3>
+<p>Compile the <em><strong>wordcount</strong></em> program with the instrumentation option:<br>
+<code>atac cc -g -o wordcount_err main_err.c wc.c</code></p>
+<p>Keep in mind that the <em><strong>wordcount_err</strong></em> you obtained here is the version with bug.</p>
+<h3 id="execute-some-test-cases">Execute some test cases</h3>
+<p>Execute the following three test cases against <em><strong>wordcount_err</strong></em>:</p>
+<p>The 1st test case:</p>
+<pre><code>./wordcount_err input1
+</code></pre>
+<p>The 2nd test case:</p>
+<pre><code>./wordcount_err -w input1
+</code></pre>
+<p>The 3rd test case:</p>
+<pre><code>./wordcount_err -w &lt; input1
+</code></pre>
+<h3 id="determine-which-test-cases-failed">Determine which test cases failed</h3>
+<p>In the real-world, you need to determine which test cases failed by comparing the <strong>observed outputs</strong> (sometimes you even need to check the system behavior) with the <strong>expected outputs</strong>. In this tutorial, you don’t need to figure out the <strong>expected outputs</strong> since you can obtain them by running the test cases against a correct version of the program  – <em><strong>wordcount_correct</strong></em> – which does not have bug. Please keep in mind that this is not always the case in the real-world since you might not have a correct version of the program you are testing.</p>
+<p>Let’s continue.</p>
+<p>Compile the correct version of the program – <em><strong>wordcount_correct</strong></em> – and clean an environmental variable:</p>
+<pre><code>cc -o wordcount_correct main.c wc.c
+export ATAC_TRACE=
+</code></pre>
+<p>Now, execute the  three test cases against <em><strong>wordcount_correct</strong></em> like you just did for the faulty program.</p>
+<pre><code>./wordcount_correct input1
+......
+
+./wordcount_correct -w input1
+......
+
+./wordcount_correct -w &lt; input1
+......
+</code></pre>
+<p>Compare those outputs you observed from the <em><strong>wordcount_correct</strong></em> with those outputs you observed from the <em><strong>wordcount_err</strong></em>, and you should be able to determine which test cases failed against <em><strong>wordcount_err</strong></em>.</p>
+<h3 id="use-xslice-to-help-you-identify-the-bug-in-the-source-code">Use xSlice to help you identify the bug in the source code</h3>
+<p>Run the xSuite:</p>
+<pre><code>xsuite wordcount_err.atacp
+</code></pre>
+<p>Switch the tool to xSlice mode by clicking menu “Coverage” -&gt; “xSlice”.</p>
+<p>Open the trace file <em><strong>wordcount_err.trace</strong></em></p>
+<p>Specify which tests passed and which failed.</p>
+<p><img src="https://paris.utdallas.edu/ewong/se6367/04-Tutorial/xSlice-Tutorial/Figure1.png" alt="enter image description here"></p>
+<p>Check the source code view in xSlice. The bug location should be highlighted by RED.</p>
+<h3 id="submission">Submission</h3>
+<p>Take a screenshot of the code highlighted in red and submit it to eLearning.<br>
+The screenshot must show <em><strong>all your screen</strong></em>.</p>
+<p>Name your screenshot to <em><strong>xSlice-Tutorial-FirstName-LastName.png</strong></em> (other file types, such as JPG, are allowed)</p>
+<ul>
+<li>Submission without the correct file name will not be accepted</li>
+</ul>
+</div>
+</body>
+
+</html>

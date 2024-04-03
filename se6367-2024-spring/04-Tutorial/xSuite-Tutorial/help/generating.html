@@ -1,0 +1,674 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <title>atac and xSuite: Generating Summary Reports</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel=stylesheet href="style.css" type="text/css" media=screen>
+</head>
+
+<body>
+<div id="wrap">
+
+<a href="coverpage.html">[Top]</a>
+<a href="managing.html">[Prev]</a>
+<a href="displaying.html">[Next]</a>
+<a href="sqatoolIX.html">[Index]</a>
+<a href="sqatoolTOC.html"> [TOC] </a>
+<hr><br>
+<a name="994145">
+<h1> </h1>
+</a><a name="994161">
+<h1> </h1>
+</a><a name="994147">
+<h1>Chapter 8 <br>
+<br>
+ATAC & xSuite: Generating Summary Reports
+<br>
+<br>
+</h1>
+</a><a name="994142">
+</a>
+<p><a name="991483">When a program is compiled with <em>atac</em>, a <em>.atac</em>
+file
+is generated for each instrumented source file, and coverage
+information is appended to a trace file each time the compiled
+executable is tested. Each <em>.atac</em> file contains a list of what
+should be covered when testing its corresponding source file. The trace
+file records what has actually been covered during testing. The graphical interface 
+<em>xSuite</em> uses the same facilities as does the command-line browser <em>atac</em> in
+reporting testing results, therefore the presentation of summary
+reports for <em>atac</em> and <em>xSuite</em> are merged
+in this chapter. This chapter discusses how to generate reports using
+these files that summarize the current level of code coverage and what
+each test case has contributed to this coverage. Such reports provide a
+high-level view of how a test is progressing and the relative
+contribution of each test case to the software testing effort.
+</a></p>
+<p><a name="484077">The character-based interface<em>, atac,</em>
+accepts various
+command-line options, one or more <em>.atac</em> files, and a trace
+file as input. <em>atac</em> compares what should be covered in a
+given source file to what has been covered and outputs its findings in
+a variety of ways. The <em>-s</em> command-
+line option is used to generate summary reports. Additional arguments
+are used along with <em>-s</em> to further specify the contents and
+format of a report.
+</p>
+<p><a name="994984">
+In the graphical interface, <em>xSuite</em>,
+summary
+report selections are made by clicking the "<em>Summary</em>" button
+in the
+top button bar and selecting the appropriate coverage option.
+The <em>.atac</em> and <em>.trace</em> files may be specified on the
+command line. Currently only the <em>File</em>
+menu in the the the <em>xSuite</em> session.
+</a></p>
+<p><a name="994999">
+<h2>8.1 Generating Coverage Summaries
+</h2>
+</a><a name="995336">
+To invoke <em>atac</em> in summary generation mode, use the <em>-s</em>
+command-line option. For example, assume that the <em>wordcount</em>
+program discussed in </a><a href="tutorial.html#402515">Chapter 2</a><em>,
+</em>has been executed only against the following three tests:
+</p>
+<pre>	prompt:&gt; wordcount -l empty<br>	prompt:&gt; wordcount -w empty<br>	prompt:&gt; wordcount -c empty<br></pre>
+<a name="987979">Then a summary of the current level of code coverage
+is obtained by entering (for default trace file name on Windows):
+</a>
+<pre><a name="988030">	prompt:&gt; atac -s main.atac wc.atac wordcount.trace<br></a><br></pre>
+The summary report generated looks like this:
+<pre><br><br>        % blocks      % decisions <br>        ------------- ------------- <br>        63(34/54)     49(17/35)     == total ==<br></pre>
+<a name="991762">
+This report indicates that, throughout all source files making up the <em>wordcount</em>
+program, 67% of all blocks (34 of 51) and 49% of all decisions (17 of
+35) have
+been covered. </a>
+<p><a name="991823"></a><a name="992150">The corresponding summary in
+the graphical interface is provided in the "<em>Summary</em>" pane on 
+lower left of the main window when "<em>Block coverage</em>" and "<em> By type</em>"
+are selected from the controlling drop down menus.
+</a><a href="generating.html#992150">Figure 8-1</a> shows the resulting
+display. In any discussion involving <em>xSuite</em>
+throughout this chapter, we will assume that the three test cases
+mentioned above have been executed and <em>xSuite</em>
+has been invoked using the following command:
+</p>
+
+
+	<a name="992147"></a>
+	<div class="figure">
+      <a href="generating.frm.anc.gif"><img src="generating.frm.anc.gif"></a>
+        <div>Figure 8-1 Coverage summary <em>by-type</em> </div>
+    </div>
+
+<p>
+</p>
+<pre><a name="991814">	prompt:&gt; xsuite wordcount.atacp<br></a></pre>
+<a name="991902">Note that <em>xSuite</em>
+displays the percentages as a bar chart. Each bar is actually made up
+of two bars, one contained inside the other. The length of the outer
+bar represents the maximum possible (100%) coverage for the
+corresponding measure and that of the inner bar represents the actual
+coverage attained so far for that measure. As the actual coverage
+increases, the length of the inner bar increases accordingly.
+</a>
+<p><a name="991896">Both <em>atac</em> and <em>xSuite</em>
+use standard rounding in reporting results except that 100% coverage and 0% coverage
+are treated as special cases. No result is ever rounded up to 100% or
+down to 0%. Also, whereas <em>atac</em> rounds percentages to whole numbers, 
+<em>xSuite</em> rounds them to their first decimal places.
+</a></p>
+<p><a name="987648">
+<h2>8.2 Selecting What to Summarize
+</h2>
+</a><a name="986232">
+As mentioned earlier, <em>atac</em> uses various command-line options to specify
+the summary format, and <em>xSuite</em> uses
+various menus for the same purpose. You can break down the summary
+information by file, by function, or by test case.
+</a></p>
+<p><a name="986183">
+<h3>8.2.1 By File
+</h3>
+</a><a name="986233">
+In the character-based interface, a coverage summary broken down by
+source file is printed using the <em>-g</em> command-line option.
+Assuming that the test cases of </a><a href="generating.html#994999">Section
+8.1</a> have been executed, a per source file coverage summary for the <em>wordcount</em>
+program is printed by entering:
+</p>
+<pre><a name="986234">	prompt:&gt; atac -sg main.atac wc.atac wordcount.trace<br></a><br></pre>
+The summary report generated looks like this:
+<pre><br><br>        % blocks      % decisions   source file<br>        ------------- ------------- ------------- <br>        76(29/41)     70(16/23)     main.c<br>        38(5/13)      8(1/12)       wc.c<br>        67(34/54)     49(17/35)     == total ==<br><br></pre>
+<a name="987996">
+This right most column indicates whether the coverage levels presented
+correspond to <em>main.c</em>, <em>wc.c</em>, or the union of all the
+source files presented. Note that the <em>-g </em>command-line option
+cannot be used along with the <em>-f</em> command-line option (see </a><a
+ href="generating.html#992388">Section 8.2.2, <em>By Function</em></a>).
+<p><a name="992351"></a><a name="992363">In the graphical interface, a
+per file summary is
+obtained by clicking the
+"<em>Summary</em>" button, then selecting the "<em>by-file</em>"
+coverage option. </a><a href="generating.html#992363">Figure 8-2</a>
+shows the per file summary after the three tests mentioned above have
+been executed. </p>
+<!-- potential future enhancement 
+Files listed in the "<em>Summary</em>" window can be
+sorted in different ways. Clicking on "<em>Sort_by</em>" in the
+middle button bar and selecting the "<em>name</em>" entry will sort
+files by name in alpha-numeric order. The "<em>num_covered</em>," "<em>percentage_covered</em>,"
+"<em>num_uncovered</em>," and "<em>percentage_uncovered</em>"
+entries sort files by the number or percentage of testable attributes
+covered or uncovered, respectively, according to the currently selected
+coverage type. The entry "<em>num_total_units</em>" sorts files by
+the total number of testable attributes with respect to the currently
+selected coverage type. The "<em>default_order</em>" selection
+performs the sort according to the order the <em>.atac</em> files
+occurred on the command line; and the entry "<em>dont_sort</em>"
+preserves the current state of the sort allowing new information to be
+appended to the end.
+</p>
+-->
+	<a name="992360"></a>
+	<div class="figure">
+		<a href="generating.frm.anc1.gif"><img src="generating.frm.anc1.gif"></a>
+		<div>Figure 8-2 Block coverage summary <em>by-file</em> </div>
+	</div>
+     
+<!-- potential future enhancement
+<p>
+<a name="485108">Clicking with the right mouse button on a file label
+that is currently selected deselects it, and <em>vice versa</em>.
+Clicking with the left mouse button on "<em>Disable</em>" and
+selecting the "<em>Disable all .h files</em>" or "<em>Disable all
+source files</em>" entry will deselect all <em>.h</em> or <em>source</em>
+files, respectively, whereas the "<em>Enable all .h files</em>" or "<em>Enable
+all
+source
+files</em>" entry will re-
+select all <em>.h</em> or <em>source</em> files, respectively.<br>
+</a></p>
+-->
+
+<!-- potential future enhancement
+<p><a name="485108">
+</a>Similar to colored attributes
+in source files (as explained in Chapter 9), a
+color spectrum chart appears across the top of the summary window to
+indicate the highest attribute weight for each source file listed in
+the summary panel. The entry "attr_weight" sorts files in descending
+order according to their highest attribute weight.<br>
+</p>
+-->
+
+<p><a name="484736">
+</a><a name="992386">In the character-based interface the per-file
+summary includes information about both coverage types; however, in
+the graphical interface, it includes information only about the
+currently selected coverage type. 
+When <em>xSuite</em> is first invoked,
+block coverage is selected by default. To see the
+per-file coverage for another coverage type, e.g., decision coverage,
+click on the "<em>drop down menu</em>", second from the right in the summary pane and
+select the corresponding coverage entry from the options menu that drops down. </a>
+
+<a href="generating.html#992386">Figure 8-3</a> shows the "<em>Options</em>"
+menu and <a href="generating.html#992386">Figure 8-4</a> shows the
+per-file decision coverage summary after selecting the "<em>decision
+coverage</em>" entry of the drop down menu.
+<!----------------------->
+
+<a name="992383"></a>
+<div class="figure">
+	<a href="generating.frm.anc2.gif"><img src="generating.frm.anc2.gif"></a>
+	<div>Figure 8-3 The Options menu by-file</div>
+</div>
+
+<a name="992383"></a>
+<div class="figure">
+	<a href="generating.frm.anc3.gif"><img src="generating.frm.anc3.gif"></a>
+    <div>Figure 8-4 Decision coverage summary by-file </div>
+</div>
+
+<!------------------------>
+<p><a name="992388">
+<h3>8.2.2 By Function
+</h3>
+</a><a name="986237">
+A code coverage summary broken down by function is printed using the <em>-f</em>
+command-line option in the character-based interface. Assuming that the
+test cases of </a><a href="generating.html#994999">Section 8.1</a>
+have been executed, a per function coverage summary for the <em>wordcount</em>
+program is printed by entering:
+</p>
+<pre><a name="484250">	prompt:&gt; atac -sf main.atac wc.atac wordcount.trace<br></a></pre>
+<a name="484260"></a>
+<p><a name="485612"></a></p>
+<p>The summary report generated looks like this: <br>
+</p>
+<pre>        % blocks      % decisions   function<br>        ------------- ------------- ------------- <br>        64(21/33)     59(10/17)     main<br>        100(8)        100(6)        print<br>        38(5/13)      8(1/12)       count<br>        63(34/54)     49(17/35)     == total ==<br></pre>
+<a name="986240">
+This right most column indicates whether the coverage levels presented
+correspond to <em>main</em>, <em>print</em>, <em>count</em>, or the
+union of all functions presented. Note that the <em>-f</em>
+command-line option cannot be used along with the <em>-g</em>
+command-line option (see </a><a href="generating.html#986183">Section
+8.2.1, <em>By File</em></a>).
+
+<p><a name="992504"></a><a name="992522">In the graphical interface,
+the per function coverage summary is obtained by
+selecting the "<em>by-function</em>" entry from the drop down. </a><a
+ href="generating.html#992522">Figure 8-5</a> shows an example.
+
+<!-- potential future enhancement 
+Functions listed in the "<em>Summary</em>" window can be sorted in
+different ways. Clicking on "<em>Sort_by</em>" in the middle button
+bar and selecting the "<em>name</em>" entry will sort functions by
+name in alpha-numeric order. The "<em>num_covered</em>," "<em>percentage_covered</em>,"
+"<em>num_uncovered</em>" and "<em>percentage_uncovered</em>"
+entries sort functions by the number or percentage of testable
+attributes covered or uncovered, respectively, according to the
+currently selected coverage type. The entry "<em>num_total_units</em>"
+sorts functions by the total number of testable
+attributes with respect to the currently selected coverage type. 
+The "<em>default_order</em>"
+selection performs the sort according to the order of .<em>atac</em>
+files on the command line; and the entry "<em>dont_sort</em>"
+preserves the current state of the sort, allowing new information to be
+appended to the end.
+-->
+</p>
+
+<a name="992516"></a>
+<div class="figure">
+    <a href="generating.frm.anc4.gif"><img class="panel-img" src="generating.frm.anc4.gif"></a>
+	<div>Figure 8-5 Decision coverage summary <em>by-function</em></div>
+</div>
+
+
+<!-- future enhancement 
+<p>
+<a name="485159">Clicking with the right mouse button on a function
+label that is currently selected deselects it, and <em>vice versa</em>.
+Clicking with the left mouse button on
+"<em>Disable</em>" and
+selecting the "<em>Disable all functions</em>" entry will deselect
+all functions, whereas the "<em>Enable all functions</em>" entry will
+re-select all functions.<br>
+</a></p>
+<p><a name="485159">The entry "attr_weight" sorts functions in
+descending order according to their highest attribute weight.<br>
+</a></p>
+<p><a name="485209">
+Function names in the "<em>Summary</em>" window can be displayed with
+or without the corresponding file name. Clicking with the left mouse
+button on "<em>file_name</em>" and selecting the "<em>include file
+name</em>" entry will have the file name included, whereas the "<em>exclude
+file
+name</em>" entry excludes the file name.
+</a></p>
+-->
+
+<p><a name="484753">
+Unlike the character-based interface which includes all coverage types
+and all functions in all specified files in the per-function summary
+display, the graphical interface shows the coverage statistics only for
+the currently selected coverage type. As in the case of the per-
+file summary display, a different coverage type may be selected by
+choosing the corresponding entry in the "<em>Options</em>" menu.
+</a></p>
+<p><a name="992798">
+<h3>8.2.3 By Test Case
+</h3>
+</a>
+
+<a name="992837">
+In the character-based interface, the <em>-p</em> command-line option
+may be used along with the <em>-s </em>option to generate reports
+that summarize coverage on a per test case basis. Assuming that the
+test cases of </a><a href="generating.html#994999">Section 8.1</a>
+have been executed, a per test case coverage summary for the <em>wordcount</em>
+program is printed by entering:
+</p>
+<p>
+<pre><a name="992838">	prompt:&gt; atac -sp main.atac wc.atac wordcount.trace<br></a><br></pre>
+The summary report generated looks like this:
+<pre><br><br>	% blocks      % decisions   test<br>	------------- ------------- ------------- <br>	56(30/54)     34(12/35)     wordcount.1<br>	56(30/54)     34(12/35)     wordcount.2<br>	56(30/54)     34(12/35)     wordcount.3<br>	63(34/54)     49(17/35)     == all ==<br></pre>
+<a name="992846">
+This right most column indicates whether the coverage levels presented
+correspond to <em>wordcount.1, wordcount.2, wordcount.3, </em>or the
+union of all test cases presented.
+</a>
+</p>
+
+
+<a name="992898"></a>
+<div class="figure">
+	<a href="generating.frm.anc5.gif"><img class="panel-img" src="generating.frm.anc5.gif"></a>
+    <div>Figure 8-6 Decision coverage summary by test case </div>
+</div>
+
+
+<p><a name="992882"></a><a name="992904">In the graphical interface,
+the per test case summary is displayed in the lower right pane.
+ </a><a href="generating.html#992904">Figure 8-6</a>
+shows the per test case summary after executing the three tests
+mentioned in <a href="generating.html#994999">Section 8.1</a>. As in
+the case of per file and per function display, the per test case
+display also shows coverages only for the currently selected coverage
+type. But unlike the per function display, the per test case display
+shows the coverage achieved by each test case over all source files,
+not just the currently selected file.
+</p>
+
+
+<!-- potential future enhancement 
+<p>
+<a name="484513">Clicking with the right mouse button on a test case
+label that is currently selected deselects it, and <em>vice versa</em>.
+Clicking
+with
+the
+left
+mouse
+button
+on
+"<em>Disable</em>" and
+selecting the "<em>Disable all tests</em>" entry will deselect all
+tests, whereas the "<em>Enable all tests</em>" entry will re-select
+all tests. The entry "<em>Disable zero</em> <em>coverage tests</em>"
+will disable tests which do not contribute any coverage with respect to
+the currently selected coverage type.
+</a></p>
+<p><a name="994252">
+Clicking on "<em>Sort_by</em>" in the middle button bar and selecting
+the "<em>name</em>" entry will sort tests by name in alpha-numeric
+order. The "<em>num_covered</em>" entry sorts tests by the number of
+testable attributes covered with respect to the currently selected
+coverage type. The entry "<em>default_order</em>" sorts tests
+according to the order in which they were executed, and the entry "<em>dont_sort</em>"
+preserves the current state of the sort,
+allowing
+new information to be
+appended to the end.
+</a></p>
+-->
+
+<p><a name="986152">
+<h2>8.3 Restricting Summary Information
+</h2>
+</a><a name="986245">
+It is possible to restrict the information included in a summary by the
+character-based interface in many ways. Restrictions are made by
+controlling the <em>.atac</em> files submitted in the argument list
+and using various command-line options. The graphical interface does
+not offer any additional facilities for restricting the summary display
+besides those discussed in </a><a href="generating.html#987648">Section
+8.2,
+<em>Selecting What to Summarize</em></a>. The options discussed
+within this section may be used together freely.
+</p>
+<p><a name="986215">
+<h3>8.3.1 By File
+</h3>
+</a><a name="484881">
+The coverage summary generated by <em>atac</em> is limited to those <em>.atac</em>
+files submitted in the argument list. For example, the per function
+summary generated in </a><a href="generating.html#992388">Section 8.2.2</a>
+is limited to those functions in <em>main.c</em> by entering:
+</p>
+<pre><a name="988104">	prompt:&gt; atac -sf main.atac wordcount.trace<br></a><br></pre>
+The summary report generated looks like this:
+<pre><br><br>        % blocks      % decisions   function<br>        ------------- ------------- ------------- <br>        70(21/30)     59(10/17)     main<br>        100(8)        100(6)        print<br>        76(29/38)     70(16/23)     == total ==<br></pre>
+<a name="484913">
+<h3>8.3.2 By Function
+</h3>
+</a><a name="986249">
+An <em>atac</em> summary is limited to a selected set of functions
+using the <em>-F</em> command-line option. For example, the per
+function summary generated in </a><a href="generating.html#992388">Section
+8.2.2</a> is limited to the functions <em>main</em> and <em>count</em>
+by entering:
+<pre><a name="988124">	prompt:&gt; atac -sf -F main -F count main.atac wc.atac wordcount.trace<br></a><br></pre>
+The summary report generated looks like this:
+<pre><br><br>        % blocks      % decisions   function<br>        ------------- ------------- ------------- <br>        64(21/33)     59(10/17)     main<br>        38(5/13)      8(1/12)       count<br>        57(26/46)     38(11/29)     == total ==<br></pre>
+<a name="986246">
+Note that multiple functions may be specified by repeating the <em>-F</em>
+option, and functions may be named using wild card characters. These
+wild cards are the same as those used by the Linux-like command
+processor in naming files<em> (*, ?, [...])</em>. In some cases, quote
+marks may be needed to prevent the command processor from expanding the
+test names as file names.
+</a>
+<p><a name="986230">
+<h3>8.3.3 By Coverage Criteria
+</h3>
+</a><a name="986253">
+An <em>atac</em> summary is limited to a selected set of coverage
+measures using the <em>-m {bde}</em> command-line option. The
+argument to <em>-m</em> selects one or more coverage measures: <em>e</em>
+selects function-entry coverage, <em>b</em> block coverage, <em>d</em>
+decision coverage (see </a><a href="overview.html#623861">Section 3.3,
+<em>What Does <em>atac</em> Do?</em></a>,
+for
+an
+explanation
+of
+these
+measures). For example, the per function
+summary generated in <a href="generating.html#992522">Figure 8-5</a>
+is limited to block coverage by entering:
+</p>
+<pre><a name="993318">	prompt:&gt; atac -sf -mb main.atac wc.atac wordcount.trace<br></a><br></pre>
+The summary report generated looks like this:
+<pre><br><br>        % blocks      function<br>        ------------- ------------- <br>        64(21/33)     main<br>        100(8)        print<br>        38(5/13)      count<br>        63(34/54)     == total ==<br></pre>
+<a name="986221">
+<h2>8.4 Additional Test Case Summaries
+</h2>
+</a><a name="986278">
+As mentioned in </a><a href="generating.html#992798">Section 8.2.3</a>,
+in
+the
+character-based
+interface,
+the
+<em>-p</em> command-line option
+may be used along with the <em>-s</em> option to generate reports that
+summarize coverage on a per test case basis. The character-based
+interface also provides various other ways to display test case
+coverage summaries. If you are following the examples in the first
+three sections of this chapter, clear out the <em>.trace</em> file by
+removing it. Then execute the <em>wordcount</em> program against the
+following three test cases:
+<pre> 	prompt:&gt; wordcount -?<br>	prompt:&gt; wordcount empty<br>	prompt:&gt; wordcount &lt; empty<br></pre>
+<p><a name="484359">
+Also assume <em>xsuite</em> is not running and
+that <em>atactm</em> is used to rename (see </a><a
+ href="managing.html#973912">Section 7.3, <em>Naming Test Cases</em></a>):
+</p>
+<pre> 	prompt:&gt; atactm -n wordcount.1 -r help_test wordcount.trace<br>	prompt:&gt; atactm -n wordcount.2 -r empty_file_test wordcount.trace<br>	prompt:&gt; atactm -n wordcount.3 -r stdin_test wordcount.trace<br></pre>
+<p><a name="987591">
+and assign a cost (see </a><a href="managing.html#973964">Section 7.6,
+<em>Assigning Cost to Test Cases</em></a>) to each of these tests:
+</p>
+<pre> 	prompt:&gt; atactm -n help_test.1 -c 10 wordcount.trace<br>	prompt:&gt; atactm -n empty_file_test.1 -c 20 wordcount.trace<br>	prompt:&gt; atactm -n stdin_test.1 -c 20 wordcount.trace<br></pre>
+<p><a name="986280">
+A per test case code coverage summary is obtained by entering:
+</a></p>
+<pre><a name="986275">	prompt:&gt; atac -sp main.atac wc.atac wordcount.trace<br></a><br></pre>
+The summary report generated looks like this:
+<pre><br><br>        % blocks      % decisions   test<br>        ------------- ------------- ------------- <br>        15(8/54)      11(4/35)      help_test.1<br>        50(27/54)     26(9/35)      empty_file_test.1<br>        37(20/54)     17(6/35)      stdin_test.1<br>        69(37/54)     40(14/35)     == all ==<br></pre>
+<a name="484394">
+Additional arguments are available to sort or include other test case
+information in the summary. These arguments may be used together freely.
+<p><a name="484399">
+<h3>8.4.1 Including Cumulative Coverage
+</h3>
+</a><a name="986284">
+Cumulative test case coverage is included in a summary using the <em>-q</em>
+command-line option. For example, the following generates a cumulative
+summary of the test cases presented above:
+</a></p>
+<pre><a name="986285">	prompt:&gt; atac -sq main.atac wc.atac wordcount.trace<br></a><br></pre>
+The summary report generated looks like this:
+<pre><br><br>        % blocks      % decisions   test<br>        (cumulative)  (cumulative)    <br>        ------------- ------------- ------------- <br>        15(8/54)      11(4/35)      help_test.1<br>        61(33/54)     34(12/35)     empty_file_test.1<br>        69(37/54)     40(14/35)     stdin_test.1<br></pre>
+<a name="988202">
+With respect to block coverage, <em>help_test.1</em> achieved 15
+percent coverage, <em>empty_file_test.1</em> adds an additional 46
+percent coverage (total of 61%) and <em>stdin_test.1</em> adds another
+8 percent coverage (total of 69%). However, these results have been
+presented as a cumulative running total. The <em>-q</em> option
+implies a per test case summary, so the <em>-p</em> option need not be
+explicitly included.
+</a>
+<p><a name="986224">
+<h3>8.4.2 Including Test Cost
+</h3>
+</a><a name="986288">
+The user-assigned cost of executing each test case is included in a
+summary using the <em>-K</em> command-line option. For example, the
+following generates a summary of the test cases presented above,
+including test cost:
+</a></p>
+<pre><a name="986289">	prompt:&gt; atac -sK main.atac wc.atac wordcount.trace<br></a><br></pre>
+The summary report generated looks like this:
+<pre><br><br>        cost   % blocks      % decisions   test<br>        ------ ------------- ------------- ------------- <br>        10     15(8/54)      11(4/35)      help_test.1<br>        20     50(27/54)     26(9/35)      empty_file_test.1<br>        20     37(20/54)     17(6/35)      stdin_test.1<br>        50     69(37/54)     40(14/35)     == all ==<br></pre>
+<a name="484460">
+The <em>-K</em> option implies a per test case summary, so the <em>-p</em>
+option need not be explicitly included.
+</a>
+<p><a name="986273">
+<h3>8.4.3 Sorting by Coverage
+</h3>
+</a><a name="986274">
+Test cases are sorted in order of decreasing additional coverage using
+the <em>-S</em> command-line option. For example, to sort the test
+cases summarized above enter:
+</a></p>
+<pre><a name="986277">	prompt:&gt; atac -sS main.atac wc.atac wordcount.trace<br></a><br></pre>
+The summary report generated looks like this:
+<pre><br><br>        % blocks      % decisions   test<br>        ------------- ------------- ------------- <br>        50(27/54)     26(9/35)      empty_file_test.1<br>        15(8/54)      11(4/35)      help_test.1<br>        37(20/54)     17(6/35)      stdin_test.1<br>        69(37/54)     40(14/35)     == all ==<br></pre>
+<a name="986283">
+These test cases have been listed in order of increasing effectiveness
+across all coverage measures. The <em>-S</em> option implies a per
+test case summary, so the <em>-p</em> option need not be explicitly
+included.
+</a>
+
+<!-- xRegress is not in current (6.3) release
+<p><a name="484867">The same output can also be obtained in the
+graphical interface by
+invoking <em><img src="chars/chi.gif"></em>Regress, clicking on the "<em>Minimize_in</em>"
+button in the
+middle
+button
+bar
+and
+selecting
+"<em>greedy_order</em>"
+(see </a><a href="xregress.html#790001">Section 11.4, <em>Test set
+minimization and prioritization via a graphical user interface</em></a>).
+</p>
+-->
+
+<p><a name="986292">
+<h3>8.4.4 Sorting by Cumulative Cost per Additional Coverage
+</h3>
+</a><a name="986293">
+Test cases are sorted in order of decreasing cost per additional code
+coverage using the <em>-Q</em> command-line option. All costs are
+presented as cumulative values. For example, to summarize the sorted
+cumulative cost per additional coverage for the test cases executed
+above enter:
+</a></p>
+<pre><a name="986294">	prompt:&gt; atac -sQ main.atac wc.atac wordcount.trace<br></a><br></pre>
+The summary report generated looks like this:
+<pre><br><br>        cost   % blocks      % decisions   test<br>        (cum)  (cumulative)  (cumulative)    <br>        ------ ------------- ------------- ------------- <br>        20     50(27/54)     26(9/35)      empty_file_test.1<br>        30     61(33/54)     34(12/35)     help_test.1<br>        50     69(37/54)     40(14/35)     stdin_test.1<br></pre>
+<a name="992762">
+This output is similar to that obtained using the <em>-S</em> option,
+however test cost is also considered. The <em>-Q</em> option implies a
+per test case summary, so the <em>-p</em> option need not be
+explicitly included. Note that using the <em>-Q</em> option is
+equivalent to using the option sequence <em>-qKS</em>.
+</a>
+<!-- xRegress is not part of the current release (6.3)
+<p><a name="484962">The same output can also be obtained in the
+graphical interface by
+invoking <em><img src="chars/chi.gif"></em>Regress, clicking on the "<em>Minimize_in</em>"
+button
+in
+the
+middle
+button
+bar
+and
+selecting
+"<em>optimal_order</em>"
+(see </a><a href="xregress.html#790001">Section 11.4, <em>Test set
+minimization and prioritization via a graphical user interface</em></a>).
+</p>
+-->
+<p><a name="992773">
+<h2>8.5 Ignoring What is Out-of-Date
+</h2>
+</a><a name="992767">
+By default, the character-based interface issues an error message if
+any of a program's <em>.atac</em> files have been significantly
+modified since a test case represented in its trace file was executed.
+Modifications which change only comments and white space in a program
+do not significantly affect the <em>.atac</em> files. Other changes
+may affect the structure of a program and these significantly affect
+the <em>.atac</em> files. <em>atac</em> determines that a test is out-of-date
+by comparing the check sums of source files in test cases and <em>.atac</em>
+files, as appropriate (see </a><a href="managing.html#973974">Section
+7.7, <em>Dealing with Source Code Modifications</em></a>). The
+graphical interface also issues a warning whenever it detects any test
+cases to be out-of-date with any source files. It also marks the
+out-of-date test cases as an `o' in the test case display.
+</p>
+<p><a name="992746">
+If a <em>.atac</em> file has been modified since the last test case
+was executed, you can force the generation of <em>atac </em>summary
+reports using the <em>-i</em> command-line option. This will cause <em>atac
+</em>to ignore out of date information although warnings may be issued.
+In general, the <em>-i</em> option should be used with caution.
+However, it can be used to avoid re-running tests against source code
+known to be unmodified prior to the last system build. The graphical
+interface, however, currently does not provide a way to force such a
+display.<br>
+<br>
+</a></p>
+<p>
+
+</p>
+
+<!-- Possible future enhancement 
+<p>
+<h2><a name="1992773"></a>8.6 Exporting a call graph<br>
+</h2>
+The graphical interface <em>xSuite</em> xsuite tool can export the call graph of a program in the .dot format. To export the call graph, do the following:<br>
+Load the program into the graphical browser, x<em>atac</em>:<br>
+<pre>	prompt:&gt; xatac main.atac wc.atac<br></pre>
+When loaded, in the menu click 'File', then 'save call graph...'. Enter the file name under which the call graph will be saved, and click 'Save'.
+</p>
+-->
+<p><br>
+</p>
+<hr><br>
+<a href="coverpage.html">[Top]</a>
+<a href="managing.html">[Prev]</a>
+<a href="displaying.html">[Next]</a>
+<a href="sqatoolIX.html">[Index]</a>
+<a href="sqatoolTOC.html"> [TOC] </a>
+<hr><br>
+<br>
+
+</div>
+</body>
+
+</html>

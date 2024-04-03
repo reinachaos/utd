@@ -1,0 +1,676 @@
+<!--==$Header:@(#) IN /vobs/atac/doc/help/html/xvue.html /main/9 07/15/98 17:31:36 @(#)$ =-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Windows (vers 14 February 2006), see www.w3.org">	
+    <title>
+      xVue for software maintenance
+    </title>
+	<link rel=stylesheet href="style.css" type="text/css" media=screen>
+  </head>
+  <body bgcolor="white">
+  <div id="wrap">
+		<a href="coverpage.html">[Top]</a> 
+		<a href="xregress.html">[Prev]</a>
+		<a href="xslice.html">[Next]</a> 
+		<a href="sqatoolIX.html">[Index]</a>
+		<a href="sqatoolTOC.html">[TOC]</a>
+   <hr>
+    <br>
+    <h1>
+      <a name="770300"></a>
+    </h1>
+    <h1>
+      <a name="770331"></a>
+    </h1>
+    <h1>
+      <a name="770301">Chapter 12<br>
+      <br>
+      xVue: A Tool for Effective Software
+      Maintenance
+      </a>
+    </h1>
+    <p>
+      <a name="769964">Maintenance and modification of legacy software systems
+      are the most costly activities in the life cycle of a long-lived system.
+      Central to this activity are techniques for effectively finding and
+      modifying code which implements features. The tool, <em>xVue</em>, is tailored to this need and has a state of the
+      art graphical user interface to allow the maintainer or programmer to
+      quickly locate code that is associated with features of the system.</a>
+    </p>
+    <hr>
+    <h2>
+      <a name="773230">12.1 Background</a>
+    </h2>
+	<p>
+		<a name="770688">Ideally, in a well-designed software system each
+		program feature would be implemented in a single identifiable module; in
+		practice, though, this is never the case. In the early development stage of
+		a system, programmers may follow certain standards to ensure a clear
+		mapping between each feature and its corresponding code segments. However,
+		as development continues, it is likely that such traceability will often
+		become the first casualty of the pressure to keep a system operational. As
+		a result, program features are implemented over several non-adjacent
+		subroutines which makes the features more difficult to locate and
+		understand. Such delocalized programs can lead to serious maintenance
+		errors.</a>
+    <p>
+      <a name="770386">In general, the first step towards software maintenance
+      is to locate the code relevant to a particular feature. There are two
+      methods of achieving this. First, a <em>systematic</em> approach can be
+      followed which requires a complete understanding of the program behavior
+      before any code modification. Second, an <em>as-needed</em> approach can
+      be adopted, which requires only a partial understanding of the program so
+      as to locate, as quickly as possible, certain code segments that need to
+      be changed for the desired debugging/enhancement. The systematic approach
+      provides a good understanding of the existing interactions among program
+      features, but is often impractical in a real work environment due to the
+      pressures of time and cost when working with large complicated software
+      systems. On the other hand, the as- needed approach, although less
+      expensive, may ignore some non-local interactions among the features and
+      cause a program modification to result in disastrous side-effects. Thus,
+      a need arises to identify those parts of the system that are crucial for
+      the maintainer to understand. A possible solution is to read the
+      documentation; however, in many cases, this may not be effective. The
+      documentation may not exist; or even if it exists it may be incomplete,
+      difficult to comprehend or not updated. Also, programmers/maintainers may
+      be reluctant to read it. Perhaps a faster and a more efficient way of
+      identifying the important segments of the code is to let the system speak
+      for itself. It is this issue that the tool, <em>xVue</em>, attempts to address.</a>
+    </p>
+    <p>
+      <a name="770653">The <em>execution slice-based</em> technique is a
+      solution which helps programmers and maintainers locate the
+      implementation of different features in a software system. To find, for
+      example, where the call forwarding feature is implemented in a telephone
+      switching system, one would run a small, carefully selected, set of tests
+      -- some that invoke the call forwarding feature and others that do not.
+      Such tests are classified as <em>invoking</em> tests and
+      <em>excluding</em> tests, respectively. Traces of program execution are
+      analyzed to look for code components that were executed in the invoking
+      tests but not in the excluding tests. Although this technique may not
+      find all relevant code that makes up the call forwarding feature, it does
+      identify a small number of program components that are unique to this
+      feature. The identified code can then be used as a <em>starting
+      point</em> for studying this feature. This is especially useful for those
+      features that are implemented in many different modules in a large,
+      complicated and poorly documented system.</a>
+    </p>
+    <p>
+      <a name="773873">It is important to note that code segments so identified
+      rely heavily on the test cases used. Different sets of code may be
+      identified by different sets of invoking and excluding tests. This
+      implies poorly selected tests will lead to inaccurate identification by
+      either including components that are not unique to the feature or
+      excluding the ones that should not be excluded.</a>
+    </p>
+    <p>
+      <a name="773792">There are many ways in which execution traces of
+      invoking and excluding tests may be compared to identify pieces of code
+      that are related to a given feature, say <em>f</em>. One approach is to
+      identify code that is executed by any invoking test case  but not
+      executed by any excluding test case. Another approach is to identify
+      program components that are executed by every invoking test case but not
+      executed by any excluding test case. The latter approach identifies only
+      those program components that are always executed when feature <em>f</em>
+       is exhibited but not otherwise. Another, simpler, approach is to compare
+      the execution trace of just one invoking test with that of one excluding
+      test. To minimize the amount of relevant code identified, the invoking
+      test selected may be the one with the smallest execution trace and the
+      excluding test selected may be the one with the largest execution trace.
+      Depending on how features are implemented in the program,
+      programmers/maintainers may have to try all these approaches
+	  in order to find the best set of code related to a given feature.</a>
+    </p>
+    <p>
+      <a name="773793"></a><a name="772283">Ideally, the excluding tests used
+      should be as similar as possible to the invoking tests in order to filter
+      out as much common code as possible. To illustrate how to select the
+      invoking and excluding tests, consider the example code below. 
+	  Suppose we want to find the code
+      that is uniquely used to identify an <em>equilateral</em> triangle. We
+      first construct an invoking test t1 that exhibits this feature and two
+      excluding tests t2 and t3 which assign <em>isosceles</em> and
+      <em>rectangle</em>, respectively, to <em>class</em>. Clearly, t1 is
+      closer to t2 than t3. The difference between the execution traces of t1
+      and t2 shows that only statements s10 and s13 are unique to this feature,
+      whereas additional code such as the statements s3- s7 would also be
+      identified should t3 be used in place of t2 as the excluding test.
+      Furthermore, this example also indicates we do not even need to use the
+      feature that identifies a <em>rectangle</em> to find code that is unique
+      to <em>equilateral</em> triangle. The ability to identify program
+      components unique to a feature without even knowing all the program's
+      features greatly enhances the feasibility of using the execution slice
+      technique to quickly highlight a small number of program components.
+    </p>
+    <center>
+      <table>
+        <tr>
+          <td>
+            <pre>
+			<a name="783098"> s1:    scanf ("%c", &amp;type);
+			</a><a name="783099"> s2:    if (type == triangle) {
+			</a><a name="783100"> s3:        scanf ("%d %d %d", &amp;a, &amp;b, &amp;c);
+			</a><a name="783101"> s4:        class = scalene;
+			</a><a name="783102"> s5:        if ((a == b) || (b == c))
+			</a><a name="783103"> s6:            class = isosceles;
+			</a><a name="783104"> s7:        if (a*a == (b*b + c*c))
+			</a><a name="783105"> s8:            class = right;
+			</a><a name="783106"> s9:        if ((a == b) &amp;&amp; (b == c))
+			</a><a name="783107">s10:            class = equilateral;
+			</a><a name="783108">s11:        switch (class) {
+			</a><a name=
+			"783109">s12:            case right       : area = b * c / 2.0; break;
+			</a><a name=
+			"783110">s13:            case equilateral : area = a * a * sqrt(3.0) / 4.0; break;
+			</a><a name="783208">s14:            default          : s = (a + b + c) / 2.0;
+			</a><a name=
+			"783209">s15:                               area = sqrt (s * (s-a) * (s-b) * (s-c)); break;
+			</a><a name="783210">s16:        }
+			</a><a name="783114">s17:   } else {
+			</a><a name="783115">s18:        scanf ("%d %d", &amp;w, &amp;h);
+			</a><a name="783116">s19:        if (w == h) 
+			</a><a name="783117">s20:            class = square;
+			</a><a name="783118">s21:        else
+			</a><a name="783119">s22:            class = rectangle;
+			</a><a name="783120">s23:        area = w * h;
+			</a><a name="783121">s24:   }
+			</a><a name="783122">s25:   output (class, area);
+					</a>
+	</pre>
+	
+	</table>
+	</center>
+		
+            
+    <h2>
+      <a name="770329">12.2 A Tutorial</a>
+    </h2>
+	<p>
+		<a name="782212">The use of <em>xVue</em> is
+		most easily understood by an example. In this chapter we use the same
+		wordcount program as used in the previous chapters to illustrate how the
+		basic features of <em>xVue</em> can be used in
+		identifying functional features. To copy these files, create a new
+		directory, <em>cd</em> to it, and copy the contents of the directory in
+		which the tutorial files are installed into the new directory.</a>
+	</p>
+    <p>
+      <a name="782260">For the illustrations in this chapter, we will use (1)
+      two .<em>c</em> files: <em>main.c</em> and <em>wc.c</em>, (2) three data
+      files: <em>input1</em>, <em>input2</em>, and <em>input3</em>, and (3) the
+      <em>Makefile</em>. Now you are ready to compile the wordcount program,
+      with <em>atac</em>, by entering the appropriate <em>make</em> command, as
+      specified in</a> <a href="appendixB.html#1001045">Appendix  A,
+      <em>Platform Specific Information</em></a>.
+    </p>
+    <p>
+      <a name="782297">After the compilation, two <em>.atac</em> files
+		  (<em>main.atac</em> for <em>main.c</em> and <em>wc.atac</em> for
+		  <em>wc.c</em>), one <em>.atacp</em> file
+		  (<em>wordcount.atacp</em>), and the executable <em>wordcount(.exe)</em> are created.
+		  Note, one <em>.atac</em> file is created for each instrumented
+		  <em>.c</em> file, i.e., the <em>.c</em> files compiled with ATAC, and one
+		  <em>.atacp</em> file is created for each executable generated during the build process.</a>
+    </p>
+    <p>
+      <a name="782304">Invoke the graphical interface of the Toolsuite by:</a>
+    </p>
+    <pre>
+	<a name="782305">      prompt:&gt; xsuite wordcount.atacp
+	</a>
+	</pre><a name="774088"></a>
+	<a name="774119">Then, pull down the
+	"<em>Coverage</em>" menu and select the "<em>xVue</em>" option.</a>
+    <a href="xvue.html#774119">Figure  12-1</a> shows the initial main window of <em>xVue</em>.
+    
+	<div class="figure">
+        <a href="xvue.frm.anc3.gif"><img src="xvue.frm.anc3.gif"></a>
+		<div>Figure 12-1  The initial display of the main <em>xVue</em> window</div>
+	</div>    
+	
+	<a name="782350"></a><a name="783254"></a><a name="783255">
+	Let us run the following tests:</a>
+    <pre>
+        prompt:&gt; wordcount -x input1     (<em>wordcount.1</em>)
+        prompt:&gt; wordcount -wlc input1   (<em>wordcount.2</em>)
+        prompt:&gt; wordcount -wl input1    (<em>wordcount.3</em>)
+        prompt:&gt; wordcount -w input1     (<em>wordcount.4</em>)
+        prompt:&gt; wordcount nosuchfile    (<em>wordcount.5</em>)
+	</pre>
+    <p>
+      <a name="770109">The file <em>input1</em> contains the following
+      line:</a>
+    </p>
+    <pre>
+               test input file 1
+	</pre>
+	<a name="997582">After the execution, a trace file <em>wordcount.trace</em> 
+	is created containing the execution information used in feature analysis.</a>
+    <p>
+      <a name="782583"></a><a name="782595">To tell <em>xVue</em> to incorporate the dynamic information from this
+      trace file into its display, click with the left mouse button on the
+      "<em>File</em>" button in the top button bar. This will cause the
+      "<em>file</em>" menu to pop-up. Click on the "<em>open trace
+      file...</em>" entry in the menu. This will open a dialog box as shown
+      in</a> <a href="xvue.html#782595">Figure  12-2</a>. 
+	  Select <em>wordcount.trace</em> and click
+      on the "<em>Open</em>" button. This will cause <em>xVue</em> to read in the trace file.
+    </p>
+    
+	<a name="782592"></a>
+	<div class="figure  ">
+        <a href="xvue.frm.anc4.gif"><img src="xvue.frm.anc4.gif"></a>
+        <div>Figure 12-2 The trace file dialog box</div>
+    </div>
+	
+    </center><a name="771105"></a><a name="771123">To verify this, you can
+    observe the block coverage summary by test case over all files will be
+    displayed in the right upper pane as 
+	shown in</a> <a href="xvue.html#771123">Figure  12-3</a>.
+    
+    <a name="771201"></a>
+    <div class="figure">
+        <a href="xvue.frm.anc5.gif"><img src="xvue.frm.anc5.gif"></a>
+        <div>Figure 12-3 The coverage summary by test case</div>
+    </div>
+	
+    </center><a name="771124">Run <em>wordcount</em> again using
+    <em>input2</em> and <em>input3</em> with option <em>-c</em> and
+    <em>-l</em>, respectively, by entering:</a>
+    <pre>
+        prompt:&gt; wordcount -c &lt; input2   (<em>wordcount.6</em>)
+        prompt:&gt; wordcount -l input3     (<em>wordcount.7</em>)
+	</pre>
+    <p>
+      <a name="782389"></a><a name="782403">Running these two additional tests
+      causes their dynamic information to be added to the trace file. Note that
+      <em>xVue</em> has highlighted the
+      "<em>Update</em>" button in the top button bar, as shown in</a>
+      <a href="xvue.html#782403">Figure  12-4</a>, to alert you to this fact.
+      <em>xVue</em> continuously monitors the specified
+      trace files to see if any new information has been added to them. If so,
+      it highlights the "<em>Update</em>" button to indicate this to you. You
+      may choose to click on this button now to update the display with the
+      information from the test case you have just run, or you may choose to
+      wait until you have run several test cases. <!--================-->
+    </p>
+    
+	
+    <a name="782400"></a>
+	<div class="figure">
+        <a href="xvue.frm.anc2.gif"><img src="xvue.frm.anc2.gif"></a>            
+        <div>Figure 12-4 The <em>Update</em> button</div>
+	</div>
+            
+	
+	<!--================-->
+    <a name="996923"></a><a name="771177">Click on the "<em>Update</em>"
+    button to tell <em>xVue</em> to incorporate the
+    information from <em>wordcount.6</em> and <em>wordcount.7</em> into its
+    display.</a> <a href="xvue.html#771177">Figure  12-5</a> shows the updated
+    display. <!--================-->
+    
+    <a name="771174"></a>
+    <div class="figure">
+		<a href="xvue.frm.anc16.gif"><img src="xvue.frm.anc16.gif"></a>
+		<div>Figure 12-5 The updated coverage summary by test case</div>
+	</div>
+            
+    </center><!--================-->
+    <a name="771255"></a><a name="771271">Now it's time to specify a feature.
+    A pane for adding, deleting and editing features is displayed in the lower 
+	right of the main <em>xVue</em> window. Press the 
+    the "<em>Add</em>" button create a new feature. Name the new feature in
+	the popup window and observe that all the loaded test cases appear in the
+	feature editing pane as shown in</a> <a href="xvue.html#771271">Figure 
+    12-6</a>. By default, all seven tests appear in the <em>Don't Know</em>
+    category (middle pane), which means the user has not yet categorized them.
+	The <em>Don't Know</em> category is for tests fow which either we haven't yet
+	assigned or tests which are neutral to the outcome of our analysis. For the sake
+	of simplicity we will continue to refer to them as <em>Don't Know</em> tests.
+    
+    <a name="771268"></a>
+    <div class="figure">
+        <a href="xvue.frm.anc.gif"><img src="xvue.frm.anc.gif"></a>
+		<div>Figure 12-6 The initial display of the feature editing window</div>
+	</div>
+            
+    <p>
+		<a name="783530">Suppose the feature we have in mind is
+		wordcount's character counting feature (i.e., the -c option). Since
+		<em>wordcount.2</em> and <em>wordcount.6</em> exhibit the feature, they
+		should be categorized as invoking tests. To achieve this categorization,
+		select <em>wordcount.2</em> by clicking on it with the left mouse button,
+		and then click the left arrow button to move it to the <em>Invoking</em> pane. 
+		Apply the same procedure on <em>wordcount.6</em>. This
+		will move <em>wordcount.2</em> and <em>wordcount.6</em> from the
+		<em>Don't Know</em> category (middle pane) to the <em>Invoking</em> category 
+		(left pane).</a>
+	</p>
+	
+    <p>
+		  <a name="771331">Tests <em>wordcount.3</em>, <em>4</em> and <em>7</em> do
+		  not involve this feature. Thus, they should be categorized as excluding
+		  tests. To achieve this categorization, select <em>wordcount.3</em> by
+		  clicking on it with the left mouse button and then use the right arrow
+		  button between <em>Excluding</em> and <em>Don't Know</em> panes. Apply the
+		  same procedure on <em>wordcount.4</em> and <em>wordcount.7</em>. This
+		  will move <em>wordcount.3, 4</em> and <em>7</em> from the
+		  <em>Don't Know</em> category to the <em>Excluding</em> category. For
+		  tests <em>wordcount.1</em> and <em>wordcount.5,</em> suppose we don't
+		  care. Hence, they remain in the <em>Don't Know</em> category (aka 
+		  <em>Don't Care</em>).</a> <a href="xvue.html#771331">Figure  12-7</a> 
+		  shows the resulting display. 
+		  <!--===================-->
+    </p>
+    
+    <a name="767551"></a>
+    <div class="figure">
+        <a href="xvue.frm.anc8.gif"><img src="xvue.frm.anc8.gif"></a>
+		<div>Figure 12-7 The final display of the feature editing window</div>
+	</div>
+	
+	<!-- have to hand up date the figure numbers past here because a figure
+		is now deleted due to new behavior -->
+	<!--====================-->
+	<p>
+		<a name="997903">If you make any mistake assigning test cases
+		within a feature, you can select the test case 
+		to be modified (<em>character_counting</em>
+		in our case) by selecting it from the drop down menu just to the right
+		of the word "Feature" and then using the arrow
+		buttons to move the test case to its proper place (Invoking, 
+		Excluding or Don't Know/care). You may now move tests from 
+		one category to another using the
+		techniques described earlier. 
+	</p>
+	<p>
+	  <a name="782535"></a><a name="782547">You can save the present
+	  feature description in a file by clicking on the
+	  "<em>Save</em>" button in the top row of buttons in 
+	  the feature editing pane. This will
+	  cause a dialog box to appear as shown in</a> <a href=
+	  "xvue.html#782547">Figure  12-8</a>. Enter wc as the name of the file in
+	  the rectangle next to the label <em>File name</em> and click on
+	  the "<em>Save</em>" button. A file named <em>wc.features</em>
+	  is created in your working directory containing all the feature
+	  descriptions you have entered. (The file extension
+	  <em>.features</em> is appended automatically by <em>xVue</em>.) 
+	  Once you have saved your feature
+	  description in a file, you can update it by simply clicking on
+	  the "<em>Save</em>" button in the middle button bar and following
+	  the procedure above.
+	  <!-- this would be a good enhancement
+	  <em>xVue</em> will reuse the last
+	  selected file name and overwrite it with the latest feature
+	  descriptions. -->
+	</p>
+            
+    <a name="782544"></a>
+    <div class="figure">
+		<a href="xvue.frm.anc6.gif"><img src="xvue.frm.anc6.gif"></a>                    
+        <div>Figure 12-8 The <em>save_as</em> dialog box</div>
+	</div>
+                    
+	<p>
+	  <a name="768744"></a><a name="772438">To delete a feature, select
+	  it by choosing it from the drop down menu (if it is not already
+	  choosen and active. Then the "<em>Delete</em>" button in 
+	  the middle button bar can be used to delete that feature. 
+	  A dialog box as shown in</a> 
+	  <a href="xvue.html#772438">Figure  12-9</a> will appear. If you wanted
+	  to confirm the deletion, you would click on the "<em>yes</em>"
+	  button. This would cause the selected feature to be deleted and
+	  the main <em>xVue</em> window to be
+	  updated accordingly. Since we do not want to delete the feature,
+	  click on the "<em>Cancel</em>" button to close the dialog box
+	  and return to the main window of <em>xVue</em> as displayed in <a href=
+	  "xvue.html#774119">Figure  12-2</a>.
+	</p>
+            
+    <a name="772435"></a>
+    <div class="figure">
+        <a href="xvue.frm.anc10.gif"><img src="xvue.frm.anc10.gif"></a>
+        <div>Figure 12-9 The feature deletion dialog box</div>
+	</div>
+                    
+    <p>
+	  <a name="782507"></a><a name="782519">To use features that were
+	  previously saved in another feature file, click on the
+	  "<em>Load</em>" button in the middle button bar. This will
+	  cause a dialog box to pop up as shown in</a> <a href=
+	  "xvue.html#782519">Figure  12-10</a>. You would select the file which
+	  contains the feature(s) to be imported and then click on the
+	  "<em>Open</em>" button to have them displayed in the main
+	  window of <em>xVue</em>. In our case,
+	  there is no need to do so because the feature
+	  (<em>character_counting</em>) is already loaded. So, click on
+	  the "<em>Cancel</em>" button to close the dialog box and return
+	  to the main window of <em>xVue</em> as
+	  displayed in <a href="xvue.html#774119">Figure  12-2</a>.
+	</p>
+            
+	<a name="782516"></a>
+	<div class="figure  ">
+		<a href="xvue.frm.anc1.gif"><img src="xvue.frm.anc1.gif"></a>
+		<div>Figure 12-10 The feature open dialog box</div>
+	</div>
+                    
+	<p>
+	  <a name="771581"></a><a name="771593">The next step is to answer
+	  the question: "Where in the wordcount program is the 
+	  <em>character_counting</em> feature (i.e., the <em>-c</em> option)
+	  implemented?" To look for program components that are uniquely
+	  related to <em>character counting</em> 
+	  we need to choose a "heuristic" (described below).
+	  To do so, we use the "<em>Heuristics</em>" drop down menu
+	  on the far top right of the <em>xVue</em> pane. This
+	  will cause a heuristics menu to appear as shown in</a> <a href=
+	  "xvue.html#771593">Figure  12-11</a>.
+	</p>
+            
+	<a name="771590"></a>
+	<div class="figure">
+		 <a href="xvue.frm.anc12.gif"><img src="xvue.frm.anc12.gif"></a>
+		<div>Figure 12-11 Heuristics drop down menu with the 
+		<em>Union-Union</em> heuristic selected</div>
+	</div>
+	
+	<p>
+		<a name="782984"><em>xVue</em>
+		provides three heuristics. By default, the <em>Union-Union</em> heuristic is selected.
+		With this heuristic (see</a> <a href="xvue.html#771593">Figure 
+		12-12</a>) program components that are executed by any invoking
+		test (<em>wordcount.2</em> and <em>wordcount.6</em> in our case),
+		but not executed by any excluding test (<em>wordcount.3</em>,
+		<em>wordcount.4</em> and <em>wordcount.7</em> in our case), are
+		identified. In other words, program components that are in the
+		union of <em>wordcount.2</em> and <em>6</em>, but not in the union
+		of <em>wordcount3</em>, <em>4</em> and <em>7</em>, are identified.
+	</p>
+	
+	<p>
+	  <a name="998579"></a><a name="781512">You can switch to the other
+	  heuristics (<em>Intersection-Union</em>, <em>Smallest-Largest</em>), 
+	  by selecting the proper entry
+	  in the menu. With the <em>Intersection-Union</em> heuristic,
+	  program components that are commonly executed by all invoking
+	  tests (<em>wordcount.2</em> and <em>wordcount.6</em> in our
+	  case), but not by any excluding test (<em>wordcount.3</em>,
+	  <em>wordcount.4</em> and <em>wordcount.7</em> in our case), are
+	  identified. In other words, program components that are in the
+	  intersection of <em>wordcount.2</em> and <em>6</em>, but not in
+	  the union of <em>wordcount.3</em>, <em>4</em> and <em>7</em>, are
+	  identified. With the <em>Smallest-Largest</em> heuristic, program components that are
+	  executed by the smallest invoking test (<em>wordcount.6</em> in
+	  our case), but not by the largest excluding test
+	  (<em>wordcount.3</em> in our case), are identified.
+	</p>
+            
+	
+	<p>
+		<a name="783037"></a><a name="771765">Instead of using the
+		default heuristic, let us use the <em>Intersection-Union</em>
+		heuristic for the purposes of this
+		tutorial. Select "<em>Intersection-Union</em>" from the drop
+		down menu. This will result in the Summary pane updating
+		as shown in</a> <a href="xvue.html#771765">Figure  12-12</a>. You can have
+		the summary displayed in other formats by choosing
+		"<em>By type</em>" or the "<em>By function</em>" from the drop menu
+		at the top right in the summary pane.
+		To see the source display of the corresponding
+		file, click on a file name in the summary pane. In our case, we
+		can only select <em>main.c</em> since <em>wc.c</em> does not have
+		blocks that "seem to be unique" to the
+		<em>character_counting</em> feature, the feature for which we are
+		looking.
+	</p>
+            
+	<a name="771762"></a>
+	<div class="figure">
+	  <a href="xvue.frm.anc15.gif"><img src="xvue.frm.anc15.gif"></a>
+		<div>Figure 12-12 A summary <em>By file</em> over all selected test cases</div>
+	</div>
+                    
+	<p>
+	  <a name="772609"></a><a name="772853">The source code of
+	  <em>main.c</em> is displayed in
+	  </a> <a href="xvue.html#772853">Figure  12-13</a>. 
+	  The scroll bar is a
+	  thumbnail sketch of the entire file indicating there are two red
+	  spots. Clicking with the left mouse button at any spot in the
+	  scroll bar brings the corresponding region of the file into the
+	  source window. You can also drag the mouse up or down the scroll bar
+	  with the left mouse button pressed to rapidly scroll up or down
+	  the file. 
+	</p>
+	
+	<a name="772850"></a>
+	<div class="figure  ">
+	  <a href="xvue.frm.anc11.gif"><img src="xvue.frm.anc11.gif"></a>
+		<div>Figure 12-13 Blocks in <em>main.c</em> that are unique to <em>character_counting</em></div>
+	</div>
+                    
+	<p>
+	  <a name="772749">The display in</a> <a href=
+	  "xvue.html#772853">Figure  12-13</a> shows the resulting code
+	  after the first red spot is selected. Analysis of the code
+	  reveals that all the highlighted blocks are indeed "unique" to
+	  the <em>character_counting</em> feature (the <em>-</em><em>c</em>
+	  option).
+	</p>
+	<p>
+	  <a name="772857"></a><a name="782730">Similarly, you can view the
+	  feature at the <em>decision</em>, function, def-use and context coverage
+	  level by selecting the corresponding criterion
+	  from the <em>Coverage</em> drop down menu located in the top left
+	  of the main window as shown in</a> <a href=
+	  "xvue.html#782730">Figure  12-14</a>. For example, the decisions
+	  in <em>main.c</em> that are unique to <em>character_counting</em>
+	  are shown in <a href="xvue.html#782730">Figure  12-15</a>. For
+	  each highlight, <em>xVue</em> can further
+	  indicate which branch of it is uniquely related to a given
+	  feature. In our case it is the <em>true</em> but not the
+	  <em>false</em> branch of <em>dochar</em> that is unique to
+	  <em>character_counting</em>. <!--===================-->
+	</p>
+            
+	<a name="782727"></a>
+	<div class="figure figure-odd">
+		<a href="xvue.frm.anc7.gif"><img src="xvue.frm.anc7.gif"></a>
+		<div>Figure 12-14  The <em>Options</em> menu</div> 
+	</div>
+                    
+	<div class="figure  ">
+		<a href="xvue.frm.anc17.gif"><img src="xvue.frm.anc17.gif"></a>
+		<div>Figure 12-15 Decisions in <em>main.c</em> that are unique
+		to <em>character_counting</em></div>
+	</div>
+	
+	                    
+	<!--====================-->
+	<p>
+	  <a name="772877"></a><a name="772922">You can make your own
+	  customized heuristic by moving tests around as shown in</a>
+	  <a href="xvue.html#772922">Figure  12-16</a>. In this case,
+	  program components that are executed by <em>wordcount.2</em> but
+	  not <em>wordcount.3</em> are identified. Recall that test
+	  <em>wordcount.2</em> is:
+	</p>
+    
+	<pre>
+        prompt:&gt; wordcount -wlc input1   (an invoking test)
+	</pre>and test wordcount.3 is
+    
+	<pre>
+        prompt:&gt; wordcount -wl input1    (an excluding test)
+	</pre>
+            
+	<a name="772919"></a>
+	<div class="figure">
+		<a href="xvue.frm.anc13.gif"><img src="xvue.frm.anc13.gif"></a>
+		<div>Figure 12-16 Heuristics window with a custom heuristic selected</div>
+	</div>
+                    
+	<p>
+		<a name="772982">This heuristic follows the strategy
+		discussed in</a> <a href="xvue.html#773230">Section  12.1,
+		<em>Background</em></a> by selecting an invoking test
+		(<em>wordcount.2)</em> and an excluding test (<em>wordcount.3</em>)
+		which have very similar execution traces. In fact, the only
+		difference between these two tests is that one executes the
+		<em>-c</em> option and the other does not. Unique code so selected
+		is the same as that selected by <em>Intersection-Union</em> heuristic.
+	</p>
+	<p>
+	  <a name="773953">In some situations, the highlighted code may be
+	  a super set of the unique code with respect to a certain feature.
+	  Nevertheless, code so selected provides a good <em>starting</em>
+	  <em>point</em> for mapping features to program components at
+	  different levels of granularity.</a>
+	</p>
+	<p>
+	  <a name="773045">To quit <em>xVue</em>,
+	  click on the "<em>File</em>" button in the top button bar, then
+	  click on the "<em>exit</em>' entry of the dropdown menu that pops
+	  up.</a>
+	</p>
+	<!--
+	<p>
+	  <a name="773054">Since you have already run several tests and
+	  saved the information in <em>wordcount.trace</em> and
+	  <em>wordcount.features</em>, the next time you invoke
+	  <em>xVue</em> you can use the
+	  command:</a>
+	</p>
+    
+	<pre>
+		<a name="781440">      prompt:&gt; xsuite *.atacp *trace *features</a>
+	</pre>
+
+	<p>
+	<a name="781441">to import them directly as command line arguments
+	instead of loading them interactively through the graphical interface.</a>
+	</p>
+	-->
+	<p>
+	  <a name="773036"></a>
+	</p>
+	<hr>
+	<br>
+		<a href="coverpage.html">[Top]</a> 
+		<a href="xregress.html">[Prev]</a>
+		<a href="xslice.html">[Next]</a> 
+		<a href="sqatoolIX.html">[Index]</a>
+		<a href="sqatoolTOC.html">[TOC]</a>
+    <hr>
+            <br>
+          </td>
+        </tr>
+      </table>
+    </center>
+	</div>
+  </body>
+</html>

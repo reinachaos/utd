@@ -1,0 +1,350 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator"
+        content=
+        "HTML Tidy for Windows (vers 18 June 2008), see www.w3.org">
+        
+  <meta http-equiv="content-type"
+        content="text/html; charset=us-ascii">
+
+  <title>ATAC: Executing Tests</title>
+   <link rel="stylesheet"
+        href="style.css"
+        type="text/css"
+        media="screen">
+</head>
+
+<body class="c2">
+<div id="wrap">
+
+<a href="coverpage.html">[Top]</a> <a href=
+  "instrumenting.html">[Prev]</a> <a href=
+  "managing.html">[Next]</a> <a href="sqatoolIX.html">[Index]</a>
+  <a href="sqatoolTOC.html">[TOC]</a>
+  <hr>
+  <br>
+
+  <h1><a name="949049"></a></h1>
+
+  <h1><a name="949055"></a></h1>
+
+  <h1><a name="949051">Chapter 6<br>
+  <br>
+  ATAC: Executing Software Tests<br>
+  <br></a></h1><a name="948453"></a>
+
+  <p><a name="948454">When a program that has been compiled with
+  ATAC is executed, in addition to its normal output, it generates
+  coverage information that is appended to a trace file. The
+  information within this file is later used by the graphical
+  interface <em>xSuite</em> and the command
+  line browser <em>atac</em> to produce coverage displays and
+  reports. This chapter discusses how to manipulate the trace file
+  and identifies problems that might occur during test
+  execution.</a></p>
+  <hr>
+
+  <h2><a name="943081">6.1 Naming the Trace File</a></h2><a name=
+  "947315">By default, execution of a program compiled with ATAC
+  creates a trace file in the current directory. The default trace
+  file name is <em>prog.trace</em> , where <em>prog</em> is the
+  name of the executable program under test.</a>
+
+  <p>The executable name that is used as the basis for the trace
+  file name is either: 1) a name that was explicitly specified to
+  the ATAC compiler using the appropriate command-line option (see
+  <a href="instrumenting.html#203798">Section 5.1.1, <em>Basic
+  Instrumentation</em></a>); 2) the default executable name of
+  <em>a.out</em>.</p>
+
+  <p><a name="947316">The trace file name can also be specified via
+  the setting of the environment variable, <em>ATAC_TRACE</em>. If
+  this variable is set, its value is always used as as the basis of
+  the trace file name. If the value of ATAC_TRACE ends with the
+  proper suffix, <em>.trace</em>, then that value will be used
+  identically as the trace file name; else, the suffix will be
+  appended to the value to form the trace file name. Note that
+  trace file names may not begin with a hyphen (-).</a></p>
+
+  <p><a name="947316">If an executable file is later renamed, the
+  name of its trace file will still be based upon the original
+  name, and the trace information from further test runs will
+  continue to be appended to the original trace file. However, the
+  name of the trace file can be overridden to correspond to the new
+  executable name by setting the ATAC_TRACE environment variable to
+  the desired trace file name before the next test is
+  executed.</a></p>
+
+  <p><a name="947316"></a><a name="943005">The trace file may be
+  written in a directory other than the current directory by
+  setting the ATAC_DIR environment variable with a path to the
+  desired directory. ATAC_DIR may be set to either an absolute or
+  relative path.</a></p>
+
+  <h2><a name="943113">6.2 Trace File Compression</a></h2><a name=
+  "950127">When a test case is run on a program instrumented with
+  ATAC, trace information is collected in a temporary trace file. A
+  reference to this temporary trace file is appended to the
+  "master" trace file. By default, ATAC compresses the trace file
+  after each test execution.To save execution time at the expense
+  of some disk space, automatic trace compression can be disabled
+  by setting the environment variable ATAC_COMPRESS to <em>no</em>
+  prior to program execution. In addition, the frequency of
+  compression can be set to approximately every <em>n</em> files by
+  setting the value to an integer, <em>n.</em> To restore automatic
+  trace compression after each test execution, unset the
+  ATAC_COMPRESS environment variable or set it to <em>yes</em>.
+  (See</a> <a href="setup.html#107528">Section 4.1.2,
+  <em>ATAC_COMPRESS</em></a>). It should be noted that the
+  compressed trace file format used by ATAC is not the same as that
+  used by general purpose file compression tools.
+
+  <h3><a name="950138">6.2.1 Forcing Trace File
+  Compression</a></h3><a name="950139">Whenever the ATAC_COMPRESS
+  environment variable is set to <em>no</em>, it is advisable to
+  periodically force trace file compression between test
+  executions. This will prevent the trace file from growing too
+  large.</a>
+
+  <p><a name="949853">In addition, if the nature of a program or a
+  set of tests is such that many executions exit abnormally (e.g.,
+  via receipt of a signal), the trace file may not be compressed
+  prior to program exit. In this case, trace file compression
+  should periodically be forced even if ATAC_COMPRESS has not been
+  set.</a></p>
+
+  <p><a name="949854">If invoked with a <em>.trace</em> file as its
+  argument, the <em>atactm</em> command performs trace file
+  compression (see</a> <a href="managing.html#973910">Section 7.8,
+  <em>Concerning Trace File Compression</em></a>). This offers a
+  simple way to force trace file compression, regardless of whether
+  or not the ATAC_COMPRESS environment variable is set. For
+  example, invoking <em>atactm</em> as follows:</p>
+  <pre>
+<a name="949858">  prompt:&gt; atactm wordcount.trace<br></a>
+</pre><a name="949859">forces the compression of
+<em>wordcount.trace</em>.</a>
+
+  <h2><a name="949785">6.3 Temporary Trace Files</a></h2><a name=
+  "949786">The temporary trace file is normally created in the
+  <em>/usr/tmp</em> directory. This can be overridden by setting
+  the ATAC_TMP environment variable before linking or running the
+  instrumented program. On some systems performance will suffer if
+  the temporary trace file is written to an NFS mounted file
+  system.</a>
+
+  <p><a name="949787">The temporary trace file will not be
+  incorporated into the master trace file if:</a></p>
+
+  <ul>
+    <li><a name="949788">The ATAC_COMPRESS environment variable is
+    set to <em>0</em> or <em>no</em>.<br>
+    <br></a> <a name="949789"></a></li>
+
+    <li><a name="949789">The instrumented program terminates
+    abnormally.<br>
+    <br></a> <a name="949790"></a></li>
+
+ 	   
+ 	<li><a name="949790">The master trace file is locked. The master
+   trace file may be locked for the following reasons:<br>
+	      
+	      <ul>
+	      <li></a> <a name="949791">The trace file is being
+	      compressed by another program.</a></li>
+	
+	      <li><a name="949795">The trace file is being browsed
+	      with the graphical interface.</a></li>
+	
+	      <li><a name="949796">The lock file was not deleted due
+	      to a previous abnormal termination of the graphical interface
+	      or the <em>atactm</em> compression tool.</a></li>	
+      </ul>    
+
+    <li><a name="949800">There is not enough disk space available
+    to incorporate the temporary trace file into the master trace
+    file.<br>
+    <br></a> <a name="949801"></a></li>
+
+    <li><a name="949801">The temporary trace file is not readable
+    (e.g. the file system is not mounted) at the time the
+    compression tool is run.<br>
+    <br></a></li>
+  </ul><a name="949802">The temporary trace file will be
+  automatically incorporated into the master trace file except
+  under the conditions listed above.</a>
+
+  <h2><a name="949831">6.4 Trace File Locking</a></h2><a name=
+  "949832">A trace file must be locked to prevent concurrent
+  attempts to compress or edit the trace file (e.g. with
+  <em>atactm</em>) and to permit the graphical interface to process
+  concurrent trace file changes efficiently.</a>
+
+  <p><a name="950101">The lock is a file in the same directory as
+  the trace file with the same name as the trace file except that
+  the <em>.trace</em> suffix is replaced with
+  <em>.AElock</em>.</a></p>
+
+  <p><a name="950103">If the lock file exists or cannot be created
+  (due to directory permissions), tools that did not create the
+  lock cannot edit or compress the trace file. In addition, if the
+  graphical interface cannot create the lock and test cases are
+  still running, the whole trace file will have to be reread every
+  time the "<em>Update</em>" button is selected.</a></p>
+
+  <p><a name="949835">Normally the lock file is automatically
+  deleted by the tool that created the lock. If the tool terminates
+  abnormally, the lock file may not be deleted. The lock file may
+  be deleted manually.</a></p>
+
+  <p><a name="949836">Note that locking is not needed to prevent
+  trace file corruption. If it becomes necessary to "force" a lock,
+  due to apparent failure of its owner, the resulting trace may
+  become incomplete but will not become corrupted.</a></p>
+
+  <h2><a name="949930">6.5 Trace File Permission</a></h2><a name=
+  "949932">In the Windows environment, permissions are generally
+  not an issue because of the single-user nature of the setup. If
+  you are working in a multi-user Windows environment, check with
+  your system administrator regarding file security. It is notable
+  that the ownership of a trace file changes to the last user who
+  compressed it.</a>
+
+  <p><a name="949896">In the Linux environment, the master trace
+  file is created with the same read/write permissions for
+  user/group/other as the directory it is created in. Compression
+  will preserve the read/write permissions on the trace
+  file.</a></p>
+
+  <p><a name="949868">Temporary trace files are created with the
+  same permissions as the trace file that points to it.</a></p>
+
+  <p><a name="949869">For example, if the directory the trace file
+  is created in is readable and writable by user and group (0770),
+  the trace file and temporary trace files are created readable and
+  writable by user and group (0660) when a test is run by anyone in
+  the group. The same trace file may be appended and/or compressed
+  by anyone in the group.</a></p>
+
+  <p><a name="949870">If the ATAC_UMASK environment variable is set
+  before linking or execution, it should be set to an octal number
+  from 0 to 0666. The value is used to restrict the permissions on
+  the trace file, e.g. if the directory to contain the trace file
+  has permissions 0775 and ATAC_UMASK is 026 then the trace file is
+  created with permission 0640.</a></p>
+
+  <p><a name="949871">Note that the ownership of the trace file
+  changes to the last one who compressed it. This shouldn't matter
+  as long as the permissions for group or other permit reading and
+  writing.</a></p>
+
+  <p><a name="949872">Note also, that if a directory has the
+  "sticky bit" set, files can be deleted from the directory only by
+  the owner (regardless of file and directory permissions). This
+  bit is often set on <em>/tmp</em> and <em>/usr/tmp</em> so that
+  people can't delete each others temporary files even though
+  everybody can write the directory. If this bit is set on the
+  directory where ATAC is putting the temporary trace files, and
+  there are multiple users writing to the same trace file, during
+  compression, some of the temporary trace files will not get
+  deleted. When this happens, <em>atactm</em> truncates the files
+  to size zero to save disk space and as an indication that the
+  file is no longer needed.</a></p>
+
+  <h2><a name="949864">6.6 Parallel Test Execution</a></h2><a name=
+  "947338">ATAC supports parallel test execution. When multiple
+  instances of a program instrumented with ATAC are executed in
+  parallel, writing to the same trace file, ATAC will maintain
+  separate trace data for each in the trace file.</a>
+
+  <h2><a name="947348">6.7 Improving Execution Speed and Saving
+  Disk Space</a></h2><a name="943105">Programs compiled under ATAC
+  execute more slowly, require more memory, and occupy more disk
+  space than when compiled with the standard C compiler (see</a>
+  <a href="overview.html#623840">Section 3.5, <em>What Will Using
+  ATAC Cost You?</em></a>). The time required for program execution
+  may be reduced, at a cost of some disk space, by not compressing
+  the trace file between each test execution. If automatic trace
+  file compression is turned off, it is advisable to periodically
+  force compression in order to reduce the size of the trace file
+  (see <a href="executing.html#950138">Section 6.2.1, <em>Forcing
+  Trace File Compression</em></a>).
+
+  <p><a name="943052">The impact of ATAC on execution speed and
+  disk space may also be reduced by limiting the scope of coverage
+  analysis to a subset of the source files in the program under
+  test (see</a> <a href="instrumenting.html#203817">Section 5.1.3,
+  <em>Selectively Instrumenting Software</em></a> (Linux) or
+  <a href="instrumenting.html#204433">Section 5.2.3,
+  <em>Selectively Instrumenting Software</em></a> (Windows)). Using
+  this approach, normal program performance only degrades while
+  executing code within the source files compiled with ATAC.
+  Coverage analysis of an entire software system is obtained by
+  combining the results of executing identical tests on a number of
+  source file subsets, each selectively instrumented in a
+  complementary manner.</p>
+
+  <p><a name="943104">If testing is being conducted in a network
+  environment where remote file systems are being accessed from a
+  file server, execution time may also be reduced by directing the
+  trace file to a file on a local disk (see</a> <a href=
+  "executing.html#943081">Section 6.1, <em>Naming the Trace
+  File</em></a>). This eliminates network file access time when
+  writing to the trace file. If ATAC_TMP is set, it should also
+  point to a directory on a local disk (see <a href=
+  "setup.html#107556">Section 4.1.6, <em>ATAC_TMP</em></a>).</p>
+
+  <p><a name="947457">Execution time may also be reduced by
+  restricting the amount of detail in the coverage data. In
+  particular, if only block coverage data is needed, execution time
+  may be reduced by setting ATAC_BLOCKONLY to <em>yes</em> (see</a>
+  <a href="setup.html#107510">Section 4.1.1,
+  <em>ATAC_BLOCKONLY</em></a>).</p>
+
+  <h2>6.8 Explaining Run-Time Errors</h2><a name="947538">A program
+  compiled with ATAC should exhibit behavior identical to the same
+  program compiled with the standard C compiler, with the following
+  exceptions:<br></a>
+
+  <ul>
+ 
+    <li><a name="943088">The program compiled with ATAC will create
+    or append to a trace file (see</a> <a href=
+    "executing.html#943081">Section 6.1, <em>Naming the Trace
+    File</em></a>).<br>
+    <br>
+    <a name="943111"></a></li>
+
+    <li><a name="943111">The program compiled with ATAC will
+    execute somewhat more slowly than the original program. If the
+    program is timing sensitive, this may cause other behavioral
+    differences (see</a> <a href="overview.html#623840">Section
+    3.5, <em>What Will Using ATAC Cost You?</em></a> and <a href=
+    "executing.html#947348">Section 6.7, <em>Improving Execution
+    Speed and Saving Disk Space</em></a>).<br>
+    <br>
+    <a name="943115"></a><a name="943117"></a></li>
+
+    <li><a name="943117">Programs that appear to behave correctly
+    sometimes contain memory violations which, by chance, do not
+    interfere with program execution (e.g., accessing unallocated
+    memory locations). When ATAC is used, these violations may
+    begin to interfere with program execution and result in program
+    failure. Conversely, memory violations that would normally
+    result in program failure may be masked when using ATAC.<br>
+    <br></a></li>
+  </ul>
+  <hr>
+  <br>
+  <a href="coverpage.html">[Top]</a> <a href=
+  "instrumenting.html">[Prev]</a> <a href=
+  "managing.html">[Next]</a> <a href="sqatoolIX.html">[Index]</a>
+  <a href="sqatoolTOC.html">[TOC]</a>
+  <hr>
+  <br>
+  <br>
+  </div>
+</body>
+</html>

@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Combinatorial testing – Hands-on exercise</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="tutorial-combinatorial-testing">Tutorial: Combinatorial Testing</h1>
+<p>In this tutorial, you will learn the basic knowledge and get a hands-on experience of using combinatorial testing in practice.</p>
+<p>This tutorial has six major steps:</p>
+<ol>
+<li>Understand the program under test (PUT) and design your input model</li>
+<li>Create the input model using  <em>ACTS</em>  tool</li>
+<li>Create  three  CT test suites</li>
+<li>Convert your CT test suits to shell scripts</li>
+<li>Execute the test cases</li>
+<li>Find out where the bug is</li>
+</ol>
+<h2 id="step-1-understand-the-program-under-test-put-and-design-your-input-model">Step 1: Understand the program under test (PUT) and design your input model</h2>
+<p>Go to the directory “CT-Tutorial” under your home directory. Read the file “program_spec” to understand the requirement of PUT. You can use different commands to read the file. For example:</p>
+<pre><code>cat program_spec
+</code></pre>
+<p>Figure out what parameters (factors) you would like to include in your model and assign the possible values to each parameter. A sample input model can be:</p>
+
+<table>
+<thead>
+<tr>
+<th>parameter 1</th>
+<th>parameter 2</th>
+<th>parameter 3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>value 1</td>
+<td>value 4</td>
+<td>value 5</td>
+</tr>
+<tr>
+<td>value 2</td>
+<td></td>
+<td>value 6</td>
+</tr>
+<tr>
+<td>value 3</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><h2 id="step-2-create-the-input-model-using--acts--tool">Step 2: Create the Input model using  <em>ACTS</em>  tool</h2>
+<p>Run <em>ACTS</em> under tutorial folder:</p>
+<pre><code>java -jar acts_gui_2.9.jar
+</code></pre>
+<p>Open and follow the <a href="https://paris.utdallas.edu/ewong/EMSE6367/04-Tutorial/CT-Tutorial/acts_user_guide_2.92.pdf">instructions</a> of Chapter 3.1 (Page 7) of  <em>ACTS</em> manual to create your input space model. (Constraint and relation setup are not needed)</p>
+<h2 id="step-3-create--three--ct-test-suites">Step 3: Create  three  CT test suites</h2>
+<p>Follow the <a href="https://paris.utdallas.edu/ewong/EMSE6367/04-Tutorial/CT-Tutorial/acts_user_guide_2.92.pdf">instructions</a> of Chapter 3.2 (Page 11, 15, 16) of the  <em>ACTS</em>  manual to create a 2-way test suite. Export the generated 2-way test suite to a <strong>csv text file</strong>.</p>
+<p>Repeat the above process to create 3-way and 4-way test suites and export them to <strong>csv files</strong>.</p>
+<h2 id="step-4-convert-your-ct-test-suits-to-shell-scripts">Step 4: Convert your CT test suits to shell scripts</h2>
+<p>Convert your 2-way, 3-way, and 4-way test suite <strong>csv files</strong> to executable shell scripts so that you can automatically execute all the test cases.</p>
+<p>A sample executable script is provided in your tutorial folder (sample_script.sh).</p>
+<pre><code>#!/bin/bash
+./ct -o XP -b Firefox -p IPv6 -c AMD -d MySQL
+</code></pre>
+<p>You can find more tips about writing shell scripts <a href="http://www.linfo.org/create_shell_1.html">here</a>.</p>
+<p>If you get permission error when you run your script:</p>
+<pre><code>-bash: ./test.sh: Permission denied
+</code></pre>
+<p>Make sure you give your script execute permission:</p>
+<pre><code>chmod +x test.sh
+</code></pre>
+<h2 id="step-5-execute-your-test-cases">Step 5: Execute your test cases</h2>
+<p>Execute your test cases with output redirection so you can examine the output.</p>
+<h2 id="step-6-find-out-the-bug">Step 6: Find out the bug</h2>
+<p>Find out <strong>the bug</strong> and <strong>which test set detects the bug</strong>. Write your answer in a file called “testing-result” using the following format:</p>
+<pre><code>The test case no.[y] of [x]-way test suite detects the bug.
+Expected results: ...
+Observed results: ...
+</code></pre>
+<h2 id="submission">Submission</h2>
+<p>Submit a tar (or zip) file including to eLearning:</p>
+<ul>
+<li>your CT-Tutorial folder on the server (should have your converted shell scripts)</li>
+<li>the “<em><strong>testing-result</strong></em>” file required in Step 6.</li>
+</ul>
+<p>using the following naming rule:</p>
+<pre><code>CT-Tutorial-FirstName-LastName.tar
+or
+CT-Tutorial-FirstName-LastName.zip
+</code></pre>
+<p>Submitted files without the correct name will not be accepted.</p>
+</div>
+</body>
+
+</html>

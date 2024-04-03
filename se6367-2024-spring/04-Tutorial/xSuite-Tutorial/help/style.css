@@ -1,0 +1,137 @@
+/*simple style sheet for SQA HTML documentation */
+
+body {
+	background-color: #525951;	
+}
+
+#wrap {
+	padding: 30px;
+	font-size: 90%;
+	font-family: Veranda, Geneva, Arial, sans-serif;
+	background-color: #FFFEEE;
+	margin: 0 auto;
+	width: 950px;
+	border-style: dotted;
+	border-width: 1px;
+	border-color: gray;
+	text-align: justify;
+}
+
+h1 {
+	font-size: 160%;
+	margin-bottom: 15px;
+	}
+	
+h2 {
+	font-size: 100%;
+	margin-bottom: 10px;
+}
+
+
+a[href] {
+	text-decoration: none;
+	color: E55322;
+	}
+	
+a[href]:hover {
+	background-color: B6DB83;
+	color: FFF991;
+	}
+
+
+#titlepage {
+	text-align: center;
+}
+
+#toc {
+	font-size: 150%;
+	margin-top: 10px;
+	color: red;}
+
+#toc li {
+	list-style-type: none;
+}
+
+.majortitle {
+	font-weight: bold;
+	font-size: 200%;
+}
+
+/* A figure consists of an image (<a><img></a>) and a title (<div>) */
+.figure {
+	border-color: black;
+	border-style: dotted;
+	border-width: 1px;
+	margin-left: 20px;
+	margin-bottom: 20px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	clear: right;
+	float: right;
+	text-align:center;
+}
+
+.figure a img {
+	border-color: black;
+	border-style: solid;
+	border-width: 1px;
+	margin: 10px;
+	width: 150px;
+}
+
+.figure div {
+	font-style: italic;
+	font-size: 70%;
+	text-align: center;
+	padding-left: 5px;
+	padding-right: 5px;
+	width: 200px;
+}
+
+.figure-odd {
+	float: left;
+	margin-left: 0px;
+	margin-right: 20px;
+	clear: left;
+}
+
+
+
+ul {
+	margin: 10px;
+	font-size: 80%
+}
+
+.important {
+	margin: 0 auto;
+	font-size: 90%;
+	text-align: justify;
+	padding: 5px;
+	border-color: red;
+	border-width: 1px;
+	border-style: solid;
+	font-weight: bold;
+	margin: 0px 200px 0px 200px;
+}
+
+#deferred {
+	font-size: 70%;
+	font-style: italic;
+	color: green;
+}
+	
+
+/* for debugging 
+pre {
+	border-color: black;
+	border-style: dotted;
+	border-width: 0px;
+}
+*/
+.footer {
+	clear: all;
+	font-size: 80%;
+}
+
+
+

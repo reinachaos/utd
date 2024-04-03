@@ -1,0 +1,59 @@
+Subject: Re: proof of the BRO, BOR and BRE algorithms
+Date: Fri, 1 Mar 2013 03:58:13 +0000
+From: Mathur, Aditya P <apm@purdue.edu>
+To: Eric Wong <ewong@utdallas.edu>
+
+
+Dear Eric:
+
+Sorry for the delay in responding. 
+Life is extremely hectic here though Singapore is a great place to live and work.
+
+No, I do not have papers showing a proof that thou asked for. 
+I believe the proof can be derived using the following steps 
+(please try and let me know) illustrated for BOR 
+but can be extended to others.
+
+Step 1: For each type of node, assume an expression with only one operator 
+        (e.g., for an and node consider the condition C=x and y, 
+        where x and y are arbitrary boolean expressions).
+Step 2: Derive tests for c using Step 2.2 for BOR.
+Step 3: Mutate C to C1, C2,etc, by changing and to OR and XOR.
+Step 4: Create a table of values of C, C1 and C2 for all possible values 
+        of x and y obtained from the test cases.  
+        Recall that an AND node leads to only three tests (not four). 
+Step 5: Table created in Step 4 will show that each error in C is  
+        detected by at least one test case.
+
+Steps 1-5 are the base case for an inductive proof. The inductive step follows.
+
+Step 6: Generalize the condition c to C'(n-1)=c1 op c2 op c3..c(n-1) and 
+        assume that all errors in C'(n-1) can be detected by BOR tests.
+Step 7: Show that all error in C'(n) will also be detected by BOR tests.
+
+Hope this helps.
+
+FYI: The second edition is now in the proofs stage.
+
+Best wishes.
+
+Aditya
+---------------------------------------------------------------------
+From: Eric Wong <ewong@utdallas.edu>
+Date: Tuesday, February 26, 2013 2:27 AM
+To: aditya_mathur <apm@purdue.edu>
+Cc: Eric Wong <ewong@utdallas.edu>
+Subject: proof of the BRO, BOR and BRE algorithms
+
+Dear Sir
+
+Do you have any papers which prove the BRO, BOR and BRE algorithms
+discussed in your Software Testing book?
+
+Students asked why test sets so generated are minimal
+and guarantee the detection of the specified bugs.
+
+Thank you.
+
+Eric
+

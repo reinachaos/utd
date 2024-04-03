@@ -1,0 +1,27 @@
+Subject: topics covered in CS/SE 6367: Software Testing
+Date: Wed, 12 Nov 2014 16:50:36 -0600
+From: Eric Wong <ewong@utdallas.edu>
+To: Bhavani Thuraisingham <bxt043000@utdallas.edu>
+CC: Eric Wong <ewong@utdallas.edu>
+
+
+Bhavani
+
+In my SE 6367 Software Testing class, we cover the following topics
+
+* Fundamental concepts of software testing
+* (Adaptive) random testing
+* Functional testing
+* Requirement-based test generation
+* Controlflow and dataflow-based coverage criteria
+* Test adequacy criteria & enhancement
+* Regression Testing
+* Mutation testing
+* Model-based testing (FSM & SDL/CEFSM)
+* Combinatorial testing & GUI testing
+* Testing for software safety
+* Risk analysis & program debugging
+
+Eric
+
+

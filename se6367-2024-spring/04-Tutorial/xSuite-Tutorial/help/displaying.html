@@ -1,0 +1,588 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+        
+  <meta http-equiv="content-type"
+        content="text/html; charset=us-ascii">
+  <link rel="stylesheet"
+        href="style.css"
+        type="text/css"
+        media="screen">
+
+  <title>atac & xSuite: Displaying Uncovered Code</title>
+</head>
+
+<body class="c2">
+<div id="wrap">
+  <a href="coverpage.html">[Top]</a> <a href=
+  "generating.html">[Prev]</a> <a href="xprof.html">[Next]</a>
+  <a href="sqatoolIX.html">[Index]</a> <a href=
+  "sqatoolTOC.html">[TOC]</a>
+  <hr>
+  <br>
+
+  <h1><a name="220417"></a></h1>
+
+  <h1><a name="220437"></a></h1>
+
+  <h1><a name="221975">Chapter 9<br>
+  <br>
+  ATAC &amp xSuite: Displaying Uncovered Code<br>
+  <br></a></h1><a name="221977"></a>
+
+  <p><a name="221982">When a program is compiled with
+  <em>atac</em>, an <em>.atac</em> file is generated for each
+  instrumented source file, and coverage information is appended to
+  a trace file each time the compiled executable is tested. Each
+  <em>.atac</em> file contains a list of what should be covered
+  when testing its corresponding source file. The trace file
+  records what has actually been covered during testing. This
+  chapter discusses how to display uncovered source code using
+  these files, a capability that helps the tester in developing
+  test cases to improve code coverage.</a></p>
+  <hr>
+
+  <h2><a name="221964">9.1 Displaying Uncovered
+  Code</a></h2><a name="221962">ATAC offers two user interfaces: a
+  character-based interface referred to as <em>atac</em> (for
+  historical reasons), and a graphical interface referred to as
+  xSuite. The former is invoked using the command, <em>atac</em> 
+  , and the
+  latter is invoked with the command, <em>xsuite</em>.
+
+  <p><a name="211927">The character-based interface, <em>atac,</em>
+  accepts various command-line options that specify various display
+  selection choices besides accepting one or more <em>.atac</em>
+  and <em>.trace</em> files as input. <em>atac</em> compares what
+  should be covered in a given source file to what has been covered
+  and outputs its findings in a variety of ways. Unless invoked in
+  summary report generation mode (with the <em>-s, -C,</em> or
+  <em>-v</em> command-line options; see</a> <a href=
+  "generating.html#994147">Chapter 8, <em>ATAC: Generating Summary
+  Reports</em></a>), <em>atac</em> outputs the results of its
+  analysis in the display mode. Source code fragments are paged
+  across the screen and uncovered testable attributes are
+  highlighted in reverse video. Additional arguments are used to
+  further specify precisely which testable attributes are
+  displayed.</p>
+
+  <p><a name="211388">If you are following the tutorial example,
+  clear out the <em>.trace</em> file by removing it. Then execute
+  the <em>wordcount</em> program against the following four
+  tests:</a></p>
+  <pre>  prompt:&gt; wordcount -?<br>  prompt:&gt; wordcount -bad_option<br>  prompt:&gt; wordcount no_such_file<br>  prompt:&gt; wordcount empty<br>
+</pre><a name="211420">Now all uncovered testable attributes can be
+displayed using the character-based interface by entering:</a>
+  <pre>
+	<a name=
+	"213535">  prompt:&gt; atac main.atac wc.atac wordcount.trace<br></a>
+	</pre><a name="223115"></a><a name="213560">The beginning part of
+	the display generated appears in</a> <a href=
+	"displaying.html#213560">Figure 9-1</a>. The first line of the
+	display informs the tester that function-entry coverage has been
+	completely satisfied. This line is followed by a code fragment
+	highlighting the eight remaining uncovered blocks in the file <em>
+	  main.c</em> followed by some of the remaining uncovered blocks in
+	  the file <em>wc.c</em> (recall that a function call ends a
+	  block). Additional information follows in the display, but the
+	  output appears one page at-a-time, so the tester can study it
+	  while developing test cases.
+
+  
+    <a name="213555"></a>
+	<div class="figure">
+        <a href="displaying.frm.anc4.gif"><img src="displaying.frm.anc4.gif"></a>
+		<div>Figure 9-1 A partial display of all uncovered blocks
+              using the character-based interface</div>
+    </div>
+
+
+  <p><a name="223112"></a><a name="214099">In the graphical user
+  interface, xSuite, on the other
+  hand, the display selections are made by clicking appropriate
+  menus and selecting relevant entries with the help of the
+  mouse.The <em>.atacp</em> and <em>.trace</em> files may be
+  specified either on the command line or added later during a
+  xSuite session. </a>
+  Refer to <a href="tutorial.html#402515">Chapter 2, <em>ATAC: A
+  Tutorial</em></a> for more explanation. 
+  
+  <a href= "displaying.html#214099">Figure 9-2</a> shows the result of
+  invoking xSuite (after moving a few lines down) using the following command:</p>
+  <pre>
+<a name= "214068">  prompt:&gt; xsuite wordcount.atacp wordcount.trace </a>
+</pre>
+
+	<a name="220450">
+	<div class="figure"> 
+		<a href="displaying.frm.anc.gif"><img src="displaying.frm.anc.gif"></a>
+		<div>Figure 9-2 A partial display of all uncovered blocks
+				  using the graphical interface</div>
+	</div>
+
+  <!--==============================================-->
+  <a name="214020">The source window in the middle displays the
+  source file that corresponds to the first <em>.atac</em> file on
+  the command line. All covered and uncovered blocks in the file
+  are highlighted in various colors. Each color represents a
+  certain weight. If, for instance, a block has a weight, 9, it
+  means any test that causes that block to be covered is guaranteed
+  to cover a <em>minimum</em> of 9 other blocks or decisions as
+  well. xSuite determines these
+  weights by doing a detailed control flow analysis of the program.
+  White represents zero weight and red represents the highest
+  weight among all blocks in the file. Thus, if a block is
+  highlighted in white, it means that it has already been covered
+  by a test case and covering it again will not add new coverage.
+  If, on the other extreme, a block is highlighted in red, it means
+  that it has not been covered by any test case so far and covering
+  it first is the most efficient way to add new coverage to the
+  program; it is the best way to add maximum coverage in a single
+  program execution.</a>
+
+  <p><a name="214878">The color spectrum chart above the source
+  window displays the actual weights associated with each color.
+  The annotated scroll bar to the left of the source window
+  displays a thumbnail sketch of the entire file. It is very useful
+  in quickly locating where the red blocks, or the "hot spots," in
+  the file are. Clicking with the left mouse button at any spot in
+  the scroll bar brings the corresponding region of the file into
+  the source window. The arrows at the top and the bottom of the
+  scroll bar may be used to scroll up or down the source file a few
+  lines at a time. Alternatively, the mouse may be dragged up or
+  down the scroll bar with the left mouse button pressed to rapidly
+  scroll through the file.</a></p>
+
+  <p><a name="214882">Test cases may be run in parallel to a
+  xSuite session. Running a test
+  case causes new coverage information to be logged to a
+  <em>.trace</em> file. xSuite
+  continuously monitors the specified trace files to see if any new
+  coverage information has been added to any of them. If so, it
+  highlights the "<em>Update</em>" button in the top button bar to
+  alert the tester to this fact. The tester may then choose to
+  click on this button to incorporate the new coverage information
+  in the display, or wait to do so until several other test cases
+  have been run.</a></p>
+
+  <h2><a name="214849">9.2 Selecting What to
+  Display</a></h2><a name="214803">It is possible to select the
+  uncovered testable attributes to be displayed. In the character-
+  based interface, selections are made by controlling the
+  <em>.atac</em> files submitted on the argument list and using
+  various command-line options (the options discussed within this
+  section may be used together freely). In the graphical user
+  interface, xSuite, as mentioned
+  earlier, selections are made by selecting appropriate menus and
+  the relevant entries with the help of the mouse.</a>
+
+  <h3><a name="214756">9.2.1 By File</a></h3><a name=
+  "220702"><em>The</em> character-based <em>interface</em> only
+  displays the uncovered testable attributes for those
+  <em>.atac</em> files that are submitted on the argument list. For
+  example, the display generated in</a> <a href=
+  "displaying.html#213560">Figure 9-1</a> may be limited to only
+  one file, <em>main.c,</em> by entering:
+  <pre>
+	<a name=
+	"211455">  prompt:&gt; atac main.atac wordcount.trace <br></a>
+	</pre>
+	
+	
+	<a name="223546">The graphical interface, on the other hand,
+	always displays one source file at a time even when multiple	source files make up the code that is being tested. 
+	<!-- superseded by *.atacp file By default
+	it displays the source file that corresponds to the first
+	<em>.atac</em> file on the command line, as mentioned earlier. -->
+	
+	A different source file may be displayed by double clicking on the desired file
+	in the "<em>Summary</em>" pane (located in the lower left of the interface). 
+	If the summary pane is <em>not</em> displaying 
+	a list of files then the "<em>by-file</em>" option may be selected by
+	choosing it from the rightmost drop down in the summary pane.
+	For all the source files combined into the *.atacp file, 
+	<em>xSuite</em> lists the corresponding source file in
+	this window. This list can be sorted in different ways. 
+	Any of the columns in the  "<em>Summary</em>" window can be used to sort the 
+	display. Clicking on a column header will result in sorting the display
+	by that column. Clicking again on the same column will sort the display in
+	the opposite order. For example, clicking on the "<em>File</em>" column header
+	will sort files by name in alpha-numeric
+	order. Clicking on the same column header again will sort the files
+	in reverse alpha-numeric order. </a>
+	
+	<!-- the following no longer makes sense given that the program loads atacp files rather than individual *.atac files 
+	
+  <p><a name="223717"></a><a name="223742">A new file that is not
+  listed may be added to the summary window and displayed by
+  clicking on the "<em>open</em> <em>.atac or source file . .
+  .</em>" entry in the "<em>File</em>" menu and specifying the name
+  of the corresponding <em>.atac</em> file in the dialog box that
+  pops up as shown in</a> <a href="displaying.html#223742">Figure
+  9-3</a> (the Windows dialog box looks slightly different). 
+  </p>
+
+  <span class="fig-left">
+    <table>
+      <caption>
+        <br>
+      </caption>
+
+      <tbody>
+        <tr>
+          <td>
+            <a name="223739"></a>
+
+            <div class="c1">
+              <a href="displaying.frm.anc2.gif">
+              <img class="panel-img" src="displaying.frm.anc2.gif"></a>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="fig-cap">
+              Figure 9-3 The <em>atac</em> file dialog box
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </span>
+  
+  <!--=====================-->
+  -->
+  
+  
+  <!-- not to be implemented 
+   <a name="223852">Clicking with the right mouse button on a file
+  label that is currently selected deselects it, and <em>vice
+  versa</em>. Clicking with the left mouse button on
+  "<em>Disable</em>" and selecting the "<em>Disable all .h
+  files</em>" or "<em>Disable all source files</em>" entry will
+  deselect all <em>.h</em> or <em>source</em> files, respectively,
+  whereas the "<em>Enable all .h files</em>" or "<em>Enable all
+  source files</em>" entry will re- select all <em>.h</em> or
+  <em>source</em> files, respectively.</a>
+  -->
+
+	
+  <h3><a name="223850">9.2.2 By Function</a></h3><a name=
+  "211457">In the character-based interface, display may be limited
+  to uncovered testable attributes within a selected set of
+  functions using the <em>-F</em> command-line option. For example,
+  the display generated in</a> <a href=
+  "displaying.html#213560">Figure 9-1</a> may be limited to the
+  functions <em>main</em> and <em>count</em> by entering:
+  <pre>
+	<a name= "211458">  prompt:&gt; atac -F main -F count main.atac wc.atac wordcount.trace<br></a>
+</pre><a name="211454">	Note that multiple functions may be
+specified by repeating the <em>-F</em> option and these functions
+must be defined within the <em>.atac</em> files listed on the
+command-line. Functions may be named using wild card characters.
+These wild cards are the same as those used by the UNIX-like
+command processor in naming files <em>(*, ?, [...])</em>. In some
+cases, quote marks may be needed to prevent the command processor
+from expanding the function names containing wild cards as file
+names.</a>
+
+  <p><a name="223292">The graphical interface, as mentioned
+  earlier, always displays an entire source file in the source
+  window that the user can browse through using the scroll bar.
+  Therefore there is no direct way of limiting the source display
+  to certain functions in the graphical interface. Selecting the
+  "<em>By-Function</em>" option from the rightmost drop down
+  in the "<em>Summary</em>" window pane
+  and then doubling clicking on a particular function name, say,
+  <em>main.c:main</em>, makes function <em>main</em> in
+  <em>main.c</em> appear in the source window. However, this does
+  not prevent another function, <em>print</em> in our case, in
+  <em>main.c (i.e., main.c:print)</em> from being displayed in the
+  source window even though it may be hidden due to the size of the
+  source window. Nevertheless, you can still view the function
+  <em>print</em> by browsing through using the scroll bar.</a></p>
+
+  <p><a name="223857">Functions listed in the "<em>Summary</em>"
+  pane can be sorted in different ways. Similar to the sorting of
+  file names by the various columns one can click on the column
+  headers and sort the display by that column. For example,  
+  clicking on the "<em>Covered</em>" will sort functions by the 
+  "<em>Block Coverage</em>" (if that is the metric selected) in
+  ascending order.</a></p>
+
+	<!-- not to be supported 
+  <p><a name="223871">Clicking with the right mouse button on a
+  function label that is currently selected deselects it, and
+  <em>vice versa</em>. Clicking with the left mouse button on
+  "<em>Disable</em>" and selecting the "<em>Disable all
+  functions</em>" entry will deselect all functions, whereas the
+  "<em>Enable all functions</em>" entry will re-select all
+  functions.</a></p>
+  -->
+
+
+  <p><a name="223872">Function names in the "<em>Summary</em>"
+  window can be displayed with or without the corresponding file
+  name. Clicking on the "<em>View</em>" menu item in the top bar
+  and selecting the "<em>show file name in 'summary by function'</em>" 
+  entry will have the file name included, whereas unchecking the menu
+  entry excludes the file name.</a></p>
+
+
+  <h3><a name="216685">9.2.3 By Coverage Criteria</a></h3>
+  
+  <a name= "211461">In the character-based interface, display may be limited
+  to uncovered attributes for a selected set of coverage measure(s)
+  using the <em>-m {bcdeu}</em> command-line option. The argument
+  to <em>-m</em> selects one or more coverage measures: <em>e</em>
+  selects function-entry coverage, <em>b</em> block coverage and
+  <em>d</em> decision coverage (see</a> <a href=
+  "overview.html#623861">Section 3.3, <em>What Does ATAC
+  Do?</em></a>, for an explanation of these measures). For example,
+  the display generated in <a href="displaying.html#213560">Figure
+  9-1</a> may be limited to decision coverage in <em>main.c</em>
+  and <em>wc.c</em> by entering:
+  <pre> <a name="214566">  prompt:&gt; atac -md main.atac wc.atac wordcount.trace<br></a></pre>
+
+	<a name="214587"></a><a name="223132">In <em>xSuite</em>, the desired coverage type may be
+	specified by selecting from the second from the right drop down in the "<em>summary</em>" pane
+	and selecting the corresponding coverage type as shown in</a> <a href=
+	"displaying.html#223132">Figure 9-4</a>.
+
+    <a name="223129"></a>
+	<div class="figure">
+	    <a href="displaying.frm.anc1.gif"><img class="panel-img" src= "displaying.frm.anc1.gif"></a>
+	    <div>Figure 9-4 The <em>Options</em> menu</div>
+	</div>
+  
+  <h3><a name="211391">9.2.4 By Test Case</a></h3><a name=
+  "211422">By default, <em>atac</em> displays uncovered testable
+  attributes after reconciling all test case trace information
+  recorded in a given trace file against all <em>.atac</em> files
+  submitted on the command- line. You can display what has not been
+  covered with respect to selected test cases in the
+  character-based interface by using the <em>-n test_name</em>
+  command-line option. For example, assume the four tests presented
+  at the beginning of this chapter have been executed against the
+  <em>wordcount</em> program. Any testable attributes not covered
+  by the first two of these tests are displayed by entering:</a>
+  <pre>
+        prompt:&gt; atac -n wordcount.1 -n wordcount.2 main.atac wc.atac wordcount.trace<br>
+	</pre>
+
+	<a name="220778">Notice that multiple <em>-n</em> arguments
+	may be submitted on a single command-line. In such a case, the
+	union of all the tests named is selected. Tests can also be named
+	using wild card characters. These wild cards are the same as those
+	used by the UNIX-like command processor in naming files <em>(*, ?,
+	[...])</em>. So, entering:</a>
+  <pre>
+        prompt:&gt; atac -n 'wordcount.[1-2]' main.atac wc.atac wordcount.trace<br>
+	</pre>
+
+	<a name="211440">results in the same listing as the previous
+	example. In some cases, quote marks may be needed to prevent the
+	command processor from expanding the test names as file names.</a>
+
+  <p><a name="211441">Sometimes it is necessary to select all tests
+  other than those that have been named. The <em>-x</em> option is
+  used to select the complement of all tests specified using one or
+  more instances of the<em>-n</em> option. For example,
+  entering:</a></p>
+  <pre>
+        prompt:&gt; atac -x -n 'wordcount.[1-2]' main.atac wc.atac wordcount.trace<br>
+	</pre>
+
+<a name="211443">displays any testable attributes not covered
+by the third and fourth test cases, excluded from the output in the
+previous examples.</a>
+
+  <p><a name="223879"></a><a name="223914">As in the
+  character-based interface, the graphical interface also takes all
+  test cases into consideration by default while determining any
+  uncovered testable attributes (see</a> <a href=
+  "displaying.html#223914">Figure 9-5</a>). 
+  
+  <!-- not to be implemented Clicking with the right
+  mouse button on a test case label that is currently selected
+  deselects it, and <em>vice versa</em>. Clicking with the left
+  mouse button on "<em>Disable</em>" and selecting the "<em>Disable
+  all tests</em>" entry will deselect all tests, whereas the
+  "<em>Enable all tests</em>" entry will re-select all tests. The
+  entry "<em>Disable zero</em> <em>coverage tests</em>" will
+  disable tests which do not contribute any coverage with respect
+  to the currently selected coverage type.</p> -->
+
+ 
+    <a name="223911"></a>
+	<div class="figure">
+        <a href="displaying.frm.anc3.gif"><img class="fullscreen-img" src= "displaying.frm.anc3.gif"></a>
+		<div>Figure 9-5 A test case display</div>
+    </div>
+
+  <p><a name="224065">Tests listed in the "<em>TestCases</em>"
+  pane can be sorted into different orders in fashion similar
+  to the summary pane. For example, clicking on the
+  "<em>Test</em>" column header will sort tests by name in alpha-numeric
+  order. The "<em>num_covered</em>" entry sorts tests by the number
+  of testable attributes covered with respect to the currently
+  selected coverage type.</a></p>
+
+  <h3><a name="224067">9.2.5 All Uncovered Testable
+  Attributes</a></h3><a name="224068">By default, after performing
+  the required analysis, the character-based interface only
+  displays those uncovered testable attributes that are covered by
+  a weaker measure (see</a> <a href="overview.html#623861">Section
+  3.3, <em>What Does ATAC Do?</em></a>, for a discussion concerning
+  the relative strength of coverage measures). For instance,
+  suppose the <em>wordcount</em> program contains an uncovered
+  block that is also part of an uncovered decision. Only the
+  uncovered block will be displayed by <em>atac</em>, and the
+  uncovered decision will be omitted from its output (because it is
+  a stronger coverage measure). This is to avoid repeatedly
+  displaying multiple uncovered testable attributes, each involving
+  the same source code constructs.
+
+  <p><a name="211445">You can force the display of all uncovered
+  testable attributes, whether they are covered by a weaker measure
+  or not, using the <em>-a</em> command-line option. For example,
+  assume the four tests presented at the beginning of this chapter
+  have been executed against the <em>wordcount</em> program. Enter
+  the following to force the display of all uncovered testable
+  attributes:</a></p>
+  <pre>
+	<a name= "211447">  prompt:&gt; atac -a main.atac wc.atac wordcount.trace<br></a>
+	</pre>
+
+	<a name="216921">The graphical interface, on the other hand,
+	always displays all uncovered testable attributes whether or not
+	the corresponding weaker measures are covered. This is because,
+	unlike the character-based interface, <em>xSuite</em> displays 
+	all covered and uncovered attributes "in
+  	place" in the source file and ignoring uncovered attributes not
+  	covered by a weaker measure will not reduce the size of the
+  	output the user has to scroll through.</a>
+
+  <h2><a name="211427">9.3 Ignoring What is
+  Out-of-Date</a></h2><a name="223979">By default, the
+  character-based interface issues an error message if any of a
+  program's <em>.atac</em> files have been significantly modified
+  since a test case represented in its trace file was executed.
+  See</a> <a href="generating.html#992773">Chapter 8.5,
+  <em>Ignoring What is Out-of-Date</em></a> for more information
+  about how ATAC handles these situations.
+
+  <h2><a name="223984">9.4 Using Underscoring Rather Than
+  Highlighting</a></h2><a name="223985">The source code fragments
+  output by the character-based interface are larger than the
+  uncovered testable attributes being displayed. This is to provide
+  the tester with sufficient context to identify and understand
+  what needs to be covered within the program itself. Within these
+  source code fragments, <em>atac</em>, by default, identifies the
+  testable attributes of interest by highlighting them. This
+  approach is convenient for display purposes, but the output may
+  not be easy to print without capturing screen images.</a>
+
+  <p><a name="211444">You can cause the character-based interface
+  to use underscoring, rather than highlighting, using the
+  <em>-u</em> command-line option. For example, a display similar
+  to that in</a> <a href="displaying.html#213560">Figure 9-1</a>,
+  except using underscoring, is generated by entering:</p>
+  <pre>
+<a name=
+"211431">  prompt:&gt; atac -u main.atac wc.atac wordcount.trace &gt; myfile<br></a>
+</pre><a name="211343">and then viewing the contents of
+<em>myfile</em>. The output may also be sent directly to a printer,
+allowing easy generation of hard copy coverage displays.<br>
+  <br></a>
+
+  <h2><a name="211343">9.5 Marking Defensive Code</a></h2>
+
+  <h2><a name="211343"></a></h2><a name="211343"><br>
+  In a program there is often code that is not normally intended to
+  be executed because it handles unexpected error conditions or it
+  implements unsupported features or debugging options, etc. By
+  default, ATAC includes this code in coverage displays. If the
+  programmer does not intend to test this code, coverage displays
+  that include this code may be distracting and, possibly,
+  misleading.<br>
+  <br>
+  The programmer may mark this code as defensive in the graphical
+  interface. There are three objects that can be marked as
+  defensive code:<br></a>
+
+  <ul>
+    <li><a name="211343">A block of code</a></li>
+
+    <li><a name="211343">A decision branch</a></li>
+
+    <li><a name="211343">A function</a></li>
+  </ul>
+  
+  <a name="211343"><br>
+  To mark a block of code as defensive, "<em>Ctrl + LeftClick</em>"
+  on the block. The block will change its color to gray. If there
+  are other blocks or decisions that would be always covered if the
+  selected block is covered, they are marked defensive as well.
+  "<em>Ctrl + LeftClick</em>" on the block again will remove the
+  marking. When the state of the marking is changed, the
+  "SaveMarkedBlocks" menu entry will highlight. Click on it to save
+  the changes. To discard all marking changes since&nbsp; last
+  save, return to the summary screen by clicking on the "Summary"
+  menu entry. You will be asked whether to discard changes.<br>
+  <br>
+  To mark a decision as defensive, switch to decision coverage.
+  Click on the decision of interest, and "<em>Ctrl +
+  LeftClick</em>" on the branch that should be marked as defensive.
+  As with the blocks, all blocks and decisions that would always be
+  executed together are marked as well (see</a> <a href=
+  "displaying.html#defcode-fig1">Figure 9-6</a>).<br>
+   
+	<a name="defcode-fig1"></a>    
+	<div class="figure">
+        <a href="displaying.defcode1.gif"><img class="fullscreen-img" src= "displaying.defcode1.gif"></a>
+	<div>Figure 9-6 Marking defensive code</div>
+    </div>
+    
+  
+  <br>
+  To mark a function as defensive, mark the first block of the
+  function. All blocks and decisions in this function will be
+  marked defensive as well.<br>
+  <br>
+  To optimize performance, the weights of blocks are not
+  recalculated every time a block/decision is marked. Thus there
+  are two inconsistencies that may be observed after the
+  block/decision is marked or unmarked but not yet saved:<br>
+  <br></a>
+
+  <ul>
+    <li><a name="211343">The item that is being marked has the
+    highest score (red color), and it is the only item of highest
+    score. In such case, there will be no block of red color in the
+    file, even though the color bar on the top suggests
+    otherwise.</a></li>
+
+    <li><a name="211343">The item is being unmarked and it was
+    saved as marked before. In such case the weight of the marked
+    item is zero, and it will appear as covered (white) until the
+    save button is clicked.</a></li>
+  </ul>
+  
+  <br><br><br>
+  <a name="211343"><br></a>
+  <hr>
+  <br>
+  <a href="coverpage.html">[Top]</a> <a href=
+  "generating.html">[Prev]</a> 
+  <a href="xprof.html">[Next]</a>
+  <a href="sqatoolIX.html">[Index]</a> <a href=
+  "sqatoolTOC.html">[TOC]</a>
+  <hr>
+  <br>
+  <br>
+  </div>
+</body>
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator"
+        content=
+        "HTML Tidy for Windows (vers 18 June 2008), see www.w3.org">
+        
+  <meta http-equiv="content-type"
+        content="text/html; charset=us-ascii">
+
+  <title>ATAC: Instrumenting Software</title>
+  <link rel="stylesheet"
+        href="style.css"
+        type="text/css"
+        media="screen">
+</head>
+
+<body class="c2">
+<div id="wrap">
+  <a href="coverpage.html">[Top]</a> <a href=
+  "setup.html">[Prev]</a> <a href="executing.html">[Next]</a>
+  <a href="sqatoolIX.html">[Index]</a> <a href=
+  "sqatoolTOC.html">[TOC]</a>
+  <hr>
+  <br>
+
+  <h1><a name="205688"></a></h1>
+
+  <h1><a name="205689"></a></h1>
+
+  <h1><a name="203094">Chapter 5<br>
+  <br>
+  ATAC: Instrumenting Your Software<br>
+  <br></a></h1><a name="203109"></a>
+
+  <p><a name="203133">Instrumentation of the software to be tested
+  is performed by executing the compile and link commands with
+  ATAC. ATAC analyzes and instruments code and submits it to the C
+  or C++ compiler. This chapter discusses how to instrument the
+  software under test with ATAC. Linux users should read</a>
+  <a href="instrumenting.html#203898">Section 5.1,
+  <em>Instrumenting on Linux</em></a>, Windows users should proceed
+  to <a href="instrumenting.html#203775">Section 5.2,
+  <em>Instrumenting on Windows</em></a></p>
+  <hr>
+
+  <p><a name="203749"></a></p>
+
+  <p><a name="203901"></a></p>
+
+  <p><a name="203902"></a></p>
+
+  <p><a name="203903"></a></p>
+
+  <p><a name="203904"></a></p>
+
+  <p><a name="203905"></a></p>
+
+  <h2><a name="203898">5.1 Instrumenting on Linux</a></h2>
+
+  <h3><a name="203798">5.1.1 Basic Instrumentation</a></h3><a name=
+  "206197">To compile with ATAC, remove all previously created
+  object files and executable files you intend to build. Then
+  compile the software as you normally would, but prefix the
+  compile command with <em>atac</em>. For example, to compile an
+  executable called <em>wordcount</em> from two source files
+  <em>wc.c</em> and <em>main.c</em>, enter the following:</a>
+  <pre>
+<a name="203800">  prompt:&gt; atac cc -o wordcount wc.c main.c<br></a>
+</pre><a name="203801">In addition to creating the executable
+program <em>wordcount</em> and the object files <em>wc.o</em> and
+<em>main.o</em>, ATAC has created the files <em>wc.atac</em> and
+<em>main.atac</em>. ATAC creates a <em>.atac</em> file for each
+<em>.c</em> file it compiles. These files contain static coverage
+information used in test analysis. It is possible to restrict
+instrumentation and the collection of coverage information to
+selected source files (see</a> <a href="instrumenting.html#203817">
+  Section 5.1.3, <em>Selectively Instrumenting Software</em></a>).
+
+  <h3><a name="203808">5.1.2 Integrating with
+  Makefiles</a></h3><a name="203809">If your existing Makefiles
+  make use of the CC macro, it is easy to integrate the use of ATAC
+  with <em>make</em>. When invoking <em>make</em> to build a
+  target, simply redefine CC to be ATAC, as follows:</a>
+  <pre>
+<a name="203811">  prompt:&gt; make CC="atac cc"<br></a>
+</pre><a name="203813">In the case of the <em>wordcount</em>
+program, the output for a typical <em>Makefile</em> might look like
+this:</a>
+  <pre>  atac cc -c wc.c<br>  atac cc -c main.c<br>  atac cc -o wordcount wc.o main.o<br>
+</pre>
+
+  <h3><a name="203817">5.1.3 Selectively Instrumenting
+  Software</a></h3><a name="203818">If you only need coverage
+  measures for a portion of your software contained in selected
+  source files, it is unnecessary to compile the remaining source
+  files with ATAC. Because compilation with ATAC increases
+  execution time, memory use, and object code size, (see</a>
+  <a href="overview.html#623840">Section 3.5, <em>What Will Using
+  ATAC Cost You?</em></a>) it may be advantageous to use ATAC only
+  on source files for which coverage measures are required.
+
+  <p><a name="203822">You can limit coverage analysis of your
+  software by selectively instrumenting specific source files. Only
+  those source files that have been compiled with ATAC are
+  instrumented, and only instrumented portions of the software
+  collect trace information during test execution. This is
+  accomplished through separate compilation, which ATAC supports in
+  the same manner as <em>cc</em>. Simply compile all source files
+  to be instrumented with <em>atac cc</em> and all remaining source
+  files with the standard C compiler, then link the object files.
+  Linking must be performed by <em>atac cc</em> so that the proper
+  run-time library is included in the executable. For example, we
+  can manually instrument <em>wc.c</em> and leave <em>main.c</em>
+  untouched by entering:</a></p>
+  <pre>  prompt:&gt; rm *.o wordcount<br>  prompt:&gt; atac cc -c wc.c<br>  prompt:&gt; cc -c main.c<br>  prompt:&gt; atac cc -o wordcount wc.o main.o<br>
+</pre><a name="203824">Alternatively, we can accomplish the same
+thing using the existing Makefile by doing the following:</a>
+  <pre>  prompt:&gt; make clean<br>  prompt:&gt; make main.o<br>  prompt:&gt; make CC="atac cc"<br></pre>
+  
+  <a name="205521">Note that it is not possible to selectively
+	instrument functions within a given source file.</a>
+
+  <p><a name="203827">At times you may lose track of which object
+  files or executable files were compiled with ATAC. The
+  <em>atacid</em> command may be used to identify files compiled
+  with ATAC. For example, do the following for the
+  <em>wordcount</em> program:</a></p>
+  <pre><a name="203828">  prompt:&gt; atacid wc.o main.o wordcount | fgrep ATAC<br></a></pre>
+  
+  <a name="203831">If none of the files were compiled with
+	ATAC, no lines are printed.</a>
+
+  <h3><a name="203858">5.1.4 Linking with ld</a></h3><a name=
+  "206225">The <em>atac cc</em> command invokes <em>ld</em>, the
+  standard Linux linker, to link the object modules comprising an
+  executable. If desired, you may explicitly invoke <em>atac
+  ld</em> to customize this linking step. In this way, object files
+  created with <em>atac cc</em> may be linked with object files and
+  libraries created by other means.</a>
+
+  <p><a name="204159">The command line options for <em>atac</em>
+  <em>ld</em> are the same as for <em>ld</em>. A program linked in
+  this way outputs trace information to the file
+  <em>a.out.trace</em>, where <em>a.out</em> is the name of the
+  executable file created by <em>atac ld</em>. If the <em>-o
+  prog</em> option is used to explicitly name the resulting
+  executable, then the trace file generated is named
+  <em>prog.trace</em>. To compile ATAC-specific object files prior
+  to its link stage, <em>atac ld</em> invokes <em>cc</em>. After
+  this ATAC-specific preprocessing has been completed, <em>atac
+  ld</em> then invokes <em>ld</em> to link all object files. The
+  use of another C compiler may be substituted for the <em>cc</em>
+  command, and the use of another linker may be substituted for
+  <em>ld</em>.</a></p>
+
+  <p><a name="203868">The following commands compile <em>wc.c</em>
+  using <em>atac cc</em> and <em>main.c</em> using <em>cc</em>. The
+  resulting object files are then linked to build
+  <em>wordcount</em>:</a></p>
+  <pre>  prompt:&gt; atac cc -c wc.c<br>  prompt:&gt; cc -c main.c<br>  prompt:&gt; atac ld -o wordcount /usr/lib/crt0.o wc.o main.o -lc<br></pre>
+
+	<a name="204969">It is also possible to generate an ATAC
+	instrumented executable without using a compiler to do the
+	linking.</a>
+
+  <p><a name="203873">This is most easily understood via an
+  example. Let us use the same wordcount program as used before for
+  the example. To begin, create a directory, <em>cd</em> to it and
+  copy the contents of the directory in which the tutorial files
+  are installed into the new directory. There should be two c
+  files: <em>main.c</em> and <em>wc.c</em>, and a Makefile. You can
+  compile the wordcount program with <em>atac</em> by
+  entering:</a></p>
+  
+  <pre><a name="205186">  prompt:&gt; make CC="atac cc"<br></a></pre>
+
+	<a name="203875">This is the same as:</a>
+  <pre>  prompt:&gt; atac cc  -g  -c  wc.c<br>  prompt:&gt; atac cc  -g  -c  main.c<br>  prompt:&gt; atac cc  -g  -o  wordcount wc.o main.o<br></pre>
+
+	<a name="205370">However, you are not required to use
+	<em>cc</em> to make the link. Instead of running the third command
+	above, you can use a link editor such as <em>ld</em> to generate
+	the executable. To do so, you must first run:</a>
+	
+  <pre><a name="206067">  prompt:&gt; atac_env_create<br></a></pre>
+  
+	  <a name="206346">to create an atac environment file
+	(<em>atac_env.o</em>) in the same directory where
+	<em>atac_env_create</em> is invoked. Then you need to provide the
+	standard C library (<em>-lc</em>), or any customized C libraries
+	which are essential for your programs. Note that the exact order of
+	these supporting libraries may vary depending on your environment.
+	In addition, you need to supply the ATAC run time routine
+	(<em>atac_rt.o</em>) in order for the executable to be able to
+	collect the execution trace. Given all these, the command you
+	should use looks like:</a>
+  
+  <pre>  prompt:&gt; ld -o wordcount wc.o main.o `ataclib`/atac_rt.o <br>  atac_env.o /usr/lib/crt0.o -lc<br></pre>
+  
+	  <a name="206053">After a test execution, the trace
+	information is saved in <em>a.out.trace</em> instead of
+	<em>wordcount.trace</em> unless ATAC_TRACE is set otherwise.</a>
+
+  <h3><a name="206397">5.1.5 Suppressing Instrumentation of Include
+  Files</a></h3><a name="206400">In C and C++ programs, source
+  files included with the <em>#include</em> directive may contain
+  executable code. By default, ATAC instruments executable code in
+  include files unless the include file came from a system header
+  file. Include files that have been instrumented with ATAC will
+  appear in the coverage summary by source file display.</a>
+
+  <p><a name="206422">A system header file is defined as a file
+  that was included from one of the system include directories. The
+  list of directories that contain system header files appears
+  in:</a></p>
+  <pre>  `ataclib`/atac/edg/lib/g++_incl_paths</pre>
+  
+  This list is applicable for both C and C++ programs.
+
+  <p><a name="206422">Include files that have been instrumented
+  with ATAC will appear in the coverage summary by source file
+  display. Suppressing instrumentation of selected <em>include
+  files</em> may be desirable either to improve run-time
+  performance or to remove those files from the coverage summary by
+  source file. To modify the definition of a system file, edit the
+  file <em>`ataclib`/atac/edg/lib/g++_incl_paths</em>. The file
+  contains a ':' separated list of paths. Append the directory that
+  contains include files that should be effectively treated as
+  system files and not instrumented.</a></p>
+
+  <p><a name="206511">Note: The include path search order
+  is:</a></p>
+
+  <ol>
+    <li>System include directories (from
+    <em>`ataclib`/atac/edg/lib/g++_incl_paths</em>)</li>
+
+    <li>User-specified directories (<em>cc -I
+    "some_directory"</em>)</li>
+  </ol>This is important in the case of include files with the same
+  names in different locations. For example, assume we have
+  different files <em>"/inc1/a.h"</em> and <em>"/inc2/a.h"</em>.
+  The command <em>"cc -I/inc1/ -I/inc2/ main.c"</em> will produce
+  different result from <em>"cc -I/inc2/ -I/inc1/ main.c"</em>.<br>
+  If the <em>"/inc2/"</em> path is moved to the g++_incl_paths
+  file, it will be searched before <em>"/inc1/"</em> path, and thus
+  produce different result from <em>"cc -I/inc1/ -I/inc2/
+  main.c"</em>.
+
+  <h2><a name="203775">5.2 Instrumenting on Windows</a></h2>
+
+  <h3><a name="203776">5.2.1 Basic Instrumentation</a></h3><a name=
+  "204279">To compile with ATAC, remove all previously created
+  object files and executable files you intend to build. Then
+  compile the software as you normally would, prefixing the compile
+  command with ATAC. These commands are:</a> <a name="204302">If
+  you use the Microsoft C compiler:</a>
+  <pre><a name="204283"><strong>  </strong>prompt:&gt; atacCL /Fewordcount.exe main.c wc.c <br></a></pre>
+
+<a name="204284">In addition to creating the executable
+program <em>wordcount.exe</em> and the object files <em>wc.obj</em>
+and <em>main.obj</em>, ATAC has created the files <em>wc.atac</em>
+and <em>main.atac</em>. ATAC creates a <em>.atac</em> file for each
+<em>.c</em> file it compiles. These files contain static coverage
+information used in test analysis. It is possible to restrict
+instrumentation and the collection of coverage information to
+selected source files (see</a> <a href="instrumenting.html#204433">
+  Section 5.2.3, <em>Selectively Instrumenting Software</em></a>).
+
+  <h3><a name="203783">5.2.2 Integrating with
+  Makefiles</a></h3><a name="204423">If your existing makefiles
+  make use of the a macro specifying a C or C++ compiler, it is
+  easy to integrate the use of ATAC with <em>nmake</em>. Execute
+  the command in&nbsp;</a><a href="appendixB.html#1032088">Appendix
+  A.2, <em>Compiling with atac - Microsoft compiler</em></a> if you
+  are using the Microsoft compiler. The output associated with this
+  command is shown in Appendix A, Figure A-8.
+
+  <h3><a name="204433">5.2.3 Selectively Instrumenting
+  Software</a></h3><a name="196206">If you only need coverage
+  measures for a portion of your software contained in selected
+  source files, it is unnecessary to compile the remaining source
+  files with ATAC. Because compilation with ATAC increases
+  execution time, memory use, and object code size, (see</a>
+  <a href="overview.html#623840">Section 3.5, <em>What Will Using
+  ATAC Cost You?</em></a>) it may be advantageous to use ATAC only
+  on source files for which coverage measures are required.
+
+  <p><a name="196208">You can limit coverage analysis of your
+  software by selectively instrumenting specific source files. Only
+  those source files that have been compiled with ATAC are
+  instrumented, and only instrumented portions of the software
+  collect trace information during test execution. This is
+  accomplished through separate compilation with the installed
+  compiler. Simply compile all source files to be instrumented by
+  prefixing your compiler with <em>atac</em> and all remaining
+  source files with your installed C compiler, then link the object
+  files. Linking must be performed by <em>atacCL</em> so that the
+  proper run-time library is included in the executable. For
+  example, we can manually instrument <em>wc.c</em> and leave
+  <em>main.c</em> untouched by entering:</a></p><a name="204499">If
+  you use the Microsoft C compiler:</a>
+  <pre>  prompt:&gt; del *.obj wordcount.exe<br>  prompt:&gt; atacCL /c wc.c<br>  prompt:&gt; cl /c main.c<br>  prompt:&gt; atacCL /Fewordcount.exe wc.obj main.obj<br></pre>
+  <a name="196141">Alternatively, we can accomplish the same
+	thing using the existing makefiles by first executing the clean
+	command for your compiler, as found in</a> <a href=
+	"appendixB.html#1001045">Appendix A, <em>Platform Specific
+	Information</em></a>, then executing the following two commands, as
+	appropriate for your compiler:
+
+  <p><a name="206068">If you use the Microsoft C compiler:</a></p>
+  <pre>  prompt:&gt; nmake -f makefile_msc main.obj<br>  prompt:&gt; nmake -f makefile_msc CC=atacCL wordcount.exe<br></pre>
+  <a name="205651">Note that it is not possible to selectively
+	instrument functions within a given source file.</a>
+
+  <h3><a name="196117">5.2.4 Building Executables with Installed
+  Linkers</a></h3><a name="205016">It is possible to generate an
+  ATAC instrumented executable without using a compiler command to
+  do the link.</a>
+
+  <p><a name="205006">The explanation is most easily understood by
+  an example. Let us use the same wordcount program as used before
+  for the example. To copy these files, create a new directory,
+  <em>cd</em> into it, and copy the contents of the directory in
+  which the tutorial files are installed into the new directory.
+  There should be two c files: <em>main.c</em> and <em>wc.c</em>,
+  and a makefile. You can compile the wordcount program with
+  <em>atac</em> by executing the <em>nmake</em> command for your
+  setup, as specified in</a> <a href=
+  "appendixB.html#1001045">Appendix A, <em>Platform Specific
+  Information</em></a>.</p>
+
+  <p><a name="204872">This is the same as:</a></p><a name=
+  "204881">If you use the Microsoft C compiler:</a>
+  <pre>  prompt:&gt; atacCL /c wc.c main.c<br>  prompt:&gt; link /Fewordcount.exe wc.obj main.obj &lt;ataclib&gt;\dllatacrt.lib<br></pre>
+
+	<a name="205330">where &lt;ataclib&gt; represents the
+	directory printed by the <em>ataclib</em> command.</a>
+
+  <h3><a name="206614">5.2.5 Suppressing Instrumentation of Include
+  Files</a></h3><a name="206611">In C and C++ programs, source
+  files included with the <em>#include</em> directive may contain
+  executable code. By default atac instruments executable code in
+  include files unless the include file comes from a system include
+  directory (i.e., the include directory under Visual Studio for
+  Microsoft compilers).</a>
+
+  <h2><a name="205957">5.3 Common Instrumentation Options</a></h2>
+
+  <h3><a name="206012">5.3.1 Code Inside Macros</a></h3><a name=
+  "206013">When uncovered testable attributes exist inside a
+  preprocessor macro expansion, ATAC display components highlight
+  the macro name and arguments within the original source code.
+  Normally, blocks other than the first block inside a macro
+  expansion are not counted or displayed. It is assumed that the
+  tester does not expect complete coverage of each macro at each
+  invocation. 
+  <!-- These blocks may be counted using the <em>atac -J</em> option. --></a>
+
+  <h2><a name="206311">5.4 Compilation and Link Errors</a></h2>When
+  a program fails to compile or link with ATAC, check that it
+  compiles and links without errors using your installed compiler
+  (Refer to <a href="appendixB.html#1001045">Appendix A,
+  <em>Platform Specific Information</em></a> for the specific
+  commands to execute.) If the same command line arguments are
+  used, a program that compiles and links without errors using a
+  standard compiler should compile and link without errors under
+  ATAC, with the following exception:
+
+  <ul>
+ 
+    <li>
+      <a name="196225">The Microsoft compiler allows some template
+      structures that are syntactically incorrect. For example:</a>
+      <pre><a name="196225">template&lt;class T&gt;<br> class A {<br>  public:<br>    A() {<br>     not_yet_defined_function();<br>    }<br>  };<br><br> int not_yet_defined_function() {<br>  return 0;<br> }<br><br>void main() { A&lt;int&gt; a; };<br>    </a></pre>
+
+	<a name="196225">The Microsoft compiler will successfully
+	compile the sample even though the function is used before it is
+	declared. ATAC will not parse such a template successfully.</a>
+    </li>
+    
+  </ul><a name="196236">When ATAC has trouble parsing a program, it
+  will issue a <em>parse failed</em> message and fail to compile
+  the program.</a>
+
+  <p><a name="196115">After preprocessing and data-flow
+  instrumentation of a source program, ATAC passes the modified
+  program to the standard C or C++ compiler. Errors from the
+  standard compiler may indicate an error in ATAC (e.g., during
+  instrumentation) or in the standard compiler.</a></p>
+
+  <p><a name="196203">A program compiled with ATAC must be linked
+  with ATAC. If linked with the standard compiler, the linker will
+  issue a message indicating an undefined external symbol named
+  <em>aTaC43</em> or <em>_aTaC43</em> because the required run-time
+  library has not been included in the executable.</a></p>
+  <hr>
+  <br>
+  <a href="coverpage.html">[Top]</a> <a href=
+  "setup.html">[Prev]</a> <a href="executing.html">[Next]</a>
+  <a href="sqatoolIX.html">[Index]</a> <a href=
+  "sqatoolTOC.html">[TOC]</a>
+  <hr>
+  <br>
+  <br>
+  </div>
+</body>
+</html>

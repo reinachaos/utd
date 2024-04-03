@@ -1,0 +1,479 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator"
+        content=
+        "HTML Tidy for Windows (vers 18 June 2008), see www.w3.org">
+        
+  <meta http-equiv="content-type"
+        content="text/html; charset=us-ascii">
+
+  <title>atac: Overview</title>
+  <link rel="stylesheet"
+        href="style.css"
+        type="text/css"
+        media="screen">
+  
+</head>
+
+<body class="c3">
+<div id="wrap">
+
+<a href="coverpage.html">[Top]</a> 
+<a href="tutorial.html">[Prev]</a> 
+<a href="setup.html">[Next]</a>
+<a href="sqatoolIX.html">[Index]</a>
+<a href="sqatoolTOC.html">[TOC]</a>
+
+<hr><br>
+
+<a name="629206"></a>
+<a name="629982"></a>
+
+<h1><a name="629218">
+	Chapter 3<br>
+	<br>
+	ATAC: Overview<br><br>
+</a></h1>
+
+<a name="629219"></a>
+
+<p>
+	<a name="623820">This chapter provides an overview of the
+	Toolsuite's code coverage tools (<em>atac</em>) and is
+	recommended reading for first-time users or those who want a
+	summary of the code coverage features.</a>
+</p>
+
+<hr>
+
+<h2><a name="623823">3.1 What is ATAC?</a></h2>
+
+<p>
+	<a name="623864"><em>atac</em> is a <em>coverage analysis</em> tool that
+	aids in testing programs written in the C or C++ programming
+	language. <em>atac</em> measures how thoroughly a program has
+	been exercised by a set of tests, identifies code within the
+	program that is not well tested, and determines the overlap among
+	individual test cases. <em>atac</em> is used by software
+	developers and testers to measure the <em>adequacy</em> of a test
+	set and identify areas in a program that require further testing.
+	These measures may be used for project tracking to indicate
+	progress during testing, and as acceptance criteria to subsequent
+	stages of development and testing. Regression testers also may
+	use <em>atac</em> to identify a particular subset of a test set
+	that achieves high coverage at limited cost.</a>
+</p>
+
+<h2><a name="623838">3.2 What is Coverage Testing?</a></h2>
+
+<p>
+	<a name="623870">Coverage testing suggests a
+	number of criteria that should be satisfied when testing a
+	program. Examples of such criteria are:</a>
+	<ul>		<li><a name="623871">All statements should be executed;</a></li>
+		<li><a name="623916">All decisions should be evaluated both to
+								true and to false.</a></li>
+	</ul>
+</p>
+
+<p>
+	<a name="623932">The goal of coverage testing is to develop
+	a set of tests that satisfy the criteria. Notice that each of
+	these example criteria are dependent upon a program's source
+	code. Testing methods that use information about a program's
+	internal structure are said to perform <em>white-box</em>
+	testing. Methods that only consider a program's inputs and
+	outputs, making no use of its source code, are said to perform
+	<em>black-box</em> testing. <em>atac</em> supports white-box
+	testing, so the <em>coverage criteria</em> discussed here will be
+	tied to the source code of the program under test.</a>
+</p>
+
+<p>
+	<a name="623931">Each specific coverage criterion identifies a
+	number of program constructs to be exercised <em>(covered)</em>
+	by a set of tests. The constructs to be covered are called
+	<em>testable attributes</em>. For instance, in covering all
+	decisions as suggested above, there is one testable attribute for
+	each true branch and one for each false branch in the program. A
+	tester covers them by developing a test set that executes each of
+	these branches. A test set is considered <em>adequate</em> with
+	respect to a given coverage criterion if all testable attributes
+	identified by the criterion are exercised, at least once, by some
+	test within the set.</a>
+</p>
+
+<p>
+	<a name="623920">It is harder to develop an adequate test set
+	for some coverage criteria than for others. Weaker criteria
+	usually require fewer test cases than stronger criteria to obtain
+	completely adequate coverage. However, a test set adequate for a
+	weaker criterion is less likely to reveal an error than a test
+	set adequate for a stronger criterion. For example, it generally
+	requires fewer test cases to ensure that all functions within a
+	program are invoked than to ensure that all statements are
+	executed. However, a test set that executes all program
+	statements tends to test a program more thoroughly than a test
+	set that invokes all functions. This is because it is possible to
+	invoke all functions without executing all of their statements.
+	The converse is not true.</a>
+</p>
+
+<p>
+	<a name="623839">One coverage criterion is stronger than
+	another if, for any program, completely adequate coverage for the
+	first implies completely adequate coverage for the second and, as
+	with statement and function coverage, the converse is not true.
+	If the converse is also true, then the coverage criteria are of
+	equal strength.</a>
+</p>
+
+<p>
+	<a name="623917">In practice, for many coverage criteria, a
+	completely adequate test set is not easy to create for most
+	programs. As a test set is being developed, it exhibits a level
+	of adequacy called a <em>coverage measure</em> - the percentage
+	of testable attributes exercised by its set of tests. As a test
+	set's coverage measure improves, it becomes harder to create test
+	cases that cover the remaining, uncovered testable attributes. In
+	some cases, it may be impossible or impractical to achieve
+	completely adequate coverage. For example, a program may contain
+	code to detect and handle error conditions that are very hard to
+	simulate during testing. The appropriate target coverage measures
+	for any program under test depend on the characteristics and
+	reliability requirements of that program.</a>
+</p>
+
+<h2><a name="623861">3.3 What Does ATAC Do?</a></h2>
+
+<p>
+	<a name="630563"></a><a name="62991"></a>
+	<em>atac</em> provides an integrated suite of
+	software tools that support coverage testing for two coverage
+	criteria (as described later): <em>block and decision</em>. It
+	should be noted that&nbsp; <em>function-call</em> and
+	<em>function-return</em> are not currently available in <em>xSuite</em>, the graphical
+	interface.&nbsp;Given a program to test, <em>atac</em> computes
+	its set of testable attributes and instruments it to record trace
+	information during test execution. As subsequent tests are
+	executed, the trace information is appended to a trace file. At
+	any point, a tester can selectively report coverage measures or
+	display source code associated with any uncovered testable
+	attributes. The former allows the tester to assess how the test
+	is progressing, the latter aids in developing new tests to
+	exercise what has not been covered.
+</p>
+
+<p>
+	<a name="629299"><em>atac</em> can instrument all, or a
+	subset, of the files making up a software system. This allows
+	testing to be targeted at a specific portion of the system and
+	makes it possible to incrementally manage the overhead of testing
+	a large system. The coverage measures reported only pertain to
+	that source code which has been instrumented, and any
+	instrumentation added has no effect on non-instrumented
+	code.</a>
+</p>
+
+<h3><a name="629322">3.3.1 Function-Entry and Block Coverage</a></h3>
+
+<p>
+	<a name="623865">The weakest coverage criteria
+	measured by <em>atac</em> is <em>function-entry</em>.
+	<em>Function-entry</em> coverage ensures that all functions
+	within a program are called at least once.&nbsp;</a>
+</p>
+
+<p>
+	<a name="628387"><em>Block</em> coverage ensures that all
+	<em>basic blocks</em> are executed at least once. A <em>basic
+	block</em> is a sequence of instructions that, except for the
+	last instruction, is free of branches and function calls. So, the
+	instructions in any <em>basic block</em> are either executed all
+	together, or not at all. In C and C++, a <em>block</em> may
+	contain more than one statement if no branching occurs between
+	statements; a statement may contain multiple blocks if branching
+	occurs inside the statement; an expression may contain multiple
+	blocks if branching is implied within the expression (e.g.,
+	<em>conditional</em>, <em>logical-and</em>, and <em>logical-or
+	expressions</em>). <em>atac</em> begins a new <em>basic
+	block</em> after a function call because it is possible that the
+	function call will not return (e.g. if exit is called within the
+	function).&nbsp;</a>
+</p>
+
+<a name="62908"></a>
+<div class="figure">
+	<a href="overview.frm.anc5.gif"><img src="overview.frm.anc5.gif" ></a></center>
+	<div>Figure 3-2 An example of three distinct blocks
+			(character-based interface)</div>
+</div>
+
+<p><a name="628437"></a> 
+	<a href="overview.html#62908">Figure 3-2</a> 
+	presents an example of three
+	distinct <em>blocks</em>, as they are displayed in
+	<em>atac</em>'s character-based interface. Block 1 consists of a
+	logical-expression embedded within a compound
+	conditional-expression; Block 2 consists of an entire conditional
+	expression; Block 3 consists of the entire body of an
+	if-statement. If <em>block</em> coverage is ever less than 100%,
+	then there are program statements that have not been executed by
+	any test. So, achieving completely adequate <em>block</em>
+	coverage ensures that the entire program is at least executed.
+	Completely adequate <em>block</em> coverage implies completely
+	adequate <em>function-entry</em> coverage.
+</p>
+
+
+<h3><a name="628438">3.3.2 Decision Coverage</a></h3>
+
+<a name="63014"></a>
+<div class="figure">
+	<a href="overview.frm.anc1.gif"><img src="overview.frm.anc1.gif" ></a></center>
+	<div>Figure 3-3 An example of <em>true</em> and
+			  <em>false</em> decision paths (character-based display)</div>
+</div>
+
+<p>
+	<a name="628439"></a>
+	<em>Decision</em> coverage
+	ensures that each of the branches within a conditional statement
+	evaluate to both true and false, at least once. A conditional
+	statement may contain a number of conditional expressions, each
+	having a true and false decision path passing through it. Each of
+	these decision paths corresponds to a different testable
+	attribute to be covered. For example, <a href=
+	"overview.html#63014">Figure 3-3</a> presents two distinct
+	uncovered decisions occurring in the same expression, as they are
+	displayed by <em>atac</em>. The first is covered by developing a
+	test case that causes <em>c ==</em> ' ' to evaluate true, the
+	second by developing a test case causing this expression to
+	evaluate false.
+</p>
+
+<p>
+	<a name="623926">If a decision is not covered during
+	testing, then an error might not be revealed in the conditional
+	statement containing the decision. Completely adequate
+	<em>decision</em> coverage implies completely adequate
+	<em>block</em> coverage, except for programs with no branches
+	(because there are no decisions to cover).</a>
+</p>
+
+<h3><a name="623904">3.4 How Does ATAC Work?</a></h3>
+
+<p>
+	<a name="623924">Using <em>atac</em> focuses on
+	three main activities: instrumenting the software to be tested,
+	executing software tests, and determining how well the software
+	has been tested. Instrumentation of the software occurs at
+	compile-time, and <em>atac</em> allows large systems to be
+	instrumented a-piece-at-a-time. Once instrumentation is complete
+	and an executable has been built, a tester executes tests and
+	uses <em>atac</em> to generate reports or display uncovered
+	source code. The reports reveal the current coverage measures for
+	each criteria, indicating how adequate the existing test set is
+	and providing a high-level view of progress during testing. The
+	tester can also display precisely what needs to be covered and
+	develop new tests to improve the current level of code
+	coverage.</a>
+</p>
+
+<p>
+	<a name="623925"><em>atac</em> consists of the following
+	tools: the <em>atac</em> compiler <em>(</em>atac cc on Linux,
+	<em><em>atac</em>CL</em> on Windows<em>), <em>atac</em>,
+	<em>atac</em>tm</em>, and <em>x</em>atac. These are the
+	user-layer components of <em>atac</em> invoked by a tester from
+	the command line. In addition, there are other executables and a
+	run-time library required by <em>atac</em> that are not of
+	general interest to users. An executable called
+	<em><em>atac</em>lib</em> (Linux) <em>or <em>atac</em>_lib</em>
+	(Windows)is invoked by all other <em>atac</em> components when
+	they need to locate the <em>atac</em> library. This helps
+	minimize the need for users to modify their personal computing
+	environment in order to use <em>atac</em>.</a>
+</p>
+
+<a name="62681"></a>
+<div class="figure">
+	<a href="overview.frm.anc4.gif"><img src="overview.frm.anc4.gif" ></a></center>
+	<div>Figure 3-6 Key inputs and outputs during program
+		  instrumentation, test execution and coverage analysis</div>
+</div>
+
+<p>
+	<a name="623918"></a><a href=
+	"overview.html#62681">Figure 3-6</a> depicts the key inputs and
+	outputs during software instrumentation, test execution, and
+	coverage analysis. Instrumentation of the software to be tested
+	is performed by the <em>atac</em> compiler. The <em>atac</em>
+	compiler replaces the standard compiler, while accepting all the
+	same command line options. The <em>atac</em> compiler supports
+	separate compilation and can be easily used in conjunction with
+	the <em>make</em> or <em>nmake</em> programs. The <em>atac</em>
+	compiler accepts one or more <em>.c</em> source files as input
+	and, for each, computes its testable attributes and instruments
+	it to record an execution trace at run-time. The outputs of the
+	<em>atac</em> compiler are a <em>.</em>atac file corresponding to
+	each <em>.c</em> file and an executable program, <em>a.out.</em>
+	All instrumentation is emitted as source code embedded within the
+	software to be tested, and then the standard compiler is invoked
+	to generate <em>a.out</em> (an alternative compiler may be
+	invoked if so desired)<em>.</em> Each <em>.</em>atac file acts as
+	a list of all testable attributes that exist within its
+	corresponding <em>.c</em> file.
+</p>
+
+<p>
+	<a name="628483">Each time <em>a.out</em> is executed,
+	trace information is appended to a corresponding trace file,
+	<em>a.out.trace.</em> This occurs automatically due to the
+	instrumentation generated by the <em>atac</em> compiler<em>.</em>
+	A tester uses the <em><em>atac</em></em> or <em>x</em>atac tool
+	to obtain a high-level measure of test adequacy, or to view
+	actual source code that still needs to be covered. The trace file
+	and a list of relevant <em>.</em>atac files are inputs to
+	<em><em>atac</em></em> and <em>x</em>atac. <em>atac</em>
+	reconciles the information contained in <em>a.out.trace</em>
+	against all the testable attributes to be covered, as recorded in
+	the <em>.</em>atac files. Once what has and has not been covered
+	is determined, the results are output in report or display mode,
+	as appropriate.</a>
+</p>
+	
+<p>
+	<a name="628486">The <em><em>atac</em>tm</em> tool manipulates
+	the contents of a trace file. Trace files contain coverage
+	information for each test that has been executed. Using
+	<em><em>atac</em>tm</em>, a tester can list, rename, extract,
+	delete, or assign cost to individual tests. <em>atac</em> permits
+	the coverage achieved by arbitrary subsets of tests to be
+	compared and computes minimal size and cost subsets of tests
+	achieving the same coverage as the entire test set. A tester may
+	use these tools to manage a test set during testing and later
+	compact it without reducing coverage. This approach reduces the
+	cost of any regression testing to be performed in the
+	future.</a>
+</p>
+
+<p>
+	<a name="630806">Although <em>atac</em> provides a large
+	number of options for varying the form and content of the
+	information reported, defaults have been chosen so that few
+	options are required to use the basic features. Complete details
+	of the <em>atac</em> commands and options appear later in this
+	guide.</a>
+</p>
+
+<h2><a name="623840">3.5 What Will Using ATAC Cost You?</a></h2>
+
+<p>
+	<a name="630673">Programs compiled with
+	<em>atac</em> will execute more slowly and use more memory than
+	they normally do. The effect on execution time varies among
+	programs depending upon the nature of the computation and the
+	size of the trace file. <em>Compute-bound</em> processes are more
+	severely effected than <em>I/O-bound</em> processes. Performance
+	degradation can range from less than one, to several times the
+	normal execution time. Most programs do not experience severe
+	affects, but, in any case, performance degradation is only
+	present during testing with <em>atac</em>. After testing, the
+	program should be recompiled without <em>atac</em> to obtain
+	maximum execution efficiency. The affect of this is insignificant
+	in most testing environments. However, in some time dependent
+	applications a change in timing behavior may effect the execution
+	of the program. There are means of reducing performance
+	degradation, as discussed in</a> <a href=
+	"instrumenting.html#203817">Section 5.1.3, <em>Selectively
+	Instrumenting Software</em></a> (Linux) or <a href=
+	"instrumenting.html#204433">Section 5.2.3, <em>Selectively
+	Instrumenting Software</em></a> (Windows).
+</p>
+
+<p>
+	<a name="630683">Using <em>atac</em> will also require
+	additional disk space. This need arises from three sources: the
+	increased size of the instrumented executable to be tested, the
+	creation of <em>.</em>atac files during compilation, and the
+	creation of a <em>.trace</em> file during test execution. The
+	instrumented executable is approximately twice the size of a
+	non-optimized, non-instrumented executable program. Each
+	<em>.</em>atac file is at least as large as its corresponding
+	<em>.c</em> file. The size of the <em>.trace</em> file generated
+	during testing is a function of the total number of testable
+	attributes to be covered and the size of the test set. When trace
+	file compression is used, the <em>.trace</em> file grows very
+	little unless a test actually improves coverage, in which case
+	its growth is proportional to what is covered. Omitting trace
+	file compression reduces test execution time but makes the
+	<em>.trace</em> file grow more quickly, thereby costing
+	additional disk space. Uncompressed <em>.trace</em> files can
+	become rather large over time.</a>
+</p>
+
+<h2><a name="623862">
+	3.6 How Does ATAC Fit into the Development Process?
+</a></h2>
+
+<p>
+	<a name="623935"><em>atac</em> is
+	primarily designed as a tool to support unit testing. That is,
+	<em>atac</em> is to be used by developers in testing individual
+	program units, or integrated collections of program units, within
+	the development environment. The idea is to test each of the
+	``software parts'' that make up a software product because
+	constructing a system out of components that are thoroughly
+	tested results in a high quality software product.</a>
+</p>
+
+<p>
+	<a name="623936">The view that <em>atac</em> is a unit testing
+	tool used by individual developers is largely one of
+	practicality, but this need not always be the case. All the
+	software components of an entire product can be instrumented and
+	tested at the same time, if the product is of appropriate size.
+	Also, some projects might designate a team of one or more
+	individuals to coverage test all or part of the source code
+	produced by its developers. Typically, it is most efficient for
+	the author of a piece of software to do the coverage testing.
+	This is because developing test cases that improve coverage is
+	easier if one is very familiar with the source code under test.
+	However, there is some flexibility in how <em>atac</em> is used
+	to best satisfy the testing requirements and resource limitations
+	of a given project.</a>
+</p>
+
+<p>
+	<a name="623937"><em>atac</em> is not generally perceived as a
+	system testing tool because system test focuses on verifying the
+	behavior of software features, not on exercising constructs
+	within the source code. Furthermore, it is likely that a system
+	is too large and/or system testers have insufficient knowledge of
+	a product's architecture to effectively perform coverage testing.
+	Nevertheless, if the resources are available, it may be
+	beneficial to instrument all or part of a product's source code
+	using <em>atac</em>, and then run its system test suite. This
+	provides a means of determining the overall code coverage of the
+	system test suite.</a>
+</p>
+
+<hr>
+<br>
+
+<a href="coverpage.html">[Top]</a> 
+<a href="tutorial.html">[Prev]</a> 
+<a href="setup.html">[Next]</a>
+<a href="sqatoolIX.html">[Index]</a> 
+<a href="sqatoolTOC.html">[TOC]</a>
+
+<hr>
+<br>
+<br>
+
+</div>
+</body>
+</html>

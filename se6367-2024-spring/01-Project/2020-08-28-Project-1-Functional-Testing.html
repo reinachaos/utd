@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project-1-Functional-Testing</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="project-1-functional-testing">Project 1: Functional Testing</h1>
+<p><strong>(Total points: 100)</strong></p>
+<p>In this project, you are required to generate a test set for testing the Unix “spell” command. The objective is to conduct good functional testing to conform to all the functional specifications.</p>
+<h3 id="login-to-the-project-server">Login to the project server</h3>
+<p>Follow the instructions on our <a href="../04-Tutorial/xSudsu-Server/Project access by MobaXterm.pdf">website</a> to connect to the project server.</p>
+<h3 id="read-the-manual-of-the-subject-program">Read the manual of the subject program</h3>
+<p>You can review the man page of “spell” by running the spell program with the help option:</p>
+<pre><code> ./spell -h
+</code></pre>
+<h3 id="execute-some-test-cases">Execute some test cases</h3>
+<p>Run spell against a sample test case using the following command:</p>
+<pre><code>./spell sample
+</code></pre>
+<p>Run spell against some test cases you created</p>
+<h3 id="project-submission">Project submission</h3>
+<p>Submit a tar (or zip) file (other file extensions will not be accepted)(<em><strong>Project-1-FirstName-LastName.tar</strong></em>) of the following three files to <a href="http://elearning.utdallas.edu">eLearning</a>.</p>
+<p>(Files do not follow the required naming rules will not be accepted)</p>
+<ul>
+<li>
+<p><em><strong>Functionality Table</strong></em><br>
+Download the template on our <a href="https://paris.utdallas.edu/ewong/emse6367/01-Project/Functionality-Table.xlsx">website</a> and enter your answer. The functionality table has two columns:</p>
+<ul>
+<li>The first column is a functionality ID starting from F01.</li>
+<li>The second column is a description of the functionality</li>
+</ul>
+</li>
+<li>
+<p><em><strong>Test Case Table</strong></em><br>
+Download the template on our <a href="https://paris.utdallas.edu/ewong/emse6367/01-Project/Test-Case-Table.xlsx">website</a> and enter your answer. The test case table has four columns:</p>
+<ul>
+<li>The first column is a test case ID starting from T001</li>
+<li>The second column is a description of this test case (i.e., its objective)</li>
+<li>the third column indicates which functionalities are tested by this test case<br>
+(i.e., listing the corresponding functionality IDs)</li>
+<li>the fourth column explains the technique used for generating this test case<br>
+(e.g., reading the man page, equivalence class partitioning, boundary value analysis, predicate testing, etc.)</li>
+</ul>
+</li>
+<li>
+<p><em><strong>A Shell Script</strong></em><br>
+A shell-script “<em><strong style="color:blue">Your-LastName-Test-Execution.sh</strong></em>” which can be used to automatically execute all the test cases you submitted. The output of each execution should be saved in “<em><strong style="color:blue">Your-LastName-Test.Output</strong></em>” and the errors, if any, should be saved in “<em><strong style="color:blue">Your-LastName-Test.Error</strong></em>”.</p>
+</li>
+<!-- <li>
+  <p><em><strong>A Shell Script</strong></em><br>
+  A shell-script “<em><strong><a href="http://Your-LastName-Test-Execution.sh">Your-LastName-Test-Execution.sh</a></strong></em>” which can be used to automatically execute all the test cases you submitted. The output of each execution should be saved in “<em><strong>Your-LastName-Test.Output</strong></em>” and the errors, if any, should be saved in “<em><strong>Your-LastName-Test.Error</strong></em>”.</p>
+</li> -->
+</ul>
+<p><em>Note: if your shell script requires additional files to run (e.g., you created some files to be used as program inputs), you can tar and submit the entire project folder, including the two required Excel sheets</em></p>
+</div>
+</body>
+
+</html>

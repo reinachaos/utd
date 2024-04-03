@@ -1,0 +1,31 @@
+On 08/26/2013, we copied all the videos to paris.utdallas.edu/testing-Lectures
+and renamed them as follows
+
+
+ln -s 00-Original-Videos/081-ART-Final-2013-05.mp4                                           05-ART.mp4
+ln -s 00-Original-Videos/082-Requirements-based-Functional-Testing-Final-2013-06.mp4         07-Requirements-based-Functional-Testing.mp4
+ln -s 00-Original-Videos/083-Coverage-Testing-Criteria-and-Tools-Final-2013-06-03.mp4        10-Coverage-Testing-Criteria-and-Tools.mp4
+ln -s 00-Original-Videos/084-Coverage-Testing-SDL-Final-2013-05.mp4                          16-Coverage-Testing-SDL.mp4
+ln -s 00-Original-Videos/085-Requirements-based-Predicate-Testing-Final-2013-06-Part-I.mp4   08-Requirements-based-Predicate-Testing-Part-I.mp4
+ln -s 00-Original-Videos/085-Requirements-based-Predicate-Testing-Final-2013-06-Part-II.mp4  08-Requirements-based-Predicate-Testing-Part-II.mp4
+ln -s 00-Original-Videos/087-Controlflow-Final-2013-06-10.mp4                                11-Controlflow.mp4
+ln -s 00-Original-Videos/090-Mind-Mapping-Test-Generation-Final-2013-05.mp4                  06-Mind-Mapping-Test-Generation.mp4
+ln -s 00-Original-Videos/093-Regression-Testing-Final-2013-05-short.mp4                      20-Regression-Testing-short.mp4
+ln -s 00-Original-Videos/093-Regression-Testing-Final-2013-05.mp4                            20-Regression-Testing-long.mp4
+ln -s 00-Original-Videos/095-Risk-Analysis-Final-2013-05-short.mp4                           32-Risk-Analysis-short.mp4
+ln -s 00-Original-Videos/095-Risk-Analysis-Final-2013-05.mp4                                 32-Risk-Analysis-long.mp4
+ln -s 00-Original-Videos/098-Mutation-Testing-Final-2013-05-short.mp4                        28-Mutation-Testing-short.mp4
+ln -s 00-Original-Videos/098-Mutation-Testing-Final-2013-05.mp4                              28-Mutation-Testing-long.mp4  
+ln -s 00-Original-Videos/099-SW-Safety-MIke-Siok-Final-2013-05.mp4                           83-SW-Safety.mp4
+ln -s 00-Original-Videos/100-Software-Fault-Localization-short.mp4                           25-Fault-Localization-short.mp4
+ln -s 00-Original-Videos/100-Software-Fault-Localization.mp4                                 25-Fault-Localization-long.mp4
+ln -s 00-Original-Videos/101-Understanding-Your-Code.mp4                                     31-Program-Understanding.mp4
+ln -s 00-Original-Videos/105-John-Medellin-Final-2013-05.mp4                                 85-John-Medellin.mp4
+
+
+-----------------  We do not have the following videos ----------------
+03-Preliminary.mp4
+12-Dataflow.mp4
+15-Test-Adequacy.mp4
+18-Test-Gen-Reachability-Graph.mp4
+

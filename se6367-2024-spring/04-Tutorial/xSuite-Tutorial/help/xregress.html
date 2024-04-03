@@ -1,0 +1,713 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>
+      xRegress for regression testing	 
+    </title>
+	<link rel=stylesheet href="style.css" type="text/css" media=screen>
+  </head>
+  <body>
+  <div id="wrap">
+    <a href="coverpage.html">[Top]</a> 
+	<a href="xprof.html">[Prev]</a> 
+	<a href="xvue.html">[Next]</a> 
+	<a href="sqatoolIX.html">[Index]</a> 
+	<a href="sqatoolTOC.html">[TOC]</a>
+   <hr>
+   <br>
+ 
+    <h1>
+      <a name="789903">Chapter 11<br>
+      <br>
+      xRegress: A Tool for Effective Regression
+      Testing</a>
+    </h1>
+    <p>
+      <a name="769964">The purpose of regression testing is to ensure that
+      changes made to software, such as adding new features or modifying
+      existing features, do not adversely affect features of the software that
+      should not change. It is not cost-effective to rerun all the tests in a
+      regression suite; a method is needed to reduce the testing effort.
+      <em>xRegress</em> is just such a tool which
+      supports test set minimization and test prioritization. It helps testers
+      identify a representative subset of tests which should be re-executed to
+      revalidate modified software.</a>
+    </p>
+    <hr>
+    <p>
+      <a name="777152"></a>
+    </p>
+    <h2>
+      <a name="773230">11.1 Background</a>
+    </h2><a name="770688">No matter how well conceived and tested software is,
+    it will eventually have to be modified in order to fix bugs or respond to
+    changes in user specifications. Regression testing must be conducted to
+    confirm that recent program changes have not adversely affected existing
+    features and new tests must be created to test new features. Testers might
+    rerun <em>all</em> test cases generated at earlier stages to ensure that
+    the program behaves as expected. However, as a program evolves the
+    regression test set grows larger, <em>old</em> tests are rarely discarded,
+    and the expense of regression testing grows. Repeating all previous test
+    cases in regression testing after each minor software revision or patch is
+    often impossible due to time pressure and budget constraints. On the other
+    hand, for software revalidation, arbitrarily omitting test cases used in
+    regression testing is risky. Thus, we need to investigate methods to select
+    small subsets of effective fault-revealing regression test cases to
+    revalidate software. It is for this purpose that <em>xRegress</em>, 
+	a test set minimization and prioritization
+    tool, was developed.</a>
+    <p>
+      <a name="774374"><em>xRegress</em> supports test
+      set <em>minimization</em> to reduce the number of test cases contained in
+      a test set without loss of code coverage. In other words, it minimizes a
+      test set to find a <em>minimal subset</em> in terms of the number of test
+      cases that preserves the code coverage with respect to a certain
+      criterion (<em>block and decision</em> as explained in</a> <a href=
+      "overview.html#623861">Section 3.3, <em>What Does ATAC Do?</em></a>) of
+      the original test set. <em>xRegress</em> also
+      supports test set <em>prioritization</em> by sorting tests in increasing
+      order of additional coverage per cost.
+    </p>
+    <p>
+      <a name="774868">For test set minimization, <em>xRegress</em> 
+	  uses an implicit enumeration algorithm with
+      reductions to find the optimal subset based on all tests examined. In
+      addition, to determine the exact minimized subset, <em>xRegress</em> 
+	  also provides options to select a fast but
+      approximate solution based on <em>greedy</em> heuristics in case the
+      exact solution is not obtained in reasonable time. For test set
+      prioritization, <em>xRegress</em> first selects a
+      test case which gives the maximal coverage with respect to a given
+      criterion per unit cost. Subsequent tests are selected based on their
+      additional coverage per unit cost.</a>
+    </p>
+    <p>
+      <a name="774450">When testers can only afford to re-execute a few
+      regression tests, they can either use every test case in the minimized
+      subset for software revalidation or select as many tests as possible on
+      the basis of test case priority, i.e., starting from the top of the
+      prioritized test list. The rationale behind these two techniques is the
+      following:</a>
+    </p>
+    <ol>
+      <li>
+        <a name="774509">The <em>correlation</em> between the fault detection
+        capability of a test set and its code coverage on a program is higher
+        than that between the fault detection capability and test set size.
+        Insufficient testing such as long hours of test case execution that do
+        not increase code coverage can lead to an incorrect assessment of
+        program reliability.<br>
+        <br></a> <a name="774884"></a>
+      </li>
+      <li>
+        <a name="774884">No matter how a test set is generated, its minimized
+        test sets have a <em>size/effectiveness</em> advantage over the
+        original set in terms of fewer test cases with little or no compromise
+        in the strength of revealing faults.<br>
+        <br></a> <a name="774659"></a>
+      </li>
+      <li>
+        <a name="774659">In general, a reduced set of tests selected by
+        minimization/prioritization can detect faults not detected by a reduced
+        set of the same size selected in a random or arbitrary way. Null
+        hypothesis testing indicates that such effectiveness of
+        minimization/prioritization over randomization does not just happen by
+        chance.<br>
+        <br></a>
+      </li>
+    </ol><a name="774908">In practice, depending on the available resources, a
+    trade-off between what we can do in regression testing and what we can
+    afford to do is applied to determine which test, among those necessary,
+    should be re-executed first, and which one has lower priority or is to be
+    omitted from re-execution. Our experience suggests that although neither
+    test set minimization nor prioritization can reduce the cost of testing the
+    current release, it may significantly reduce the cost of testing future
+    releases of a software system. This savings arises because less time is
+    spent maintaining, documenting, executing, and evaluating the output of
+    smaller test sets.</a>
+    <p>
+      <a name="786849">The remainder of this chapter is organized as
+      follows:</a> <a href="xregress.html#770329">Section 11.2</a> describes
+      how to conduct test set minimization via a character-based user
+      interface, <a href="xregress.html#776362">Section 11.3</a> describes how
+      to perform test set prioritization via a character-based user interface
+      and <a href="xregress.html#790001">Section 11.4</a> explains how these
+      procedures are executed via a graphical user interface.
+    </p>
+    <h2>
+      <a name="770329">11.2 Test set minimization via a character-based user
+      interface</a>
+    </h2><a name="788092">In this section we explain how test set minimization
+    is done via a character-based user interface. 
+
+
+    <!-- The same wordcount program as
+    used before is used here. To copy these files, create a new directory,
+    <em>cd</em> to it, and copy the contents of the directory in which the
+    tutorial files are installed into the new directory. For the illustrations
+    in this chapter, we will use: (1) two <em>c</em> files: <em>main.c</em> and
+    <em>wc.c</em>, (2) three data files: <em>input1</em>, <em>input2</em>, and
+    <em>input3</em>, (3) the <em>Makefile</em> and (4)
+    the <em>tests_regress</em> script. Compile the <em>wordcount</em> program
+    with ATAC. Refer to</a> <a href="appendixB.html#1001045">Appendix A,
+    <em>Platform Specific Information</em></a> to determine the correct command
+    to execute for your setup.
+    <p>
+      <a name="787902">After the compilation, two <em>.atac</em> files
+		  (<em>main.atac</em> for <em>main.c</em> and <em>wc.atac</em> for
+		  <em>wc.c</em>), one <em>.atacp</em> file
+		  (<em>wordcount.atacp</em>), and the executable <em>wordcount(.exe)</em> are created.
+		  Note, one <em>.atac</em> file is created for each instrumented
+		  <em>.c</em> file, i.e., the <em>.c</em> files compiled with ATAC, and one
+		  <em>.atacp</em> file is created for each executable generated during the build process.</a>
+    </p> -->
+
+
+    <p>
+	  <a name="788057"></a><a name="789470">Now we are going to use script "tests_regress" to execute all the tests
+	  executed in</a> <a href="tutorial.html#402515">Chapter 2, as shown below: 
+
+<!-- 	  	, <em>ATAC: A
+	  Tutorial</em></a>, and assign costs to each of these tests, as specified
+	  in <a href="managing.html#973964">Section 7.6, <em>Assigning Cost to Test
+	  Cases</em></a>.To save typing, these commands have been collected in a
+	  script file called <em>tests_regress(.bat)</em>. 
+	  The commands it executes are listed below.
+	  First, remove all files with a .trace suffix. Then run the script by
+	  typing <em>tests_regress</em>. While the script is running, you will see
+	  some 'error' messages because the tests are executing lines of code
+	  designed to handle error conditions. Commands executed by the <em>tests_regress</em>
+	  script are listed below.	  
+	  <!--===============--> -->
+    </p>
+    
+	
+    <pre>
+	===== These 17 tests are going to be executed =====
+
+	wordcount input1
+	wordcount -x input1
+	wordcount &lt; input1
+	wordcount nosuchfile
+	wordcount -wlc input1
+	wordcount input1 input2
+	wordcount "-?"   
+	wordcount -l input1
+	wordcount -w input1 
+	wordcount -l &lt; input1 
+	wordcount -w &lt; input1
+	wordcount -c &lt; input1 
+	wordcount -l nosuchfile
+	wordcount -lx input1
+	wordcount input1 nosuchfile
+	wordcount empty 
+	wordcount input3
+
+	===== We are going to assign cost to each test case shown above ======
+
+	atactm  -n wordcount.1   -c 120  wordcount.trace
+	atactm  -n wordcount.2   -c 50   wordcount.trace
+	atactm  -n wordcount.3   -c 20   wordcount.trace
+	atactm  -n wordcount.4   -c 10   wordcount.trace
+	atactm  -n wordcount.5   -c 40   wordcount.trace
+	atactm  -n wordcount.6   -c 60   wordcount.trace
+	atactm  -n wordcount.7   -c 80   wordcount.trace
+	atactm  -n wordcount.8   -c 20   wordcount.trace
+	atactm  -n wordcount.9   -c 10   wordcount.trace
+	atactm  -n wordcount.10  -c 70   wordcount.trace
+	atactm  -n wordcount.11  -c 50   wordcount.trace
+	atactm  -n wordcount.12  -c 50   wordcount.trace
+	atactm  -n wordcount.13  -c 50   wordcount.trace
+	atactm  -n wordcount.14  -c 40   wordcount.trace
+	atactm  -n wordcount.15  -c 60   wordcount.trace
+	atactm  -n wordcount.16  -c 20   wordcount.trace
+	atactm  -n wordcount.17  -c 150  wordcount.trace       
+	</pre>
+               
+    <p>
+      <a name="787648">Let's run the above script:</a>
+    </p>
+    <pre>
+	prompt:&gt; ./tests_regress<br>
+	</pre>
+
+    <p>
+      <a name="787648">After the script finishes, run <em>atac</em> with the
+      <em>-q</em> option to print out the cumulative coverage with respect to
+      each test case. The output of:</a>
+    </p>
+    <pre>
+	prompt:&gt; atac -q main.atac wc.atac wordcount.trace<br>
+	</pre>
+	<p>
+		<a name="788427"></a><a name="788397">is below. 
+		From this output, it is obvious that
+		some tests are redundant in terms of coverage. 
+	</p>
+
+	<pre>
+	% blocks      % decisions   test
+	(cumulative)  (cumulative)
+	------------- ------------- -------------
+	69(35/51)     57(20/35)     wordcount.1
+	80(41/51)     66(23/35)     wordcount.2
+	86(44/51)     71(25/35)     wordcount.3
+	90(46/51)     74(26/35)     wordcount.4
+	100(51)       86(30/35)     wordcount.5
+	100(51)       89(31/35)     wordcount.6
+	100(51)       91(32/35)     wordcount.7
+	100(51)       97(34/35)     wordcount.8
+	100(51)       100(35)       wordcount.9
+	100(51)       100(35)       wordcount.10
+	100(51)       100(35)       wordcount.11
+	100(51)       100(35)       wordcount.12
+	100(51)       100(35)       wordcount.13
+	100(51)       100(35)       wordcount.14
+	100(51)       100(35)       wordcount.15
+	100(51)       100(35)       wordcount.16
+	100(51)       100(35)       wordcount.17
+	</pre>
+
+	<p>
+		A minimal cost subset of these
+		tests which has the same block, decision and all- uses coverage as the original
+		set can be obtained by executing the command:
+	</p>
+
+	<pre>
+	prompt:&gt; atac -Mq main.atac wc.atac wordcount.trace
+	</pre>  
+	
+	<p>
+		<a name="788665"></a><a name="788382">The output follows with tests
+		in order of decreasing added coverage per unit cost. Since ATAC
+		minimization does not modify the .<em>trace</em> file, for those tests
+		which are not included in the minimal subset such as <em>wordcount.1</em>,
+		their corresponding trace information remains in the trace file unless it
+		is deleted explicitly by <em>atactm</em> with the <em>-d</em> option (see
+		<a href="managing.html#973909">Section 7.5, <em>Deleting Test
+		Cases</em></a>). After this minimization, test set size is reduced from 17
+		to 6. 
+		<!-- A bigger size reduction can be obtained by doing minimization with
+		respect to a different coverage criterion (see <a href=
+		"xregress.html#788883">Section 11.2.3, <em>Minimizing by Coverage
+		Criteria</em></a>). -->
+	</p>
+
+
+	<pre>
+	% blocks      % decisions   test
+	(cumulative)  (cumulative)
+	------------- ------------- -------------
+	75(38/51)     66(23/35)     wordcount.9
+	86(44/51)     77(27/35)     wordcount.3
+	94(48/51)     83(29/35)     wordcount.14
+	98(50/51)     91(32/35)     wordcount.15
+	100(51)       97(34/35)     wordcount.12
+	100(51)       100(35)       wordcount.7
+	</pre>
+					
+    <h3>
+      <a name="787760">11.2.1 Forcing Tests to be in the Minimal Set</a>
+    </h3>
+	
+	<p>
+		<a name="787761">There are some tests that you always want to be
+		included in the minimal set regardless of whether they provide additional
+		cost-effective code coverage, such as tests that detect previously fixed
+		programming faults. You can force the inclusion of such tests in the
+		minimal set by giving them a cost of 0 using <em>atactm</em>.</a>
+	</p>
+	
+    <h3>
+      <a name="776594">11.2.2 Choosing a Reduced Subset after Minimization</a>
+    </h3>
+	
+	<p>
+		<a name="785460"></a><a name="785478">In some cases, a cost effective
+		test set need not be minimal. Suppose you only have two hours to execute
+		some subset of your regression test set; then you would like to execute the
+		most effective subset during that time. You may wish to make the cost
+		versus effectiveness trade-off decision yourself. In this case you can run
+		ATAC minimization with the <em>-K</em> option to print out a cumulative
+		summary of the cost. For example, below is the result of entering:
+	</p>
+	
+    <pre>
+	prompt:&gt; atac -MKq  main.atac wc.atac wordcount.trace<br>
+	</pre>
+   
+    <pre>
+	cost   % blocks      % decisions   test
+	(cum)  (cumulative)  (cumulative)
+	------ ------------- ------------- -------------
+	10     75(38/51)     66(23/35)     wordcount.9
+	30     86(44/51)     77(27/35)     wordcount.3
+	70     94(48/51)     83(29/35)     wordcount.14
+	130    98(50/51)     91(32/35)     wordcount.15
+	180    100(51)       97(34/35)     wordcount.12
+	260    100(51)       100(35)       wordcount.7
+	</pre>
+                 
+	<p>
+		<a name="788882">From this summary it is easy to identify a subset
+		of the tests that achieve a given level of coverage at reduced cost. For
+		example, all tests together have cost 260. However, the first four tests in
+		the minimal set achieve at least 90% <em>block</em> coverage at a total
+		cost of 130, a fraction of the entire cost of the minimal set.</a>
+	</p>
+	
+    <h3>
+      <a name="788883">11.2.3 Minimizing by Coverage Criteria</a>
+    </h3>
+	
+	<p>
+		<a name="789651"></a><a name="789698">With the <em>-m{bde}</em>
+		option, ATAC minimization can be limited to computing a minimal subset for
+		a selected set of coverage measure(s). The argument to <em>-m</em> selects
+		one or more coverage measures: <em>e</em> selects function-entry coverage,
+		<em>b</em> block coverage and <em>d</em> decision coverage (see</a>
+		<a href="overview.html#623861">Section 3.3, <em>What Does ATAC
+		Do?</em></a>, for an explanation of these measures). For example, the
+		minimal subset generated for tests as shown below is
+		limited to block by entering:
+	</p>
+    
+	<pre>
+	prompt:&gt; atac -Mq -mb main.atac wc.atac wordcount.trace<br>
+	</pre>
+	
+	<p>
+		<a name="789699">In this case, test set size is reduced to from 17 to 4,
+		which corresponds to a major size reduction.</a>
+	<p>
+ 
+    <pre>
+	% blocks      test
+	(cumulative)
+	------------- -------------
+	53(27/51)     wordcount.3
+	65(33/51)     wordcount.4
+	94(48/51)     wordcount.5
+	100(51)       wordcount.14
+	</pre>
+                 
+    <h3>
+      <a name="775846">11.2.4 Minimizing by File</a>
+    </h3>
+	
+	<p>
+		<a name="775865">ATAC minimization can compute a minimal test set for
+		selected testable attributes found in the <em>.atac</em> files submitted on
+		its argument list. For example, the minimal test set generated for tests
+		is limited to blocks, decisions and all-uses found in <em>main.c</em> by entering:
+	</p>
+	
+    <pre>
+	prompt:&gt; atac -M main.atac wordcount.trace<br>
+	</pre>
+	
+	<p>
+		<a name="775895"></a><a name="775905">The output of this appears immediately below.
+	</p>
+	
+	<pre>
+	% blocks      % decisions   test
+	------------- ------------- -------------
+	66(25/38)     48(11/23)     wordcount.9
+	37(14/38)     22(5/23)      wordcount.3
+	26(10/38)     22(5/23)      wordcount.14
+	58(22/38)     39(9/23)      wordcount.15
+	47(18/38)     39(9/23)      wordcount.12
+	18(7/38)      17(4/23)      wordcount.7
+	100(38)       100(23)       == all ==
+	</pre>
+	
+    <h3>
+      <a name="775931">11.2.5 Minimizing by Function</a>
+    </h3>
+	
+	<p>
+		<a name="775932">With the <em>-F</em> option, ATAC minimization can be
+		limited to computing a minimal test set for selected testable attributes
+		found in a selected set of functions. For example, the minimal test set
+		generated for tests is limited to the functions <em>main</em> and <em>count</em> by entering:
+	</p>
+	
+    <pre>
+	prompt:&gt; atac -M -F main -F count main.atac wc.atac wordcount.trace<br>
+	</pre>
+    <h3>
+      <a name="775850">11.2.6 Minimizing by Test Case</a>
+	</h3>
+	
+	<p>
+		<a name="775950">By default, ATAC minimization computes a minimal test
+		set after reconciling all test case trace information recorded in a given
+		.<em>trace</em> file against all <em>.atac</em> files submitted on the
+		command line. You can compute a minimal test set with respect to selected
+		test cases by using the <em>-n</em> option. A minimal test set is generated
+		with respect to the block coverage of the first nine test cases of those
+		by entering:
+	</p>
+    <pre>
+    prompt:&gt; atac -MKq -mb -n "wordcount.?" main.atac wc.atac wordcount.trace<br>
+	</pre>
+	
+	<p>
+		<a name="776000"></a><a name="775999">The output generated is immediately below</a>.
+	</p>
+	
+	<pre>
+	cost   % blocks      test
+	(cum)  (cumulative)
+	------ ------------- -------------
+	20     53(27/51)     wordcount.3
+	30     65(33/51)     wordcount.4
+	70     94(48/51)     wordcount.5
+	120    100(51)       wordcount.2
+	</pre>
+    
+	<p>
+		<a name="776019"></a><a name="776360">Notice that tests can be
+		named by using wild card characters. These wild cards are the same as those
+		used by the Linux-like command processor in naming files (*, ?, [...]). In
+		some cases, quotation marks may be needed to prevent the command processor
+		from expanding the test names as file names. Also, multiple instances of
+		the <em>-n</em> argument may be submitted on a single command line.
+		Sometimes it is necessary to select all tests other than those that have
+		been named. The <em>-x</em> option is used to select the complement of all
+		tests specified using one or more instances of the <em>-n</em> option. For
+		example, entering:</a>
+	</p>
+
+    <pre>
+    prompt:&gt; atac -MKq -mb -x -n "wordcount.?" main.atac wc.atac wordcount.trace<br>
+	</pre>
+
+	<p>
+		<a name="776348">computes a minimal test set with respect to block
+		coverage for all tests except the first nine. 
+		The generated summary report is displayed immediately below</a>.
+	</p>
+
+	<pre>
+	cost   % blocks      test
+	(cum)  (cumulative)
+	------ ------------- -------------
+	20     53(27/51)     wordcount.16
+	70     86(44/51)     wordcount.11
+	110    94(48/51)     wordcount.14
+	160    98(50/51)     wordcount.13
+	210    100(51)       wordcount.12
+	</pre>
+
+            
+	<h2>
+      <a name="776362">11.3 Test set prioritization via a character-based user
+      interface</a>
+    </h2>
+
+	<p>
+		<a name="776390">In this section we explain how test set
+		prioritization is performed via a character-based user interface. To begin,
+		we assume the same <em>main.atac</em>, <em>wc.atac</em> and
+		<em>wordcount.trace</em> as those in</a> <a href=
+		"xregress.html#770329">Section 11.2</a> are used. You can then print out
+		the cumulative cost and coverage of each test in <em>increasing</em> order
+		per additional coverage by entering:
+	</p>
+
+    <pre>
+	prompt:&gt; atac -Q main.atac wc.atac wordcount.trace<br>
+	</pre>
+	
+	<p>
+		<a name="776444"></a><a name="776475">The corresponding output is shown below. 
+		Test <em>wordcount.9</em> is selected as the first test because it gives 
+		the maximum coverage with respect
+		to block and decision per unit cost. Subsequent tests are selected based on
+		their additional coverage with respect to these two criteria per unit cost. In
+		our case, <em>wordcount.3</em> is selected after <em>wordcount.9</em> because
+		it gives the maximal additional block and decision coverage per unit cost.
+	</p>
+	
+    <pre>
+	cost   % blocks      % decisions   test
+	(cum)  (cumulative)  (cumulative)
+	------ ------------- ------------- -------------
+	10     75(38/51)     66(23/35)     wordcount.9
+	30     86(44/51)     77(27/35)     wordcount.3
+	40     90(46/51)     83(29/35)     wordcount.4
+	60     92(47/51)     89(31/35)     wordcount.8
+	100    98(50/51)     91(32/35)     wordcount.14
+	140    100(51)       94(33/35)     wordcount.5
+	200    100(51)       97(34/35)     wordcount.15
+	280    100(51)       100(35)       wordcount.7
+	300    100(51)       100(35)       wordcount.16
+	350    100(51)       100(35)       wordcount.2
+	400    100(51)       100(35)       wordcount.13
+	450    100(51)       100(35)       wordcount.11
+	500    100(51)       100(35)       wordcount.12
+	560    100(51)       100(35)       wordcount.6
+	630    100(51)       100(35)       wordcount.10
+	750    100(51)       100(35)       wordcount.1
+	900    100(51)       100(35)       wordcount.17
+	</pre>
+                
+    <p>
+		<a name="776504"></a><a name="789999">With the prioritized test
+		list available, we can decide where the cut-off should be. For example,
+		suppose you want to select a subset of all the tests shown above
+		with maximal possible coverage and a
+		total cost less than 310 for your regression testing. Your subset should
+		contain tests {9, 3, 4, 14, 12, 15, 7, 16}. On the other hand, if your subset
+		has to achieve the same block coverage as the original set (100% in this
+		case) and its cost should be the least, then run the following command:
+	</p>
+	
+    <pre>
+	prompt:&gt; atac -MKq -mb main.atac wc.atac wordcount.trace         
+	</pre>
+
+	<p>
+		<a name="789983">to get the minimal set with respect to the block
+		coverage</a><a href="#789982"><sup>1</sup></a>. The output generated is shown
+		below.
+	</p>
+
+	<pre>
+	cost   % blocks      test
+	(cum)  (cumulative)
+	------ ------------- -------------
+	20     53(27/51)     wordcount.3
+	30     65(33/51)     wordcount.4
+	70     94(48/51)     wordcount.5
+	110    100(51)       wordcount.14
+	</pre>
+
+              
+    <h2>
+      <a name="790001">11.4 Test set minimization and prioritization via a
+      graphical user interface</a>
+    </h2>
+	
+	<p>	
+		<a name="776900">First let's go back to folder xRegress-tutorial-GUI. We now repeat test set minimization and
+		prioritization via a graphical user interface using the same
+		<em>main.atac</em>, <em>wc.atac</em> and <em>wordcount.trace</em> files as
+		those in</a> <a href="xregress.html#770329">Section 11.2</a>. Since the
+		Toolsuite's graphical interface does not support all the features discussed
+		in <a href="xregress.html#770329">Section 11.2</a> and <a href=
+		"xregress.html#776362">Section 11.3</a>, we will only illustrate those that
+		are supported. Invoke the graphical interface of the Toolsuite by typing:
+	</p>
+
+    <pre>
+	prompt:&gt; xsuite wordcount.atacp wordcount.trace<br>
+	</pre>
+	
+	<p>
+		<a name="776820"></a><a name="777376">Then, pull down the
+		"<em>Coverage</em>" menu and select the "<em>xRegress</em>" option. Click on
+		the "<em>Minimize</em>" button in the lower right pane to see the cumulative
+		coverage by test case with respect to the selected coverage criteria. By
+		default, all three criteria -- function-entry, block, decision -- are selected.
+		The resulting window appears in</a> <a href="xregress.html#777376">Figure
+		11-1</a> with tests listed in the order of decreasing added coverage per unit
+		cost.
+	</p>
+    
+    <a name="777373"></a>
+    <div class="figure figure-odd">
+		<a href="xregress.frm.anc.gif"><img src="xregress.frm.anc.gif"></a>
+		<div>Figure 11-1 Test cases window of <em>xRegress</em> in <em>greedy_order</em> with all
+					three coverage criteria selected</div>
+	</div>
+    <p>
+		<a name="785507"></a><a name="785520">Click with the left mouse
+		button on "<em>function_entry</em>" and "<em>decision</em>" check boxes at
+		the top of the xRegress pane to deselect these criteria. This makes <em>block</em>
+		coverage the only selected criterion. Pressing the minimize button 
+		updates the test case window accordingly, as shown in</a> <a href="xregress.html#785520">Figure
+		11-2</a>. 
+		<!-- potential enhancement
+		A shortcut for this is to click on "<em>block</em>" with the
+		right mouse button which will deselect every criterion except
+		<em>block</em>.
+		-->
+	</p>
+	
+	<a name="785517"></a>
+	<div class="figure">
+		<a href="xregress.frm.anc1.gif"><img src="xregress.frm.anc1.gif"></a>
+		<div>Figure 11-2 The updated test case window in
+					<em>greedy_order</em> with only the block coverage criterion
+					selected</div>
+    </div>
+	
+    <p>
+      <a name="777869"></a><a name="777646">By default, <em>xRegress</em> 
+	  is in <em>greedy order</em> which sorts test
+      cases in order of increasing cost per additional coverage. You can switch
+      to <em>optimal order</em> to do the test set minimization by selecting
+      the "<em>Optimal</em>" from the drop down menu to the right of the
+      "<em>Minimize</em>" button. The updated test cases window is
+      displayed in</a> <a href="xregress.html#777646">Figure 11-3</a>. 
+	  <!--  potential future enhancement
+	  The
+      Test cases frame at the lower-right corner shows "<em>4 of 17</em>"
+      indicating that only the first four tests (<em>wordcount.3</em>,
+      <em>wordcount.4</em>, <em>wordcount.5</em> and <em>wordcount.14</em>) are
+      included in the minimized subset with the same <em>block</em> coverage as
+      the original test set. -->
+	  The same output can be obtained via the
+      character-based interface by entering the following on the command line:
+    </p>
+	
+    <pre>
+	prompt:&gt; atac -M -mb main.atac wc.atac wordcount.trace<br>
+	</pre>
+    
+	
+    <a name="777643"></a>
+	<div class="figure">
+        <a href="xregress.frm.anc2.gif"><img src="xregress.frm.anc2.gif"></a>
+		<div>Figure 11-3 The updated test case window in
+                <em>optimal_order</em> with only the block coverage criterion selected</div>
+	</div>
+            
+			
+	<!--
+	<p>
+		<a name="777585">The only difference is that the character-based
+		command only returns tests in the minimized set and ignores others, whereas
+		the test case window in <em>xRegress</em> lists all
+		tests including those not in the minimized set.</a>
+	</p>
+	-->
+	
+    <p>
+      <a name="777954">To quit <em>xRegress</em> click
+      on the "<em>File</em>" button in the top button bar and select
+      "<em>exit</em>".</a>
+    </p>
+    <hr>
+	<div class="footer">
+		<br>
+		<sup>1</sup><a name="789982">The option -<em>K</em> can be omitted if you
+		don't want to include cost as part of the output.</a>
+		<hr>
+		</div>
+		<br>
+			<a href="coverpage.html">[Top]</a> 
+			<a href="xprof.html">[Prev]</a> 
+			<a href="xvue.html">[Next]</a> 
+			<a href="sqatoolIX.html">[Index]</a> 
+			<a href="sqatoolTOC.html">[TOC]</a>
+		<hr>
+		<br>
+		<br>
+	</div>
+  </body>
+</html>

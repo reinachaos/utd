@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome file</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="project-2-controlflow--and-dataflow-based-testing">Project 2: Controlflow- and Dataflow-Based Testing</h1>
+<h2 id="part-1">Part 1</h2>
+<p>(70 points)</p>
+<p>Use <em><strong>xSuite</strong></em> to measure the block, decision, def-use coverage on the Unix “spell” program with respect to the test cases which you submitted for the functional testing (i.e., test cases created for your Project 1).</p>
+<h3 id="instrument-the-subject-program">Instrument the subject program</h3>
+<p>The instrumentation can be done by running:</p>
+<pre><code>make clean
+make CC="atac cc"
+</code></pre>
+<p>Recall what you did in <em><strong>xSuite</strong></em> tutorial and use <em><strong>xSuite</strong></em> to measure the code coverage of your test cases.</p>
+<h3 id="submission-for-part-1">Submission for part 1</h3>
+<p>You need to submit:</p>
+<ul>
+<li>a tar (or zip) file, and name it to <em><strong>Project-2A-FirstName-LastName.tar</strong></em> with the following:
+<ul>
+<li>your entire project 2 folder (including all the files and scripts to run the test cases you created). If a special setup is required for some of your test cases, you need to schedule an appointment with the TA to do this before the deadline.</li>
+<li>a coverage summary (screenshot) similar to Figure 2-22 in <a href="https://paris.utdallas.edu/ewong/emse6367/04-Tutorial/xSuite-Tutorial/help/tutorial.html#1000410">Chapter 2</a> of the xSuite User’s Manual</li>
+</ul>
+</li>
+</ul>
+<p><em><strong>(Submissions without the correct file name will not be accepted.)</strong></em></p>
+<h2 id="part-2">Part 2</h2>
+<p>(150 points)</p>
+<p>Generate additional test cases based on the hints provided by xSuite or<br>
+other information which you have to improve the block and decision coverage.</p>
+<h3 id="submission-for-part-2">Submission for part 2</h3>
+<p>Submit the following required items to eLearning.</p>
+<ul>
+<li>a tar (or zip) file, and name it to <em><strong>Project-2B-FirstName-LastName.tar</strong></em> with the following:
+<ul>
+<li>
+<p>download the <a href="https://paris.utdallas.edu/ewong/emse6367/01-Project/Coverage-Table.xlsx">template</a>, and enter your answers:</p>
+<ul>
+<li>
+<p>the 1st column is a test case ID starting from T001</p>
+</li>
+<li>
+<p>the 2nd column is a description of this test case</p>
+</li>
+<li>
+<p>the 3rd column explains the technique(s) used for generating this test case (e.g.,reading the man page, equivalence partitioning, boundary value analysis, predicate testing, using hints provided by xSuite, etc.)</p>
+</li>
+<li>
+<p>the 4th column is the amount of time (in minutes) you spent on creating this test case</p>
+</li>
+<li>
+<p>the 5th column is the cumulative block coverage<br>
+(the cumulative coverage on each row should be the coverage after executing the test case of that row. If you have already loaded all the test cases in xSuite, you can obtain this information by right click any test cases and select “Disable all tests”. Then right click each test case and select “Enable this test”. Write down the cumulative coverage reported at “Total”. Repeat this process until all the test cases are enabled)</p>
+</li>
+<li>
+<p>the 6th column is the cumulative decision coverage<br>
+(the cumulative coverage on each row should be the coverage after executing the test case of that row. Please use the similar approach explain for the 5th column to obtain this information.)</p>
+</li>
+</ul>
+<p>(<strong>Note: test cases in this table needs to be a superset of those submitted for Project 1</strong>)</p>
+</li>
+<li>
+<p>your entire project 2 folder (including all the files and scripts to run the test cases you created). Compared to the Part 1, the project folder you submit should include additional test cases. If a special setup is required for some of your test cases, you need to schedule an appointment with the TA to do this before the deadline.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><em><strong>(Submissions without the correct file name will not be accepted.)</strong></em></p>
+<p>If you have any questions, please contact the TA.</p>
+</div>
+</body>
+
+</html>

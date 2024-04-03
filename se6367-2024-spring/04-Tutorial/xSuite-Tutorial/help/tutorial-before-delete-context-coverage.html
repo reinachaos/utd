@@ -1,0 +1,1202 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <title>atac & xSuite: Tutorial</title>
+  <link rel=stylesheet href="style.css" type="text/css" media=screen>
+</head>
+
+<body>
+<div id="wrap">
+	<a href="coverpage.html">[Top]</a>
+	<a href="part1.html">[Prev]</a>
+	<a href="overview.html">[Next]</a>
+	<a href="sqatoolIX.html">[Index]</a>
+	<a href="sqatoolTOC.html"> [TOC] </a>
+<hr><br>
+
+<h1>
+	Chapter 2 <br><br>
+	ATAC & xSuite: A Tutorial <br><br>
+</h1>
+
+
+<a name="402043"></a>
+<p>
+	This chapter illustrates how the basic features of
+	the Toolsuite's code coverage tools, <em>atac</em> and <em>xSuite</em>, can be used in
+	reporting code coverage
+	and identifying uncovered source code.
+</p>
+
+<hr>
+
+<a name="402047"></a>
+<p>
+	In this tutorial we illustrate how the basic
+	features of <em>atac</em> and <em>xSuite</em> can be
+	used in testing by way of a
+	running example. <em>atac</em> is used to test <em>wordcount</em>, a program
+	that counts the number of lines, words, and/or characters given to it
+	as input. Within this chapter, general terminology is used. See 
+	<a href="appendixB.html#1001045">Appendix A, <em>Platform Specific
+	Information</em></a>, if you need help determining exactly what to
+	type, and to see expected output samples.
+</p>
+
+<p class="important">
+	Due to differences in compilers on Unix and Windows, 
+	the coverage related numbers shown in this tutorial will not be consistent across platforms. 
+	This, among other factors, is due to the different ways in which macros are expanded on different
+	platforms. The examples used in this documentation were generated on Windows.
+</p>
+
+<!--<a name="1000722"></a>-->
+<!--<p>-->
+	<!--The word counting program takes as arguments an optional list of files-->
+	<!--and an optional combination of the flags <em>-l</em>, <em>-w</em>,-->
+	<!--and <em>-c, </em>each respectively indicating whether to count lines,-->
+	<!--words, or characters within the argument files. By default, all input-->
+	<!--is read from standard input and all lines, words, and characters are-->
+	<!--counted. The source code and sample input for the <em>wordcount </em>program-->
+	<!--are contained in the files-->
+	<!--<em>main.c, wc.c,</em> <em>Makefile</em>, <em>input1</em>,-->
+	<!--<em>input2</em>, and<em> input3</em>. The complete source listings of-->
+	<!--the first three files appear in <a href="appendixB.html#1001045">Appendix-->
+	<!--A, <em>Platform Specific Information</em></a>. These files are also-->
+	<!--installed with the Toolsuite so you may execute these commands as you read this-->
+	<!--tutorial. To copy these files, create a new directory, <em>cd</em> to-->
+	<!--it, and copy the contents of the directory in which the tutorial files-->
+	<!--are installed into the new directory.-->
+<!--</p>-->
+
+<!--<a name="1001166"></a>-->
+<!--<p>-->
+	<!--Before using <em>atac</em>, check that the word counting program compiles and-->
+	<!--runs on a sample input. To create your executable program, type the-->
+	<!--appropriate <em>make</em> or <em>nmake</em> command to build on your-->
+	<!--system. If you are unsure which command to use, refer to-->
+	<!--<a href="appendixB.html#1001045">Appendix A, <em>Platform Specific Information</em></a>.-->
+<!--</p>-->
+
+<!--<a name="1001173"></a>-->
+<!--<p>-->
+	<!--The output should indicate that the source (<em>.c</em>) files are-->
+	<!--processed and an executable called <em>wordcount(.exe) </em>is-->
+	<!--created.-->
+<!--</p>-->
+
+<!--<a name="1001194"></a>-->
+<!--<p>-->
+	<!--An alternative way to build the executable is to run your compile-->
+	<!--command including all the source files in the directory and specifying-->
+	<!--or renaming <em>wordcount(.exe)</em> as your output file name.-->
+<!--</p>-->
+
+<p>
+To compile the program, execute
+<pre>
+        prompt:&gt; make CC="atac cc"
+</pre>
+</p>
+
+<a name="1001198"></a>
+<p>
+	Once <em>wordcount </em>has been built, run it against a sample
+	input:
+
+	<a name="1006555"></a>
+	<pre>	
+        prompt:&gt; ./wordcount input1						
+	</pre>
+
+	<a name="1000682"></a>
+	The file <em>input1</em> contains the following
+	line (the first character is a tab):
+
+	<a name="799786"></a>
+	<pre>		test input file 1<br></pre>
+
+	<a name="799857"></a>
+	The output of <em>wordcount </em>should look like this:
+
+	<a name="803639"></a>
+	<pre>		1	4	19	input1<br>		1	4	19	total<br></pre>
+</p>
+
+<a name="799787"></a>
+<p>
+	Now you are ready to use <em>atac</em>. Remove the previously
+	created object files and the executable file. One way to do this is to
+	use the <em>clean</em> command appropriate for your setup. Recompile
+	the <em>wordcount </em>program with <em>atac</em>. Refer to 
+	<a href="appendixB.html#1001045">Appendix A, <em>Platform Specific
+	Information</em></a> for assistance determining these exact commands
+	and for an approximate example of the output you will see.
+</p>
+
+<a name="799800"></a>
+<p>
+	As discussed in <a href="instrumenting.html#203783">Section 5.2.2,
+	<em>Integrating with Makefiles</em></a>, <em>atac</em> is easily integrated with
+	existing <em>makefiles</em>. Again, if you do not wish to use <em>(n)make,</em>
+	you may compile the program under <em>atac</em> by entering the appropriate
+	compile command at your system prompt. If errors are encountered during
+	compilation refer to <a href="instrumenting.html#206311">Section 5.4, <em>Compilation
+	and Link Errors</em></a>.
+</p>
+
+<a name="996408"></a>
+<p>
+	Notice that in addition to creating the <em>.o</em> or <em>.obj</em> files
+	and the executable file, <em>atac</em> has also created <em>main.atac</em>,
+	<em>wc.atac</em>, and <em>wordcount.atacp</em> files. <em> atac</em> </em>creates a 
+	<em>.atac</em> file for each <em>.c</em> file it compiles. It also creates a
+	<em>.atacp</em> file for each executable generated during the build process. 
+	A <em>.atac</em> file stores local information associated with the corresponding
+	<em>.c</em> file, such as the line and column numbers of all blocks and 
+	decisions in that <em>.c</em> file. A <em>.atacp</em> file, on the other hand, stores global 
+	information that spans all source files used to build the associated executable.
+	Information stored in these files is used later during test analysis.
+</p>
+
+<a name="996424"></a>
+<p>
+	Now invoke the graphical browser <em>xSuite</em> by entering the
+	following command:
+</p>
+
+<a name="996425"></a>
+<pre>	prompt:&gt; xsuite wordcount.atacp &<br></pre>
+
+<a name="996467"></a>
+<div class="figure">
+	<a href="tutorial.frm.anc7.gif"><img src="tutorial.frm.anc7.gif" ></a></center>
+	<div>Figure 2-1 The initial display of the main <em>xSuite</em> window</div>
+</div>
+
+<p>
+	<a href="tutorial.html#996467">Figure 2-1</a> shows the main <em>xSuite</em> 
+	window display. The source window in the
+	middle displays the first source file, <em>main.c</em>, with all of
+	its basic <em>blocks</em><a href="#994904"><sup>1</sup></a>
+	highlighted in various colors. Each color represents a certain weight. 
+	<em>xSuite</em> determines these weights by doing a
+	detailed control flow analysis of the program. If, for example, a block
+	has weight 26, it means any test case that causes that block to be
+	exercised, or <em>covered,</em> is guaranteed to cover a <em>minimum</em>
+	of 26 other blocks. White represents zero weight and red
+	represents the highest weight among all blocks in the file. Thus, if a
+	block is highlighted in white, it means that it has already been
+	covered by a test case and covering it again will not add new coverage.
+	If, on the other extreme, a block is highlighted in red, it means that
+	it has not been covered by any test case so far and covering it first
+	is the most efficient way to add new coverage to the program; it is the
+	best way to add maximum coverage in a single program execution.
+</p>
+
+<a name="809144"></a>
+<p>
+	The color spectrum chart above the source window displays the actual
+	weights associated with each color. For example, the chart in </a><a
+	 href="tutorial.html#996467">Figure 2-1</a> indicates that all yellow
+	blocks in <em>main.c</em> have the weight 9, and the red blocks have
+	the weight 26.
+</p>
+	
+<a name="806525"></a>
+<p>The scroll bar to the left of the source window
+	displays a thumbnail
+	sketch of the entire file. Note that there are no white regions in the
+	scroll bar at this point as we have not run the instrumented program
+	(the executable compiled with <em>atac</em>) on any inputs, so no blocks in the
+	file have been covered yet.
+	The scroll bar is very useful in quickly locating where the red blocks,
+	or the "hot spots," in the file are. 
+	Clicking with the left mouse
+	button at any spot in the scroll bar brings the corresponding region of
+	the file into the source window. 
+	<!-- potential enhancement You may also use the arrows at the top
+	or the bottom of the scroll bar to scroll up or down the source file a
+	few lines at a time. -->
+	You may also drag the mouse up or down the scroll
+	bar with the left mouse button pressed to rapidly scroll up or down the
+	file. 
+	
+</p>
+
+<a name="402881"></a>
+<div class="figure figure-odd">
+	<a href="tutorial.frm.anc8.gif"><img src="tutorial.frm.anc8.gif" ></a></center>
+	<div>Figure 2-2 The source display showing the red blocks or "hot spots"</div>
+</div>
+
+<a name="402868"></a>
+<p>
+	The scroll bar indicates that there is a red spot
+	towards the bottom of the file</a><a href="#402866"><sup>2</sup></a>.
+	Click on or near the red spot so that part of the file becomes visible
+	in the source window. <a href="tutorial.html#402881">Figure 2-2</a>
+	shows the resulting display.
+</p>
+
+<a name="809824"></a>
+<p>
+	Analysis of the code reveals that the two red blocks are exercised
+	whenever the program reads its input from a file (as opposed to the
+	standard input which is the default behavior). Let us run wordcount on
+	an input file, <em>input1</em>:
+	
+	<pre> 	prompt:&gt; ./wordcount input1   <em>(wordcount.1</em>) </pre>
+
+	This test should produce the same output as that
+	produced by the version of <em>wordcount</em> compiled without <em>atac</em> as
+	shown earlier. 
+</p>
+
+<a name="989986"></a>
+<p>
+	Note that in addition to the expected output, running this test case
+	has created an execution trace file called <em>wordcount.trace.</em>
+	This file contains dynamic coverage information used in test analysis.
+	Subsequent tests will cause additional dynamic information to be logged
+	to the same file.
+</p>
+
+<a name="996667"></a>
+<div class="figure">
+	<a href="tutorial.frm.anc13.gif"><img src="tutorial.frm.anc13.gif" ></a></center>
+	<div>Figure 2-3 The trace file dialog box for Windows</div>
+</div>
+
+<a name="989999"></a>
+<p>
+	To tell <em>xSuite</em> to
+	incorporate the dynamic information from this trace file into its
+	display, click with the left mouse button on the "<em>File</em>"
+	button in the top button bar. This will cause the file menu to pop up.
+	Select the "<em>open trace file...</em>" entry in the menu. This will
+	open a dialog box as shown in <a href="tutorial.html#996667">Figure
+	2-3</a>.
+	(The dialog box on Linux looks slightly different.) 
+</p>
+
+<a name="809098">
+<div class="figure figure-odd">
+	<a href="tutorial.frm.anc1.gif"><img src="tutorial.frm.anc1.gif" ></a></center>
+	<div>Figure 2-4 The source display after executing <em>wordcount.1</em></div>
+</div>
+
+<p>
+	Select <em>wordcount.trace</em> and click on the "<em>Open</em>"
+	button. This will cause <em>xSuite</em> to read
+	the trace file and update the source window display. <a
+	 href="tutorial.html#809098">Figure 2-4</a> shows the updated display.
+</p>
+
+<a name="809264"></a>
+<p>
+	Note that both the previously red blocks, along
+	with several others,
+	have turned in color to white indicating that they were, indeed,
+	covered by the test case you just ran. The scroll bar also indicates
+	that several other blocks not currently visible in the source window
+	were covered as well. Also note that the "hot spot" has now shifted
+	to another statement in the file. <em>xSuite</em>
+	reassigns colors to all uncovered blocks each time it incorporates
+	new dynamic information from a trace file. 
+</p>
+
+<a name="1000069"></a>
+<div class="figure">
+	<a href="tutorial.frm.anc3.gif"><img src="tutorial.frm.anc3.gif" ></a></center>
+	<div>Figure 2-5 The source display showing the new "hot spot"</div>
+</div>
+
+<a name="1000056"></a>
+<p>
+	<!-- future enhancement
+	Click on the new red spot in the scroll bar to
+	make that part of the file visible in the source window. --> </a>
+	Scroll the main window until the new red spot is visible in the source window. 
+	<a  href="tutorial.html#1000069">Figure 2-5</a> shows the new display.
+	The red block, as you can see by analyzing the code, will be executed
+	only when the program is invoked with an invalid command line option.
+	Let us run <em>wordcount</em> with an invalid option, "<em>-x</em>":
+	<pre> 	
+		prompt:&gt; ./wordcount -x input1   (<em>wordcount.2</em>) 
+	</pre>
+</p>
+
+<a name="1001456"></a>
+<p>
+	It should produce an appropriate error message. Note
+	that <em>xSuite</em> highlights the covered and
+	uncovered blocks in the source code and prioritizes them into an order
+	in which you should try to cover them. It does not construct the tests
+	or determine what inputs are needed to cover the uncovered code.
+	Constructing the tests is the role of the tester. It does, however,
+	simplify the tester's job by guiding him or her into creating a small
+	set of high-efficiency, high-leverage test cases that yield high
+	coverage quickly.
+</p>
+
+<a name="996788"></a>
+<div class="figure figure-odd">
+	<a href="tutorial.frm.anc.gif"><img src="tutorial.frm.anc.gif" ></a>
+	<div>Figure 2-6 The highlighted <em>Update</em> button</div>
+</div>
+
+<a name="810580"></a>
+<p>
+	Running <em>wordcount.2 </em>causes its coverage information to be added to
+	the trace file. Note that <em>xSuite</em> has highlighted the 
+	"<em>Update</em>" button in the top button bar, as shown in
+	<a href="tutorial.html#996788">Figure 2-6</a>, to alert you to this
+	fact. <em>xSuite</em> continuously monitors the
+	specified trace files to see if any new coverage information has been
+	added to them. If so, it starts blinking the "<em>Update</em>" button to
+	indicate this fact to you. You may choose to click on this button now to
+	update the display with the coverage information from the test case you
+	just ran, or you may choose to wait until you have run several test
+	cases.
+</p>
+
+<a name="810286"></a>
+<div class="figure">
+	<a href="tutorial.frm.anc6.gif"><img src="tutorial.frm.anc6.gif" ></a>
+	<div>Figure 2-7 The <em>main.c</em> source display after executing <em>wordcount.2</em> </div>
+</div>
+
+<a name="810273"></a>
+<p>
+	Click on the "<em>Update</em>" button to tell <em>xSuite</em> to 
+	incorporate the coverage information from <em>wordcount.2 </em>
+	into its display. <a href="tutorial.html#810286">Figure 2-7</a>
+	shows the updated display.
+<p>
+
+<a name="985652"></a>
+<p>
+	Again notice that the block you were trying to cover, as well as some
+	other previously uncovered blocks, have changed in color to white
+	indicating that they were covered by the test you just ran. Also note
+	that the "hot spot" has now shifted to yet another part of the
+	program.
+</p>
+
+<a name="985750"></a>
+<div class="figure figure-odd">
+	<a href="tutorial.frm.anc23.gif"><img src="tutorial.frm.anc23.gif" ></a></center>
+	<div>Figure 2-8 The coverage summary <em>by-file</em> after executing <em>wordcount</em>.2</div>
+</div>
+
+<a name="989924"></a>
+<p>
+	The scroll bar in <a href="tutorial.html#810286">Figure 2-7</a> indicates that there are
+	very few colored blocks left in the file. Recall, however, that the
+	program consists of two files, <em>main.c</em> and <em>wc.c</em>, and
+	so far we have only been looking at <em>main.c</em>. To look at the
+	overall picture involving both files, look at the "<em>Summary</em>"
+	window in the lower left corner of the main window. 
+	<em>xSuite</em>
+	displays the per file block coverage summary, as shown in 
+	<a href="tutorial.html#985750">Figure 2-8</a>.<a href="#990141"><sup>3</sup></a>
+	The summary window contains a table showing the current coverage scores 
+	for all source files, with the file containing the most 
+	“profitable” block highlighted in red so one may quickly jump to it by
+	clicking on its name.
+	The <em>weight</em> column of the table indicates the weight of the "heaviest" block
+	in each file at this time. 
+	
+	The summary window, in this case, shows that the two tests you have run 
+	so far have covered 30 of the total 41 blocks<a href="#12345678987654321"><sup>7</sup></a> in <em>main.c</em> 
+	and all 13 of the 13 blocks in <em>wc.c</em>. Overall, they have covered 43 of the 54
+	blocks, as indicated by the "total" entry towards the bottom of the
+	display. The bars on the right display the coverages in terms of
+	percentages. The top two bars indicate that the tests you have run so
+	far have covered 73.2% of the blocks in <em>main.c</em> and 100% of
+	the blocks in <em>wc.c</em>, respectively. The bottom bar indicates
+	that they have covered 79.6% of the total number of blocks.
+</p>
+
+<a name="997090"></a>
+<p>
+	Note that each coverage bar is actually made up of two
+	bars, one contained inside the other. The length of the outer bar
+	represents the maximum possible (100%) coverage for the corresponding
+	file and that of the inner bar represents the actual coverage attained
+	so far for that file. As the actual coverage increases, the length of
+	the inner bar increases accordingly. When it reaches 100%, the inner
+	bar spans the entire length of the outer bar as in the case of the <em>wc.c</em>
+	bar in <a href="tutorial.html#985750">Figure 2-8</a>.
+</p>
+
+<a name="997097"></a>
+<p>
+	The relative lengths of the outer bars of individual files represent
+	the relative sizes of various files in terms of, in this case, blocks.
+	As <em>wc.c</em> has about one-third the number of blocks compared to <em>main.c</em>,
+	the outer bar of the former is about one-third the size of the latter.
+</p>
+
+<a name="402690"></a>
+<div class="figure">
+	<a href="tutorial.frm.anc16.gif"><img src="tutorial.frm.anc16.gif" ></a></center>
+	<div>Figure 2-9 The coverage summary <em>by-type</em> after executing <em>wordcount</em>.2</div>
+</div>
+
+<p>
+      
+</p>
+<a name="402691"></a>
+<div class="figure figure-odd">
+	<a href="tutorial.frm.anc24.gif"><img src="tutorial.frm.anc24.gif" ></a></center>
+	<div>Figure 2-10 The coverage summary <em>by-function</em> after executing <em>wordcount</em>.2</div>
+</div>
+
+<a name="402675"></a>
+<p>
+	If you want to see the summary with respect to
+	each type, select "<em>by-type</em>" from the right-hand drop down menu 
+	in the summary pane. The result is shown in </a><a href="tutorial.html#402690">Figure 2-9</a>.
+	Similarly, click on "<em>by-function</em>" for the summary with
+	respect to each function as shown in <a href="tutorial.html#402691">Figure 2-10</a>.
+</p>
+
+<a name="402728"></a>
+<div class="figure">
+	<a href="tutorial.frm.anc32.gif"><img src="tutorial.frm.anc32.gif" ></a></center>
+	<div>Figure 2-11 The <em>wc.c</em> source display after executing <em>wordcount.2 </em></div>
+</div>
+
+<a name="402709"></a>
+<p>
+	In the by file mode you may 
+	click on a file name in the summary window as 
+	shown in </a><a href="tutorial.html#985750">Figure
+	2-8</a> to see the source display
+	of the corresponding file. For now, click on the <em>wc.c</em> label
+	in that window to see its source display. <a
+	 href="tutorial.html#402728">Figure 2-11</a> shows
+	the resulting display. As expected, every block in the file is
+	highlighted in
+	white as each one of them has been covered.
+</p>
+
+<a name="986365"></a>
+<p>
+	As mentioned earlier, the <em>main.c</em> as well as the "total"
+	entries indicate that we have not achieved 100% block coverage yet.
+	Although complete block coverage does not guarantee that a set of tests
+	will reveal all errors, testing is certainly incomplete if there are
+	blocks of code that are not exercised by any test. So click on the <em>main.c</em>
+	tab at the top of the window to go back to the <em>main.c</em> source display, as shown
+	previously in </a><a href="tutorial.html#810286">Figure 2-7</a>.
+</p>
+
+<a name="1000159"></a>
+<div class="figure figure-odd">
+	<a href="tutorial.frm.anc5.gif"><img src="tutorial.frm.anc5.gif" ></a></center>
+	<div>Figure 2-12 The <em>main.c</em> source display showing the new "hot spot"</div>
+</div>
+
+<a name="1000143"></a>
+<p>
+	Click on the red region in the scroll bar on the left, so the corresponding code
+	becomes visible in the source window,
+	as shown in </a><a href="tutorial.html#1000159">Figure 2-12</a>.
+	The red block will be executed when the program reads its input from
+	the standard input instead of a file. Execute the following command
+	which copies the contents of <em>input1</em> to the standard input of <em>wordcount</em>:
+	<pre> 	prompt:&gt; ./wordcount &lt; input1   (<em>wordcount.3</em>) </pre>
+
+	<a name="1001529"></a>
+	This should produce the following output:
+	<a name="986130"></a>
+	<pre>		1	4	19<br></pre>
+</p>
+
+<a name="986162">
+<div class="figure">
+	<a href="tutorial.frm.anc25.gif"><img src="tutorial.frm.anc25.gif" ></a></center>
+	<div>Figure 2-13 The <em>main.c</em> source display after executing <em>wordcount.3</em></div>
+</div>
+
+<a name="799817">
+<p>
+	Note that the "<em>Update</em>" button in the top button bar is again
+	highlighted, as shown previously in </a><a href="tutorial.html#996788">Figure
+	2-6</a>, indicating that new information is available in the trace
+	file. Click on this button. <a href="tutorial.html#986162">Figure 2-13</a>
+	shows the new display.
+	The new red block indicates that we need a test case where the input
+	file cannot be opened, e.g., if the file does not exist. Scrolling
+	through the source window to see other nonwhite blocks indicates that
+	we need a test case where the line, word, and character counting
+	options are specified explicitly. The following test cases cover these
+	situations:
+	
+	<pre> 	prompt:&gt; ./wordcount nosuchfile    (<em>wordcount.4</em>) <br> 	prompt:&gt; ./wordcount -wlc input1   (<em>wordcount.5</em>)<br></pre>
+	
+	<a name="1001575">
+	The former test case should produce an error message indicating that
+	the file could not be found and the latter test case should produce the
+	same output as <em>wordcount.1,</em> as shown earlier.
+</p>
+
+<a name="986398"></a>
+<div class="figure figure-odd">
+	<a href="tutorial.frm.anc26.gif"><img src="tutorial.frm.anc26.gif" ></a></center>
+	<div>Figure 2-14 The <em>main.c</em> source display after executing <em>wordcount.5</em></div>
+</div>
+
+<a name="figure_2_15">
+<div class="figure">
+	<a href="tutorial.frm.anc14.gif"><img src="tutorial.frm.anc14.gif" ></a></center>
+	<div>Figure 2-15 The coverage summary <em>by-file</em> after executing <em>wordcount.5</em></div>
+</div>
+
+<a name="986310"></a>
+<p>
+	Click on the "<em>Update</em>" button.
+	<a href="tutorial.html#986398">Figure 2-14</a> shows the updated
+	display. The scroll bar indicates that all blocks in the file have now been
+	covered. <a href="#figure_2_15">Figure 2-15</a> shows
+	the new summary results. As you can see, the five tests you have run so far have
+	achieved 100% block coverage over both files. They do not, however, constitute a
+	complete set of tests. There may be errors not revealed by these tests
+	that will be revealed when different combinations of statements are
+	executed, or when they are executed in a different order. The remaining coverage
+	measures are designed to help create tests that will reveal these errors.
+</p>
+
+<a name="402920"></a>
+<div class="figure figure-odd">
+	<a href="tutorial.frm.anc15.gif"><img src="tutorial.frm.anc15.gif" ></a></center>
+	<div>Figure 2-16 The coverage summary <em>by-type</em> after executing <em>wordcount.5 </em></div>
+</div>
+
+<a name="402904"></a>
+<p>
+	Select "<em>by-type</em>" in the right-hand drop down menu 
+	in the summary pane. This will show the coverages 
+	achieved so far using various coverage
+	measures, as shown in <a href="tutorial.html#402920">Figure 2-16</a>.
+	The first entry
+	indicates that the five tests you ran have covered all
+	54 of 54 blocks. The
+	other entries provide the coverage status for other coverage
+	measures known as <em>decision</em>, <em>function entry</em>, <em>def-use</em>, and <em>context</em> 
+	coverage. The last two of these entries are related to data flow coverage, which 
+	is not enabled by default; we will discuss how to enable this later in the tutorial. Note
+	that the decision coverage measure has not reached the 100% coverage status yet. 
+	Let us now try to raise this measure to 100%.
+</p>
+
+<a name="402947"></a>
+<div class="figure">
+	<a href="tutorial.frm.anc33.gif"><img src="tutorial.frm.anc33.gif" ></a></center>
+	<div>Figure 2-17 The <em>main.c</em> decision display after executing <em>wordcount.5</em></div>
+</div>
+
+<a name="1006933"></a>
+<a name="402925"></a>
+<p>
+	A decision is a conditional
+	branch from one block to another. As can be
+	seen from the coverage summary in </a><a href="tutorial.html#402920">Figure
+	2-16</a>, it is possible that a set of tests will cover all blocks in a
+	program without covering some of the decisions. In this example, 30 of
+	the total 35 decisions have been covered. In order to determine what
+	additional test cases are needed to cover the remaining five decisions,
+	click on "<em>Decision coverage</em>" in the <em>by-type</em> summary window. 
+	<a href="tutorial.html#402947">Figure 2-17</a> shows the resulting
+	display.
+</p>
+
+<a name="1006948">
+<div class="figure figure-odd">
+	<a href="tutorial.frm.anc11.gif"><img src="tutorial.frm.anc11.gif" ></a>
+	<div>Figure 2-18 The <em>Options </em>menu</div>
+</div>
+
+<p>
+	Alternatively, to switch to decision coverage,
+	you may also click on the "<em>Coverage</em>" menu in the top menu
+	bar and select the "<em>Decision coverage</em>" entry from the
+	resulting menu, as shown in 
+	<a href="tutorial.html#1006948">Figure	2-18</a>.
+</p>
+
+<a name="997405">
+<p>
+	In a decision display, all conditional expressions in a file are
+	highlighted. If an expression is highlighted in white, it means all
+	branches originating at that expression have been covered. If, on the
+	other hand, it is highlighted in a nonwhite color, it means there is at
+	least one branch originating there that has not been covered yet. To
+	find out which one, you may click on the highlighted expression. This
+	will pop up a window showing a list of all branches originating there
+	highlighted in colors that indicate their coverage status.
+</p>
+
+
+<a name="997425"></a>
+<div class="figure">
+	<a href="tutorial.frm.anc9.gif"><img src="tutorial.frm.anc9.gif" ></a></center>
+	<div>Figure 2-19 A decision "hot spot" in <em>main.c</em>
+			with a window<br> showing the list of all branches originating there</div>
+</div>
+
+
+<a name="997408"></a>
+<p>
+	The scroll bar shows that there are several expressions highlighted in red. 
+	Scroll up (or down) the source window so
+	the highlighted expression controlling the <em>do-while</em> loop
+	becomes visible in the source window. Then click on the highlighted
+	expression to pop up the list of all branches originating there, as
+	shown in </a><a href="tutorial.html#997425">Figure 2-19</a>.
+</p>
+
+<a name="986848">
+<p>
+	Note that, of the two possible outcomes of the highlighted conditional
+	expression, <em>true</em> and <em>false</em>, the latter is
+	highlighted in white indicating that the <em>false</em> branch of the
+	loop expression has already been covered. The former, however, is
+	highlighted in red implying that the <em>true</em> branch is yet to be
+	covered. Note that the loop expression itself is highlighted in red
+	indicating that at least one of the branches originating there remains
+	to be covered. In general, the color of a conditional expression at any
+	time is the same as the color of the "<em>heaviest</em>" branch
+	originating there at that time.
+</p>
+
+<a name="997500"></a>
+<div class="figure figure-odd">
+	<a href="tutorial.frm.anc27.gif"><img src="tutorial.frm.anc27.gif" ></a></center>
+	<div>Figure 2-20 A part of the <em>main.c</em> decision display after
+			executing <em>wordcount.6</em></div>
+</div>
+
+<a name="987005"></a>
+<p>
+	To cover the <em>true</em> branch of the loop
+	expression, you must
+	invoke <em>wordcount</em> with more than one input file. Execute the
+	following command to do this:
+	<pre> 	prompt:&gt; ./wordcount input1 input2   (<em>wordcount.6</em>)<br></pre>
+	
+	<a name="1001683"></a>
+	It should produce the following output:
+	<pre>		1	 4	 19	input1<br>		2	 8	 38	input2<br>		3	12	 57	total<br></pre>
+	
+	Click on the highlighted "<em>Update</em>" button to read the
+	coverage information from the above test case. </a><a
+	 href="tutorial.html#997500">Figure 2-20</a> shows the relevant part of
+	the updated display.
+</p>
+
+<a name="997501"></a>
+<div class="figure">
+	<a href="tutorial.frm.anc28.gif"><img src="tutorial.frm.anc28.gif" ></a></center>
+	<div>Figure 2-21 A decision "hot spot" in <em>main.c</em>
+			with its branch list after executing <em>wordcount.6 </em></div>
+</div>
+
+<a name="987227"></a>
+<p>
+	Click on the "<em>Close</em>" entry at the bottom of the decision
+	branch list (<a href="tutorial.html#997500">Figure 2-20</a>). This
+	will remove the branch list window from the display.
+</p>
+
+<a name="1000295">
+<p>
+	The scroll bar now indicates that there are still
+	three nonwhite
+	conditional expressions towards the bottom of the file and one towards
+	the top of the file. Click near the top of the scroll bar to bring the
+	corresponding text in the source window. Then click on
+	the highlighted <em>switch</em> expression to show the corresponding
+	branch
+	list, as shown in </a><a href="tutorial.html#997501">Figure 2-21</a>.
+	The branch list indicates that four of the five possible branches of
+	the <em>switch</em> statement have already been covered. The remaining
+	branch can be covered by invoking the <em>wordcount</em> program with
+	a "<em>-?</em>" option. The following command accomplishes this
+	<a href="#1000310"><sup>5</sup></a>:
+	
+	<pre> 	
+		prompt:&gt; ./wordcount -?   (<em>wordcount.7</em>)
+	</pre>
+	
+	<a name="1001729"></a>
+	This test case should print an appropriate usage
+	message. Click on the "<em>Update</em>" button to confirm that it
+	has, indeed, covered the desired branch of the switch statement. Then
+	close the branch list window by clicking on the "<em>Close</em>"
+	entry.
+</p>
+
+<a name="1000410"></a>
+<div class="figure figure-odd">
+	<a href="tutorial.frm.anc10.gif"><img src="tutorial.frm.anc10.gif" ></a></center>
+	<div>Figure 2-22 The coverage summary <em>by-type</em>
+			after executing <em>wordcount.9 </em></div>
+</div>
+
+<a name="1000377"></a>
+<p>
+	So far we have invoked <em>wordcount</em> with options that have
+	caused it to print all three - line, word, and character - counts. We
+	have never invoked it to print only one or two of these counts.
+	Examining the remaining uncovered decisions reveals that we should
+	invoke the program with only one of the three options, <em>-l</em>, <em>-w</em>,
+	and <em>-c</em>, in order to cover these uncovered decisions. The
+	following two commands achieve this:
+	<pre> 	prompt:&gt; ./wordcount -l input1   (<em>wordcount.8</em>)<br> 	prompt:&gt; ./wordcount -w input1   (<em>wordcount.9</em>)<br></pre>
+
+	<a name="1001767"></a>
+	They should produce appropriate line and word
+	counts, respectively, for the file, <em>input1</em>. Click on the "<em>Update</em>"
+	button and you will see that all decisions in the file have been
+	covered. Now go back to the summary window to check the overall
+	coverage status by clicking on the "<em>Summary</em>" button and
+	selecting the "<em>by-type</em>" coverage option. </a><a
+	 href="tutorial.html#1000410">Figure 2-22</a> shows the new coverage
+	summary.
+</p>
+
+<a name="799844"></a>
+<p>
+	All blocks and decisions have now been covered.</a><a name="799773">
+	Use of <em>atac</em> and <em>xSuite</em> to achieve high code
+	coverage places the source code under intensive scrutiny, which 
+	tends to reveal many errors that may otherwise be missed. 
+	A complete test set, combined with the effort to create it, is very 
+	effective at revealing such errors. There is, however, no
+	guarantee that a program which has passed
+	such a test set has no errors.</a><a href="#799854"><sup>6</sup></a>
+</p>
+
+<!-- documentation of data flow starts here -->
+
+<p>
+	Although achieving full block and decision coverage causes all program 
+	statements and branches to 
+	be executed, it does not cause them to be executed in all “interesting” 
+	ways. A program statement may rely on values of one or more 
+	variables, and it may, similarly, update values of one or more 
+	variables. The value of a variable that is actually used by a statement, 
+	however, may have last been assigned, or “defined”, by any one of a number of statements. 
+	Executing a statement in all “interesting”, significant ways  
+	requires that we execute that statement multiple times with enough test 
+	cases, so all of the definition-use pairs involved are exercised at least once. 
+	<em>Definition-use coverage</em> and <em>context coverage</em> help us 
+	do just that. 
+</p>
+
+<p>
+	The current version of <em>xSuite</em> supports these data flow related coverage
+	criteria in a prototype form. They are, therefore, not enabled by default. 
+	To enable them, you will have to set the <em>ATAC_ENABLE_DATAFLOW</em> environment variable
+	before you compile the target program with <em>atac</em>, either directly or via a makefile.
+</p>	
+<p>	
+	To do this for the <em>wordcount</em> program, first remove all previously created 
+	object files as well as the old executable file. One way to do this is to use the 
+	<em>clean</em> command appropriate for your setup as described in 
+	<a href="appendixB.html">Appendix A.</a>
+</p>
+
+<p>
+	Then set the environmental variable using the command 
+</p>
+
+<pre>
+		prompt:> export ATAC_ENABLE_DATAFLOW=1 
+</pre>
+
+<p>
+	and recompile the program according the instructions in Appendix A. Now 
+	invoke the graphical browser xSuite by entering the following command: 
+</p>
+
+<pre>
+    prompt:> make clean
+    prompt:> make CC="atac cc"
+</pre>
+
+<pre>
+    prompt:> xsuite wordcount.atacp &
+</pre>
+
+<a name="fig2-23"></a>
+<div class="figure">
+	<a href="tutorial.dataflow1.gif"><img src="tutorial.dataflow1.gif" ></a></center>
+	<div>Figure 2-23 Choosing <em>Def-use coverage</em> from the <em>Coverage</em> menu</div>
+</div>
+
+
+<p>
+	Now rerun the tests we used above (wordcount.1 - wordcount.9) and open 
+	the trace file as described earlier. Select Def-use (short for definition-use) 
+	coverage from the coverage menu as shown in <a href="#fig2-23">Figure 2-23</a>. 
+</p>
+
+
+<p>
+	The display updates as shown in <a href=#fig2-24>Figure 2-24</a>.
+</p>
+
+<a name="fig2-24"></a>
+<div class="figure figure-odd">
+	<a href="tutorial.dataflow2.gif"><img src="tutorial.dataflow2.gif" ></a></center>
+	<div>Figure 2-24 The updated xSuite display after choosing def-use coverage</div>
+</div>
+
+<p>
+	Red hot spots represent all variable <em>uses</em> involved in def-use pairs that have
+	not yet been covered by any existing test, while white spots represent 
+	variable uses all of whose associated def-use paris have been covered. 
+	Gray spots represent uses without any reaching definitions inside the program, 
+	such as the arguments to the <em>main()</em> function whose values are set 
+	outside the program before it is invoked. 
+</p>
+
+<p>
+	Let us consider the use of variable “doline” at line 57 in the main.c 
+	program (see <a href=#fig2-25>Figure 2-25</a>). You may display line numbers in the
+	the source window by clicking on the <em>Edit</em> menu on the top menu bar, navigating to
+	<em>Preferences->General->Editors->Text Editors</em> property dialog, enabling the 
+	"<em>Show line numbers</em>" entry, and clicking on the <em>OK</em> button at the bottom of that
+	window.
+</p>
+
+<a name="fig2-25"></a>
+<div class="figure">
+	<a href="tutorial.dataflow3.gif"><img src="tutorial.dataflow3.gif" ></a></center>
+	<div>Figure 2-25 Use of variable <em>doline</em> in the call to <em>print()</em> 
+	on line 57 in <em>main.c</em> </div>
+</div>
+
+<p>
+	The fact that there is a red hot spot over “doline” means that all of its associated 
+	def-use pairs have not been covered by the tests we have run to date. 
+	Click on “doline” to see what definition use pairs have not been 
+	covered. The “doline” use will turn green 
+	signifying that it is the variable use currently in focus (see <a href=#fig2-26>Figure 2-26</a>). 
+</p>
+
+<a name="fig2-26"></a>
+<div class="figure figure-odd">
+	<a href="tutorial.dataflow8.gif"><img src="tutorial.dataflow8.gif" ></a></center>
+	<div>Figure 2-26 A use of <em>doline</em> is highlighted to indicate that the associated 
+	def-use pairs are the current focus of coverage testing</div>
+</div>
+
+<p>
+	On the right of the display the “Use” display will update 
+	(see <a href=#fig2-27>Figure 2-27</a>) to show the three def-use 
+	pairs associated with the selected use of the “doline” variable on line 57. 
+</p>
+
+<a name="fig2-27"></a>
+<div class="figure">
+	<a href="tutorial.dataflow4.gif"><img src="tutorial.dataflow4.gif" ></a></center>
+	<div>Figure 2-27 The Use display showing the three def-use pairs associated 
+	with the use of <em>doline</em> on line 57 of main.c</div>
+</div>
+
+<p>
+	Two of these three pairs are highlighted in non-white colors, which means that we have not exercised these 
+	definition-use combinations in tests so far.  Clicking on the red pair puts the cursor on
+	the corresponding definition in the source window, which is the declaration and the initial assignment of the doline variable.
+	(line 21 in “main.c”, see <a href=#fig2-28>Figure 2-28</a>). 
+</p>
+
+<a name="fig2-28"></a>
+<div class="figure figure-odd">
+	<a href="tutorial.dataflow5.gif"><img src="tutorial.dataflow5.gif" ></a></center>
+	<div>Figure 2-28 A definition of the variable <em>doline</em> highlighted in red to 
+	signify that it part of a def-use pair that has not been covered.</div>
+</div>
+
+<p>
+	You can cover this def-use pair by invoking 
+	wordcount with the “-w” option and suppling standard input as the input file: 
+</p>
+
+<pre>
+	prompt:> ./wordcount -w &lt input1	  (<em>wordcount.10</em>)
+</pre> 
+
+<p>
+	After running this test, click on the Update button. Note that the target use of doline 
+	is now highlighted in white to signify that the targetted def-use pair has now been covered. 
+	(<a href=#fig2-29>Figure 2-29</a>). 
+</p>
+
+<a name="fig2-29"></a>
+<div class="figure">
+	<a href="tutorial.dataflow6.gif"><img src="tutorial.dataflow6.gif" ></a></center>
+	<div>Figure 2-29 The <em>doline</em> definition in the newly covered def-use pair.</div>
+</div>
+
+<p>
+	You can cover most of the other def-use pairs in a similar manner by executing the
+	following commands: 
+</p>
+
+<pre>
+	prompt:> ./wordcount -l &lt input1			(<em>wordcount.11</em>)
+	prompt:> ./wordcount -c &lt input1			(<em>wordcount.12</em>) 
+	prompt:> ./wordcount -cx input1 			(<em>wordcount.13</em>)
+	prompt:> ./wordcount -w nosuchfile			(<em>wordcount.14</em>)
+	prompt:> ./wordcount input1 nosuchfile			(<em>wordcount.15</em>) 
+	prompt:> ./wordcount input3				(<em>wordcount.16</em>)<br> 
+</pre> 
+
+<p>
+	After running the above tests click on the Update button. 
+	Figure <a href=#fig2-30>2-30</a> shows the remaining def-use pairs, 
+	which have not been covered by any of the tests run so far. 
+</p>
+
+<a name="fig2-30"></a>
+<div class="figure">
+	<a href="tutorial.dataflow7.gif"><img src="tutorial.dataflow7.gif" ></a></center>
+	<div>Figure 2-30 Uses associated with infeasible def-use pairs.</div>
+</div>
+<p>
+	These hot spots represent infeasible def-use pairs because it is impossible 
+	to invoke “wordcount” with two input files where the first one is
+	a regular file but the second one is the standard input!   
+</p>
+
+<p>
+	Now switch to <em>wc.c</em> by clicking on that file's name in the by-file summary window.
+	You will see that four def-use pairs in that file have not yet been covered. Instead of
+	covering them now, we will switch to <em>context coverage</em> now to illustrate this more
+	rigerous data flow coverage criterion. A def-use pair, as you saw earlier, is associated 
+	with use of a single variable inside an expression. That expression may, however, 
+	rely on values other variables as well to compute its value, and all variables used there
+	may have one or more reachine definitions associated with them. Context coverage requires 
+	that we run enough tests so all combinations of those definitions do in fact reach that 
+	expression.
+</p>
+
+<p>	
+	Click on <em>Coverage</em> menu in the top menu bar, and select <em>Context coverage</em> by 
+	clicking on that menu item. (See Figure <a href=#fig2-31>2-31</a>.) 
+	
+	<a name="fig2-31"></a>
+	<div class="figure">
+		<a href="tutorial.context1.gif"><img src="tutorial.context1.gif" ></a></center>
+		<div>Figure 2-31 Selecting the context option from the coverage menu.</div>
+	</div>
+	
+	
+	Each of the three assignments highlighted in red
+	make use of two variables. The first one, on line 38, needs the values of <em>p_nl</em> and 
+	<em>nl</em> variable. Click on either <em>p_nl</em> or 
+	<em>nl</em> to see all combinations of their 
+	definitions that may reach there.  (See Figure <a href=#fig2-31>2-32</a>.). 
+	
+	<a name="fig2-32"></a>
+	<div class="figure">
+		<a href="tutorial.context2.gif"><img src="tutorial.context2.gif" ></a></center>
+		<div>Figure 2-32 Reaching definitions for <em>p_nl</em> and <em>nl</em>.</div>
+	</div>	
+	
+	
+	The <em>Context</em> tab to the right
+	of the Summary tab shows two contexts, Context 1 and Context 2. Context 1 is highlighted
+	in red, signifying that it has not been covered yet, whereas Context 2 is not highlighted in red,
+	implying it has already been covered. Click on <em>Context 1</em> to see the two
+	associated definitions, both of which are highlighted in red. (See Figure <a href=#fig2-33>2-33</a>.). 
+	
+	<a name="fig2-33"></a>
+	<div class="figure">
+		<a href="tutorial.context3.gif"><img src="tutorial.context3.gif" ></a></center>
+		<div>Figure 2-33 The associated definitions for <em>p_nl</em> and <em>nl</em>.</div>
+	</div>	
+	
+</p>
+
+<p>		
+	It shows
+	that the values of <em>p_nl</em> and <em>nl</em> used on line 38, in this context, arise
+	from their definitions on lines 19 and 24, respectively, and that this combination of def-use
+	pairs was not exercized simultaneously by any of the test cases you have run so far. The only way
+	this combination can be exercized is if the two definitions involved are executed but the body of 
+	the "while" loop on line 27 is skipped altogether by a test case. This is possible only if the 
+	wordcount program is supplied with an empty file as input. Your test folder already contains
+	one such file, aptly named <em>empty</em>. Execute the following command:
+</p>
+
+<pre>
+	prompt:> ./wordcount empty	  (<em>wordcount.17</em>)
+</pre> 
+
+<p>
+	Then click on the Update button. Note that this test has not only covered the context you
+	were targetting, but the other two previously uncovered contexts as well. All contexts in wc.c
+	have now been covered.  
+</p>
+
+<p>
+	Normally, you would embark upon the task of context coverage after you have completed the
+	def-use coverage task. In this
+	case, however, we proceeded to context coverage before we had covered all feasible def-use pairs.
+	It turns out that covering all feasible def-use pairs for the wordcount program also results
+	in all contexts in that program to be covered as well, which in general is not true. We switched
+	to context coverage prematurely, so we could illustrate the concept of context coverage to you,
+	while there were still some uncovered contexts available to examining. 
+	Then click on the Update button. Note that this test has not already covered the context you
+	were targetting, but the other two previously uncovered contexts as well. All contexts in wc.c
+	have now been covered.  
+</p>
+
+<p>
+	The summary window now shows that 100% def-use coverege for wc.c 
+	and 97.4% def-use coverage for main.c. Only three of the 117 def-use pairs in main.c
+	remain uncovered, and all three are infeasible as discussed earlier.
+</p>
+
+<p>
+	Determining if a def-use pair or a context is infeasible cannot be automated, 
+	in general, because this is an undecidable problem. Therefore, it will 
+	be up to analysts like you to identify such elements. Also, covering all feasible
+	def-use pairs and contexts, especially for large programs, can 
+	be a very arduous, time consuming task. It is because of these difficulties that 
+	we envision the use of these data flow coverage criteria to be restricted to analysis 
+	of the most critical, high risk parts of a target application. 
+</p>
+
+<!-- start of saved text 
+<p>
+	An individual definition-use pair, as discussed above, is associated 
+	with a single program variable. It relates a use of a variable in one 
+	program statement with another statement that may have last assigned a 
+	value to that variable. A program statement, however, may simultaneously 
+	use multiple variables to accomplish its task. Definition-use coverage, 
+	in this case, will require that all definition-use pairs associated with 
+	the use of a variable at a statement, as well as all pairs associated 
+	with the use of a variable at the same statement, be covered by at least 
+	one test case. But it requires them to be covered individually, in 
+	isolation, even though the values of the two variables involved are used 
+	simultaneously. 
+</p>
+
+<p>
+	Data context coverage requires all combinations of relevant combinations 
+	of variable definitions, or data contexts to be covered by at least one 
+	test case. Achieving high context coverage, however, may be even harder 
+	to accomplish than achieving comparable levels of definition-use 
+	coverage discussed earlier, because one now has to develop test inputs 
+	that will cause multiple variable assignments to simultaneously reach a 
+	specified program point where all of those values are used together, in 
+	unison, in a given computation. Also, the number of contexts associated 
+	with a given statement may be substantially larger than the number of 
+	definition-use pairs associated with the same computation: this number 
+	may grow exponentially as the number of variables used by the statement 
+	grows. Many of those contexts, furthermore, may be infeasible, as was 
+	the case with definition-use pairs discussed earlier. 
+</p>
+
+<p>
+	Manually determining the feasibility of such combinations may be even 
+	more cumbersome and error prone than that for definition-use pairs, for 
+	the same reasons mentioned earlier. We, nevertheless, believe that 
+	requiring such stringent coverage criterion is important for critical 
+	target sections of some applications. 
+</p>
+<!-- end of temporary text -->
+
+<!-- end of documenation - final paragraph -->
+<a name="994950"></a>
+<p>
+	To quit <em>xSuite</em> click on the "<em>File</em>"
+	button in the top button bar, then select "<em>exit</em>".
+</p>
+
+<br><br><br><br>
+<div class="footer">
+	<hr><br>
+	<sup>1</sup><a name="994904">
+	A <em>basic</em> <em>block, or simply, a block, </em>is a code
+	sequence that is always executed sequentially, i.e., it has no internal
+	branching constructs. It is also described as any
+	"single-entry-single-exit" region of code; see </a><a
+	 href="overview.html#623861">Section 3.3, <em>What Does <em>atac</em> Do?</em></a>.
+	<p><sup>2</sup><a name="402866">
+	Although the red region, in this case, appears to consist of a single
+	block, it is a sequence of two contiguous basic blocks, as the first
+	one of the two is a function call. A function call, in general, may
+	never return, e.g., if it invokes <em>exit</em> under certain
+	conditions. Thus a function call breaks the
+	"single-entry-single-exit" property of a basic block and results in
+	the start of a new basic block at a statement immediately following the
+	function call.
+	</a></p>
+	<p><sup>3</sup><a name="990141">
+	If there are more files than can fit in the summary window, a scroll
+	bar appears to the left of the window. You may use it to scroll through
+	the list of files.
+	</a></p>
+	<!-- not implemented
+	<p><sup>4</sup><a name="990496">
+	A branch list window that pops up when you click on a highlighted
+	conditional expressions in a source window "sticks" to the display at
+	the point where the mouse was clicked. It does not scroll up or down
+	with the source window. Therefore you should always close it by
+	clicking on the "<em>Close</em>" entry before scrolling the source
+	window.
+	You may, however, invoke <em>xSuite</em> with the <em>-nosticky</em>
+	option to make its behavior similar to that of a pulldown
+	menu. In that case, a branch list window will remain popped up as long
+	as you keep the mouse button pressed. It will be automatically closed
+	when you release the button.
+	</a></p>
+	-->
+	<p><sup>5</sup><a name="1000310">
+	You may need quotes around the question mark depending on whether or
+	not the command processor you are using interprets it as a wildcard
+	character.
+	</a></p>
+	<!--
+	<p><sup>6</sup><a name="997846">
+	Highlighting of a type declaration of a function argument, as in the
+	case of
+	the first highlighted definition in </a><a href="tutorial.html#997827">Figure
+	2-30</a>, refers to the implicit
+	assignment of the formal argument with the actual argument in the
+	corresponding
+	function call.
+	</p>
+	-->
+	<p><sup>6</sup><a name="799854">
+	In general, only when all possible inputs have been tested does passing
+	the tests imply the program is error free. For most programs this is
+	impossible.
+	</a></p>
+	<p><sup>7</sup><a name="12345678987654321">
+	For a given source file, block count discrepancies between Linux and Windows might occur due to different declarations for certain macro definitions in the system include files.  For example, when this tutorial is run on Linux, the total number of blocks in <em>main.c</em> is reported to be 38, rather than the 41 indicated by the corresponding screenshot, which was generated on Windows.
+	</a></p>
+</div>
+<hr><br>
+<a href="coverpage.html">[Top]</a>
+<a href="part1.html">[Prev]</a>
+<a href="overview.html">[Next]</a>
+<a href="sqatoolIX.html">[Index]</a>
+<a href="sqatoolTOC.html"> [TOC] </a>
+<hr><br>
+<br>
+</div>
+</body>
+</html>

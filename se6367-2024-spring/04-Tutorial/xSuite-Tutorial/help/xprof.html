@@ -1,0 +1,216 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+    <title>
+      xProf for performance analysis
+    </title>
+	<link rel=stylesheet href="style.css" type="text/css" media=screen>
+  </head>
+  <body>
+  <div id="wrap">
+    <a href="coverpage.html">[Top]</a> 
+	<a href="displaying.html">[Prev]</a>
+    <a href="xregress.html">[Next]</a> 
+	<a href="sqatoolIX.html">[Index]</a> 
+	<a href="sqatoolTOC.html">[TOC]</a>
+   <hr>
+    <br>
+    <h1>
+      <a name="775199">Chapter 10<br>
+      <br>
+      xProf: A Tool for Detailed Performance Analysis
+      </a>
+    </h1>
+    <p>
+		  <a name="769964"><em>xProf</em> is a program
+		  performance enhancement tool in the Toolsuite. It helps developers to
+		  improve their code performance. Unlike most other profilers that provide
+		  approximate clock times spent while executing code, <em>xProf</em> provides 
+		  exact execution counts for various
+		  software items ranging from high level functions and subroutines down to
+		  the lowest level expressions. Such execution count based profiles provide
+		  a precise, repeatable, and easily understood way of measuring and
+		  improving code performance. <em>xProf</em> uses
+		  an advanced graphical user interface to present count ranges of the
+		  number of times code has been executed so programmers can focus on the
+		  most executed code for possible reorganization and rewriting to improve
+		  the code's overall performance.</a>
+    </p>
+    <hr>
+    <h2>
+      <a name="773230">10.1 Background</a>
+    </h2>
+	
+	<p>
+		<a name="773793">Programmers are frequently asked to speed up code in
+		response to user requests for improved performance. It seems
+		inevitable that any successful system will be stressed by larger and larger
+		data sets until performance bounds are encountered. Execution profiles,
+		showing how much time is spent in each function or subroutine, are the
+		common way of understanding such performance limitations. Many profiling
+		tools are available for a wide range of languages and environments. The
+		<em>xProf</em> tool utilizes the coverage data
+		already collected in ATAC to provide a profiling that counts the number of
+		times each <em>block or decision</em> executed instead of an approximate
+		<em>clock time</em> spent while executing code.</a>
+	</p>
+    <p>
+		  <a name="776333">In general, execution time profiling is usually done at
+		  the <em>function</em> level to keep down the overhead of processing
+		  system times. <em>xProf</em> presents execution
+		  count ranges for various software items ranging from high level functions
+		  and subroutines down to the lowest level expressions. It can point more
+		  directly to the exact code that most impacts performance.</a>
+    </p>
+    <p>
+		  <a name="776340">As a result, <em>xProf</em>
+		  provides a precise, repeatable, and easily understood way of measuring
+		  and improving code performance.</a>
+    </p>
+    <h2>
+      <a name="770329">10.2 A Tutorial</a>
+    </h2>
+	<p>
+		<a name="785548">The use of <em>xProf</em> is
+		most easily understood by an example. In this section we use the same
+		wordcount program as used before to illustrate how the basic features of
+		<em>xProf</em> can be used to find the most
+		frequently executed pieces of code. To copy these files, create a new
+		directory, <em>cd</em> to it, and copy the contents of the directory in
+		which the tutorial files are installed into the new directory. For the
+		illustrations in this chapter, we will use (1) two <em>c</em> files:
+		<em>main.c</em> and <em>wc.c</em>, (2) three data files: <em>input1</em>,
+		<em>input2</em>, and <em>input3</em>, (3) a <em>Makefile</em> and (4) the
+		<em>tests_regress(.bat)</em> script. Compile the wordcount program with
+		<em>atac</em> as instructed in</a> <a href="appendixB.html#1001045">Appendix A, 
+		<em>Platform Specific
+		Information</em></a>.
+	</p>
+    <p>
+		  <a name="785563">After the compilation, two <em>.atac</em> files
+		  (<em>main.atac</em> for <em>main.c</em> and <em>wc.atac</em> for
+		  <em>wc.c</em>), one <em>.atacp</em> file
+		  (<em>wordcount.atacp</em>), and the executable <em>wordcount(.exe)</em> are created.
+		  Note, one <em>.atac</em> file is created for each instrumented
+		  <em>.c</em> file, i.e., the <em>.c</em> files compiled with ATAC, and one
+		  <em>.atacp</em> file is created for each executable generated during the build process.</a>
+    </p>
+    <p>
+		  <a name="785626">Let us repeat all the tests executed in</a> <a href=
+		  "xregress.html#770329">Section 11.2</a> as shown in <a href=
+		  "xregress.html#789470">Figure 11-1</a>. First, remove all files with a
+		  .trace suffix. Then run the script by typing <em>tests_regress</em>.
+		  Expect to see a couple of error messages during this execution. We now
+		  invoke the graphical user interface of the Toolsuite by entering the
+		  following command:
+    </p>
+    <pre>
+		<a name="775421">prompt:&gt; xsuite wordcount.atacp wordcount.trace<br></a>
+	</pre>
+
+	<p>
+		<a name="774566"></a><a name="775709">Then drop down the
+		"<em>Coverage</em>" menu and select the "<em>xProf"</em> option. A summary of
+		the profiling results is displayed in the bottom pane of of main window 
+		as shown in</a> <a href="xprof.html#775709">Figure 10-1</a>. 
+		In our case, although <em>main.c</em> has
+		41 blocks and <em>wc.c</em> has 13 blocks, <em>main.c</em> is only responsible
+		for 16.6% of the total <em>block</em> execution counts whereas <em>wc.c</em> is
+		responsible for the rest. You can have the profiling summary displayed in other
+		formats by selecting <em>by-type</em> or <em>by-function</em> from the 
+		drop downs in the summary window. <a href="xprof.html#775709">Figure 10-2</a> shows the
+		<em>block</em> profiling summary by functions over all selected test cases. To
+		see the source display of the corresponding function, click on a function name
+		in this summary window. Since function <em>count</em> in <em>wc.c</em> is
+		responsible for 83.7%, let us examine it first.<!--===================-->
+	</p>
+    
+	<a name="775706"></a>
+	<div class="figure">
+		<a href="xprof.frm.anc.gif"><img src="xprof.frm.anc.gif"></a>
+		<div>Figure 10-1 A <em>block</em> profiling summary <em>by-file</em>
+                over all selected test cases</div>
+	</div>
+				
+	<div class="figure">
+        <a href="xprof.frm.anc1.gif"><img src="xprof.frm.anc1.gif"></a>
+        <div>Figure 10-2 A <em>block</em> profiling summary
+                <em>by-function</em> over all selected test cases</div>
+	</div>
+              
+	<p>
+		<a name="775728"></a><a name="775864">The source code of function
+		<em>count</em> in <em>wc.c</em> is displayed in</a> <a href="xprof.html#775864">Figure 10-3</a>. 
+		The scroll bar is a thumbnail sketch
+		of the entire file. Clicking with the left mouse button at the spot in the
+		scroll bar brings the corresponding region of the file into the source
+		window. You can also
+		drag the mouse up or down the scroll bar with the left mouse button pressed
+		to rapidly scroll up or down the file. 
+	</p>
+   
+    <a name="775861"></a>
+    <div class="figure figure-odd">
+        <a href="xprof.frm.anc2.gif"><img src="xprof.frm.anc2.gif"></a>
+        <div>Figure 10-3 Block execution counts in <em>wc.c</em>/<em>count</em></div>
+	</div>
+              
+	<p>
+		<a name="784192">The background color in <em>xProf</em> has a 
+		different meaning than in other xsuite tools. 
+		In this tool it indicates the execution frequency.
+		For example, the red spot in</a> <a href="xprof.html#775864">Figure
+		10-3</a> indicates the <em>while</em> statement is the most frequently
+		executed code with 261 times followed by statements in orange such as
+		"<em>++nc</em>" or "<em>if (c == '\n')</em>" with an execution count in
+		the range of 248-260. Execution counts do not include those spent in system
+		calls or other external subroutines. Colors are assigned relative to code
+		in that file only and the number in a color is the lowest possible number
+		of times that code was executed.
+	</p>
+    <p>
+		  <a name="775940">It is your responsibility to determine whether the code
+		  in red is implemented in its most efficient way. If not, revise it so as
+		  to improve the program's performance. Otherwise, you can examine the next
+		  most frequently executed code to see whether it is implemented
+		  efficiently. This process continues until the overall performance of the
+		  program is acceptable.</a>
+    </p>
+	
+	<a name="776133"></a>
+	<div class="figure">
+        <a href="xprof.frm.anc3.gif"><img src="xprof.frm.anc3.gif"></a>
+		<div>Figure 10-4 Decision execution counts in
+                <em>wc.c</em>/<em>count</em></div>
+	</div>
+	  
+	  
+    <p>
+		  <a name="775941"></a><a name="776136">Similarly, you can view the source
+		  code at the <em>decision</em> level by selecting the "<em>Coverage</em>"
+		  menu and selecting the corresponding criterion from the
+		  dropped down menu.</a> <a href="xprof.html#776136">Figure 10-4</a> shows
+		  the <em>decision</em> counts for function count in <em>wc.c</em>. As you
+		  can see the <em>true</em> branch of "<em>EOF != (c = getc(file))</em>"
+		  is the most frequently executed decision with 248 times.
+    </p>
+       
+	<p>
+		<a name="776079">To quit <em>xProf</em>,
+		click on the "<em>File</em>" button in the top button bar, then select
+		"<em>exit</em>".</a>
+	</p>
+    
+    <hr>
+    <br>
+		<a href="coverpage.html">[Top]</a> 
+		<a href="displaying.html">[Prev]</a>
+		<a href="xregress.html">[Next]</a> 
+		<a href="sqatoolIX.html">[Index]</a> 
+		<a href="sqatoolTOC.html">[TOC]</a>
+    <hr>
+    <br>
+	</div>
+  </body>
+</html>

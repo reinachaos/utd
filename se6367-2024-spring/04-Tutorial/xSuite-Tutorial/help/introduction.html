@@ -1,0 +1,530 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator"
+        content=
+        "HTML Tidy for Windows (vers 18 June 2008), see www.w3.org">
+        
+  <meta http-equiv="content-type"
+        content="text/html; charset=us-ascii">
+
+  <title>Software Quality Assurance (SQA) Tool: Introduction</title>
+  <link rel="stylesheet"
+        href="style.css"
+        type="text/css"
+        media="screen"></head>
+
+<body class="c3">
+<div id="wrap">
+  <a href="coverpage.html">[Top]</a> 
+  <a href="sqatoolTOC.html">[Prev]</a> 
+  <a href="part1.html">[Next]</a>
+  <a href="sqatoolIX.html">[Index]</a> 
+  <a href="sqatoolTOC.html">[TOC]</a>
+  <hr>
+  <br>
+
+  <h1><a name="181979"></a></h1>
+
+  <h1><a name="181980"></a></h1>
+
+  <h1><a name="181982">Chapter 1<br>
+  <br>
+  Introduction<br></a></h1><a name="181982">This document
+  introduces the reader to the Software Quality Assurance (SQA)
+  tool, a powerful software visualization and analysis toolset that can be used to detect malicious code in software
+  applications. <br>
+  <br>
+  Malicious code usually enters an application in two ways: it may
+  be hidden in the program by malicious developers while it is
+  being written, or it may be injected into it by malicious users
+  while it is being used in the field. In the former case,
+  malicious developers take advantage of their intimate knowledge
+  of the application logic to hide extra code, such as a Trojan
+  horse, a backdoor, or a logic bomb, in it. In the latter case,
+  malicious users take advantage of one or more programming defects
+  or flaws, such as failing to guard against a buffer overflow or
+  failure to properly validate a user input, to inject malicious
+  code into it, usually by slipping it as part of some input value.
+  The flaws involved may have been discovered accidentally by
+  users, or they may have been found as a result of a concerted
+  effort by attackers who seek out such flaws in applications so
+  they can sabotage their operations. Note that, in the former
+  case, the program itself includes the malicious code, whereas in
+  the latter case, the program just contains some flaws, which, in
+  turn, are used to push malicious code into it after it has been
+  deployed in the field. Also, these flaws typically arise from
+  inadvertent mistakes made by otherwise well meaning developers,
+  but they may also be inserted intentionally by them.<br>
+  <br>
+  Both types of malicious code mentioned above-code inserted by
+  malicious developers during software development or that injected
+  by malicious users during field use-are unlikely to be detected
+  using traditional testing methods, because normal, expected use
+  cases will not reveal them. Trojan horses or logic bombs, for
+  example, implement additional software "features" that are
+  obviously not part of the normal software requirements, so
+  testing based on those requirements cannot expose them. A logic
+  bomb is executed only when its trigger condition, which is known
+  only to its malicious developer, is met, and that condition is
+  unlikely to be included in any use case for that application.<br>
+  <br>
+  Programming flaws, such as potential buffer overflows or failure
+  to ensure that input fields are free of any unexpected symbols,
+  slip into programs because developers mistakenly assume that the
+  system will only be used as intended by legitimate users. They do
+  not take into account that some users may deliberately try to
+  sabotage its operation. Many testers too, unfortunately, share
+  the same attitude. They believe their goal is to find errors in
+  the application logic assuming it will be used as expected-by
+  legitimate users, not attackers whose primary goal may be to
+  crash it, slow it down, steal its customer data, etc.&nbsp; To
+  prevent such flaws from being introduced in applications, both
+  developers and testers need to put on attackers' hats, and think
+  of all possible ways attackers can try to subvert software
+  applications, such as by supplying them malicious input, among
+  other things.<br>
+  <br>
+  This effort focuses on detecting malicious code by examining
+  source code of applications before they are deployed in the
+  field.&nbsp; It is aimed at finding both types of vulnerabilities
+  mentioned above-those that are inserted intentionally by
+  malicious insiders and those that arise from software mistakes,
+  inadvertent or otherwise. The first type of malicious code is
+  also commonly referred to as a life cycle attack, as it is
+  inserted into the system during its development life cycle,
+  before it is put into production.<br>
+  <br>
+  Detection of malicious code in the past has primarily focused on
+  run time techniques, i.e., after the software has been deployed
+  in the field and is actively being used by its target audience.
+  Detection of life cycle attacks, on the other hand, has not
+  received much attention. This problem, however, can be simplified
+  when the source code for the target application is available. Our
+  approach, therefore, focuses on evaluating its source code and
+  detecting any malicious code embedded in it before it is put into
+  production. Careful analysis of the source code can also help
+  detect programming flaws that, if left intact, become avenues for
+  injecting malicious code in it, as mentioned earlier.&nbsp;<br>
+  <br>
+  The SQA Tool was originally developed to help automate
+  many software testing, debugging, and maintenance activities,
+  with the primary goal of making software development faster,
+  better, and cheaper. As part of this effort, we have made
+  substantial modifications and extensions to the SQA Tool, so it can be
+  used for detection of malicious code in applications before they
+  are put into production. It can, therefore, be used to complement
+  runtime malicious code detection technologies, such as those
+  being developed under DARPA's Dynamic Quarantine of Worms (DQW)
+  and other programs.<br>
+  <br>
+  This approach involves three steps:<br>
+  <br></a>
+
+  <ol>
+    <li><a name="181982">The target application is analyzed using
+    one or more static analysis tools, so any inadvertent flaws
+    such as failure to guard against buffer overflows and command
+    injections are detected and removed from the code, thereby
+    precluding them from being exploited by malicious users while
+    the application is being used in the field.</a></li>
+
+    <li><a name="181982"></a>The application code is analyzed by
+    the SQA Tool, which
+    guides the analysts into creating a compact, comprehensive test
+    set that is likely to cause life cycle attack triggers to be
+    executed, and hence, detected and removed. After reviewing the
+    results the analyst may decide to resolve any uncertainty by
+    creating tests under the guidance of SQA tool to verify the
+    existence of any questionable flaws.&nbsp; The analyst has an
+    opportunity to examine and test that code with actual inputs,
+    which unambiguously expose vulnerabilities given the proper
+    inputs.</li>
+
+    <li>One or more dynamic, execution monitoring tools are used to
+    detect any residual application defects such as memory leaks,
+    buffer overflows, etc., which may have escaped detection by
+    static analysis tools.&nbsp; But a dynamic monitoring tool's
+    ability to detect defects in an application is highly dependent
+    on the quality of test sets used to drive its execution. If the
+    test set results in a large part of application code to never
+    be executed, then the tool can never find any defects in that
+    part of the code. If, on the other hand, the test set causes
+    most of the application code to be executed, then the
+    likelihood that remaining defects in that code will be detected
+    will be higher. As the test set developed during the second
+    step above is aimed at "covering" a large fraction of the
+    application code, that test set is used to drive the dynamic
+    execution monitoring during this step.<br></li>
+  </ol><a name="181982">At the end of Step 3, the application will
+  have been analyzed both statically and dynamically for presence
+  of any inadvertent programming defects which may, if left
+  unaddressed, be exploited by malicious users in the field, and it
+  will also have been combed to detect any hidden life cycle
+  attacks such as Trojan horses, back doors, and logic
+  bombs.&nbsp;<br>
+  <br>
+  The documentation contained herein describes the SQA Tool
+  and its functionality without particular reference to the its
+  application to malicious code detection. This functionality
+  should be exercised in pursuit of Step 2 above.<br></a>
+
+  <h2><a name="182007">1.1 The Purpose of This
+  Manual</a></h2><a name="183101">This manual covers the use of the
+  SQA Tool. It has two parts. PART 1 explains the basic ideas
+  behind coverage testing, how the SQA Tool's coverage testing
+  tools, <em>atac</em> and <em>xSuite</em>, work, how
+  to invoke the various features of each, and how one might use
+  <em>atac</em> or <em>xSuite</em> to test a program.
+  <!-- 
+  PART 2 looks at other tools including <em><img src=
+  "chars/chi.gif"></em>Regress, a tool for effective regression
+  testing; <em><img src="chars/chi.gif"></em>Slice, a tool for
+  dynamic program debugging; and <em><img src=
+  "chars/chi.gif"></em>Prof, a tool for detailed performance
+  analysis.</a>
+  -->
+
+  <h2><a name="178007">1.2 The Contents of This
+  Manual</a></h2><a name="178008">In addition to this
+  <em>Introduction</em>, this manual is comprised of fifteen other
+  chapters, two appendices and an index:</a>
+
+  <p><a name="182260">THE TOOLS</a></p>
+
+	<ul>
+		<li>
+			<a href="tutorial.html#402515">Chapter 2, <em><em>atac & xSuite</em>: A
+			Tutorial</em></a>, describes how <em>xSuite</em> might be used to test a simple
+			program;<br><br>	
+			<a name="182235"></a>
+		</li>
+		
+		<li>
+			<a href="overview.html#629218">Chapter 3, <em><em>atac</em>:
+			Overview</em></a>, explains the basic ideas behind coverage
+			testing and describes how <em>xSuite</em> and <em>atac</em> work;<br><br>
+			<a name="182242"></a>
+		</li>
+		
+		<li>
+			<a href="setup.html#107975">Chapter 4, <em><em>atac</em>: Setting Up
+			Your Execution Environment</em></a>, tells you how to modify
+			your execution environment in order to use <em>xSuite</em> and <em>atac</em>;<br><br>	
+			<a name="176453"></a>
+		</li>
+		
+		<li>
+			<a href="instrumenting.html#203094">Chapter 5, <em><em>atac</em>:
+			Instrumenting Your Software</em></a>, describes how to
+			instrument a program using the <em>atac</em> compiler<em>;</em><br><br>
+			<a name="176478"></a>
+		</li>
+
+		<li>
+			<a href="executing.html#949051">Chapter 6, <em><em>atac</em>:
+			Executing Software Tests</em></a>, describes how to manipulate
+			the trace file and identifies problems that might occur during
+			test execution;<br><br>
+			<a name="176477"></a>
+		</li>
+
+		<li>
+			<a href="managing.html#979919">Chapter 7, <em><em>atac</em>:
+			Managing Your Test Cases</em></a>, describes how to manage the
+			contents of an execution trace file;<br><br>
+			<a name="176455"></a>
+		</li>
+
+		<li>
+			<a href="generating.html#994147">Chapter 8, <em><em>atac & xSuite</em>:
+			Generating Summary Reports</em></a>, describes how to generate
+			a report summarizing the current level of code coverage;<br><br>
+			<a name="176456"></a>
+		</li>
+
+		<li>
+			<a href="displaying.html#221975">Chapter 9, <em><em>atac & xSuite</em>:
+			Displaying Uncovered Code</em></a>, describes how to display
+			source code that has not yet been covered;<br><br>
+			<a name="182302"></a>
+		</li>
+		
+		<!-- </ul><a name="183261">PART II</a> -->  
+		
+		<li>
+			<a href="xprof.html">Chapter 10, <em>xProf: A Tool for
+			Detailed Performance Analysis</em></a>, 
+			describes how to use the tool
+			which identifies poorly performing parts of code; <br><br>
+		</li>
+	  
+		<li>
+			<a href="xregress.html#789903">Chapter 11, <em>xRegress: A Tool
+			for Effective Regression Testing</em></a>, describes the tool used to
+			identify a representative subset of tests to revalidate modified
+			software;<br><br>
+			<a name="183927"> </a>
+		</li>
+		
+		<li>
+			<a href="xvue.html">Chapter 12, <em>xVue: A Tool for
+			Effective Software Maintenance</em></a>, 
+			describes how to use the tool which locates where 
+			features are implemented; <br><br>
+		</li>
+		
+		<li>
+			<a href="xslice.html#770301">Chapter 13, <em>xSlice: A Tool for
+			Program Debugging</em></a>, describes how to use the tool which is the
+			dynamic program debugger; <br><br>
+			<a name="182345"> </a>
+		</li>
+
+		
+	</ul>
+
+	<!-- 
+  <div class="important">
+    Chapter 10 (atacdiff); Chapter 11 (xRegress); Chapter 12
+    (xVue); Chapter 13 (xSlice); Chapter 14 (xProf); Chapter 15
+    (xFind) and Chapter 16 (xDiff) describe functionality not
+    included in TSVAT Release 6.3 and are not included in this
+    document.	
+  </div>
+  -->
+  
+  <a name="182393">APPENDICES</a>
+
+  <ul>
+
+    <li><a href="appendixB.html#1001045">Appendix A, <em>Platform
+    Specific Information</em></a>, provides the specific commands
+    to be executed for the various operating systems/compilers
+    (primarily for Chapter2).<br>
+    <br>
+    <a name="183853"></a></li>
+  </ul>
+
+  <h2><a name="176446">1.3 How to Use This Manual</a></h2><a name=
+  "183638">This manual contains both background material and
+  reference material. The former explains the basic ideas behind
+  coverage testing and describes how the various components work.
+  This is what you read if you want to find out "what a coverage
+  tool is good for" or "what <em>xSuite</em>
+  is all about." The latter describes how to analyze a program
+  using the various tools.</a>
+
+  <p><a name="183864">When you are ready to instrument your code,
+  refer to</a> <a href="instrumenting.html#203094">Chapter 5,
+  <em><em>atac</em>: Instrumenting Your Software</em></a>. If you want to
+  avoid reading this manual in its entirety, but want to use
+  <em>xSuite</em>, read <a href=
+  "tutorial.html#402515">Chapter 2, <em><em>atac</em>: A
+  Tutorial</em></a><em>,</em> working through the example as you
+  go. Turn to the other chapters in this manual, most likely,
+  <a href="overview.html#629218">Chapter 3, <em><em>atac</em>:
+  Overview</em></a> and the relevant sections of <a href=
+  "setup.html#107975">Chapter 4, <em><em>atac</em>: Setting Up Your
+  Execution Environment</em></a>, only if necessary. If you are a
+  software manager, you may only need to read <a href=
+  "overview.html#629218">Chapter 3</a>. Looking through the example
+  provided for each tool (<a href="tutorial.html#402515">Chapter
+  2</a> and 12-16), is useful in bringing all the details together
+  and seeing how the various tools are used in testing
+  software.</p>
+
+  <h3><a name="182477">1.3.1 About Examples</a></h3><a name=
+  "183628">Throughout this manual, descriptive examples have been
+  used to illustrate what is discussed and whenever possible real
+  output has been incorporated. Commands input by the user are
+  preceded by:</a>
+  <pre>
+<a name="183893">  prompt: <br></a>
+</pre><a name="183895">to assist the user in distinguishing inputs
+from outputs.</a>
+
+  <p><a name="183764">Most of the examples in this manual originate
+  from using the various components of the SQA Tool to test
+  <em>wordcount</em>, a small program consisting of two source
+  files, <em>wc.c</em> and <em>main.c</em> (and its variants),
+  which counts the number of characters, words and/or lines in its
+  input. A complete source code listing appears in</a> <a href=
+  "appendixB.html#1001045">Appendix A, <em>Platform Specific
+  Information</em></a>, and specific examples appear in the
+  chapters describing each tool.</p>
+
+  <h3><a name="183785">1.3.2 Type Conventions</a></h3><a name=
+  "184082">All text that represents input to or output from
+  programs in the surrounding computing environment appear in a
+  font whose typeface has constant width. Environment variables
+  appear in ALL_CAPS. The names of executable programs, source code
+  files, and references to files created by the tools
+  (<em>.atac</em> and <em>.trace</em> files), symbols, command-line
+  options, and significant terminology (first usage) appear in
+  <em>italics</em>, as does descriptive text representative of the
+  actual words or phrases that are to appear. For example,
+  <em>filename</em> is representative of any file name that might
+  be referenced. Representations of interface displays are as
+  truthful to the color screen displays as possible. Widget labels
+  (buttons and pull down menu items) are in <em>italics</em> and
+  "<em>quoted</em>".
+  
+  <!-- these annotations are no longer present
+  Finally, some insets and figures are annotated
+  with descriptive comments or tags that may be referred to later
+  in this manual. The presence of these annotations and the points
+  to which they refer are indicated by arrows, like this:</a>
+
+  <div class="c2">
+    <a name="184082"><img src="introduction.frm.anc.gif"></a>
+  </div>
+  <a href="introduction.frm.anc.gif"><img src="zjunk-1.gif"></a>  ==
+  -->
+
+  <h2><a name="184089">1.4 Other Sources of
+  Information</a></h2><a name="184090">Additional information
+  concerning <em>atac</em> may be found in:</a>
+
+  <ul>
+
+    <li><a name="182525">J. R. Horgan and S. London, "Data Flow
+    Coverage and the C Language," in <em>Proceedings of the Fourth
+    Symposium on Software Testing, Analysis, and Verification</em>,
+    pp 87-97, Victoria, British Columbia, Canada, October 1991.<br>
+    <br></a> <a name="182623"></a></li>
+
+    <li><a name="182623">J. R. Horgan and S. London, "<em>atac</em>: A Data
+    Flow Coverage Testing Tool for C," in <em>Proceedings of
+    Symposium on Assessment of Quality Software Development
+    Tools</em>, pp 2-10, New Orleans, LA, May 1992.<br>
+    <br></a></li>
+    
+  </ul>
+  
+  <a name="182874">More information and an explanation of the
+  ideas and terminology underlying coverage testing may also be
+  found in:</a>
+
+  <ul>
+
+    <li><a name="176472">R. A. DeMillo, R. J. Lipton and F. G.
+    Sayward, "Hints on Test Data Selection: Help for the Practicing
+    Programmer," <em>IEEE Computer</em>, 11(4), 1978.<br>
+    <br></a> <a name="178140"></a></li>
+
+    <li><a name="178140">J. R. Horgan and A. P. Mathur, "Assessing
+    Tools in Research and Education," <em>IEEE Software</em>, 9(3),
+    May 1992.<br>
+    <br></a> <a name="178145"></a></li>
+
+    <li><a name="178145">J. R. Horgan, Saul London and M. R. Lyu,
+    "Achieving Software Quality with Testing Coverage Measures,"
+    <em>IEEE Computer</em>, 27(9), September 1994.<br>
+    <br></a> <a name="182883"></a></li>
+
+    <li><a name="182883">H. Agrawal, "Dominators, Super Blocks, and
+    Program Coverage," in <em>Proceedings of the 21st ACM
+    SIGPLAN-SIGACT Symposium on Principles of Programming
+    Languages</em>, pp 25-34, Portland, Oregon, January 1994.<br>
+    <br></a></li>
+  </ul>
+  
+  <!--
+<a name="183596">Information regarding other tools providing automated
+support for testing may be found in:
+</a>
+<ul>
+  <a name="183597"></a>
+  <li><a name="183597">Berczik, Kenneth, "<em>Release 5.2 MYNAH System
+Administration Guide</em>" Issue3, October 1997. Telcordia Document
+00750252005. <br>
+    <br>
+    </a></li>
+</ul>
+-->
+  <a name="183598">The value of coverage testing in detecting
+  faults is explored in:</a>
+
+  <ul>
+
+    <li><a name="178240">W. E. Wong, J. R. Horgan, S. London and A.
+    P. Mathur, "Effect of Test Set Size and Block Coverage on Fault
+    Detection Effectiveness," <em>Software--Practice &amp;
+    Experience</em>,28(4):347-369, April 1998.<br>
+    <br></a> <a name="182698"></a></li>
+
+    <li><a name="182698">W. E. Wong, J. R. Horgan, S. London and A.
+    P. Mathur, "Effect of Test Set Minimization on Fault Detection
+    Effectiveness," in <em>Proceedings of the 17th IEEE
+    International Conference on Software Engineering</em>, pp
+    230-238, Seattle, WA, April 1995.<br>
+    <br></a> <a name="182699"></a></li>
+
+    <li><a name="182699">W. E. Wong, J. R. Horgan, A. P. Mathur and
+    A. Pasquini, "Test Set Size Minimization and Fault Detection
+    Effectiveness: A Case Study in a Space Application," in
+    <em>Proceedings of the 21st IEEE International Computer
+    Software and Application Conference</em>, pp 522-528,
+    Washington, D.C., August 1997.<br>
+    <br></a> <a name="182913"></a></li>
+
+    <li><a name="182913">W. E. Wong, J. R. Horgan, S. London and H.
+    Agrawal, "A Study of Effective Regression Testing in Practice,"
+    in <em>Proceedings of the 8th IEEE International Symposium on
+    Software Reliability Engineering</em>, pp 264-274, Albuquerque,
+    New Mexico, November, 1997.<br>
+    <br></a> <a name="182800"></a></li>
+
+    <li><a name="182800">H. Agrawal, J. R. Horgan, S. London and W.
+    E. Wong, "Fault Localization using Execution Slices and
+    Dataflow Tests," in P<em>roceedings of the 6th IEEE
+    International Symposium on Software Reliability
+    Engineering</em>, pp 143-151, Toulouse, France, October
+    1995.<br>
+    <br></a> <a name="182700"></a></li>
+
+    <li><a name="182700">P. Piwowarski, M. Ohba, J. Caruso,
+    "Coverage Measurement Experience During Function Test," in
+    <em>Proceedings of the 15th IEEE International Conference on
+    Software Engineering</em>, pp 287-301, Baltimore, MD, May
+    1993.<br>
+    <br></a></li>
+  </ul><a name="182918">Other related studies:</a>
+
+  <ul>
+
+    <li><a name="182916">H. Agrawal and J. R. Horgan, "Dynamic
+    Program Slicing," in <em>Proceedings of the ACM SIGPLAN'90
+    Conference on Programming Language Design and
+    Implementation</em>, pp 246-256, White Plains, NY, June
+    1990.<br>
+    <br></a> <a name="182928"></a></li>
+
+    <li><a name="182928">H. Agrawal, J. R. Horgan, E. W. Krauser
+    and S. London, "Incremental Regression Testing," in Proceedings
+    of the 1993 IEEE Conference on Software Maintenance, Montreal,
+    Canada, September, 1993.<br>
+    <br></a> <a name="182928wwwww"></a></li>
+
+    <li><a name="182928wwwww">W. E. Wong, S. S. Gokhale, J. R.
+    Horgan and K. S. Trivedi, "Locating Program Features using
+    Execution Slices," in Proceedings of the Second IEEE Symposium
+    on Application-Specific Systems and Software Engineering
+    Technology, Richardson, TX, March, 1999.<br>
+    <br></a></li>
+  </ul><a name="182704"></a>
+  <hr>
+  <br>
+	  <a href="coverpage.html">[Top]</a> 
+	  <a href="sqatoolTOC.html">[Prev]</a> 
+	  <a href="part1.html">[Next]</a>
+	  <a href="sqatoolIX.html">[Index]</a> 
+	  <a href="sqatoolTOC.html">[TOC]</a>
+  <hr>
+  <br>
+  <br>
+  </div>
+</body>
+</html>

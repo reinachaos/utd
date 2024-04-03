@@ -1,0 +1,512 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator"
+        content=
+        "HTML Tidy for Windows (vers 18 June 2008), see www.w3.org">
+        
+  <meta http-equiv="content-type"
+        content="text/html; charset=us-ascii">
+  
+  <link rel="stylesheet"
+        href="style.css"
+        type="text/css"
+        media="screen">
+
+
+  <title>ATAC: Managing Tests</title>
+  
+</head>
+
+<body>
+
+<div id="wrap">
+
+  <a href="coverpage.html">[Top]</a> <a href=
+  "executing.html">[Prev]</a> <a href="generating.html">[Next]</a>
+  <a href="sqatoolIX.html">[Index]</a> <a href=
+  "sqatoolTOC.html">[TOC]</a>
+  <hr>
+  <br>
+
+  <h1><a name="979897"></a></h1>
+
+  <h1><a name="979916"></a></h1>
+
+  <h1><a name="979919">Chapter 7<br>
+  <br>
+  ATAC: Managing Your Test Cases<br>
+  <br></a></h1><a name="979923"></a>
+
+  <p><a name="979924">When a program is compiled with ATAC,
+  coverage information is appended to a trace file each time the
+  resulting executable is tested. This information records the time
+  of test case execution, what is covered, and the occurrence of
+  any abnormal conditions (e.g., trace file corruption). This
+  chapter discusses how to manage your test cases by manipulating
+  the contents of the trace file.</a></p>
+  <hr>
+
+  <p><a name="973960">The contents of an ATAC trace file are not in
+  human-readable form. However, the ATAC trace manager,
+  <em>atactm</em>, can be used to manipulate its contents.
+  <em>Atactm</em> can list, rename, extract, delete, and assign
+  cost to test cases. Each of these operations can be qualified to
+  apply to a selective subset of test cases within a trace file.
+  Listing test cases is a display operation. Renaming, deleting, or
+  assigning cost to tests can either be performed in-place,
+  effecting the existing trace file, or the results can be directed
+  to a new trace file. Extracting one or more test cases means to
+  select and copy them to a new trace file.
+
+  <h2><a name="973880">7.1 Listing Test Cases</a></h2><a name=
+  "973878">A list of all the tests represented in a given trace
+  file is obtained using the <em>-l</em> or <em>-L</em> command-
+  line options. For example, assuming that four test cases have
+  been executed against the <em>wordcount</em> program, invoking
+  <em>atactm</em> on <em>wordcount.trace</em> with the <em>-l</em>
+  option:</a>
+  <pre>
+<a name="973833">  prompt:&gt; atactm -l wordcount.trace<br></a>
+</pre><a name="973911">yields an abbreviated list of, in this case,
+default test names (see</a> <a href="managing.html#973912">Section
+7.3, <em>Naming Test Cases</em></a>, for more details):
+  <pre>
+<a name=
+"973913">  wordcount.1   wordcount.2   wordcount.3   wordcount.4<br></a>
+</pre><a name="973914">Alternatively, invoking <em>atactm</em> on
+<em>wordcount.trace</em> with the <em>-L</em> option:</a>
+  <pre>
+<a name="973915">  prompt:&gt; atactm -L wordcount.trace<br></a>
+</pre><a name="973916">yields a longer, more informative, list of
+test case information:</a>
+  <pre>
+   6/14/10-09:53:45  0:00:01 6.1  100 ---------- wordcount.1<br>   6/14/10-09:53:50  0:00:01 6.1  100 ---------- wordcount.2<br>   6/14/10-09:53:57  0:00:00 6.1  100 ---------- wordcount.3<br>   6/14/10-09:54:02  0:00:00 6.1  100 ---------- wordcount.4<br>
+</pre><a name="979004">Using <em>-l</em> can be convenient in
+conjunction with shell scripts to aid in performing actions on
+large numbers of test cases. Using <em>-L</em> provides more
+information. The test list contains six or seven columns for each
+test providing the execution date-time and duration of the test,
+the version of ATAC used, a user-assigned test cost (the default is
+100), test trace attributes (---------- for none), the test name,
+and the uncompressed trace file if applicable.The significance of
+test cost is discussed in the</a> <a href=
+"managing.html#973964">Section 7.6, <em>Assigning Cost to Test
+Cases</em></a>.
+
+  <p><a name="979019"></a></p>
+
+  <p><a name="981539">The possible trace attribute values
+  are:</a></p>
+
+  <ul>
+
+    <li><a name="981486"><em>B</em>, indicating that the test was
+    run for block coverage data only (see</a> <a href=
+    "setup.html#107510">Section 4.1.1,
+    <em>ATAC_BLOCKONLY</em></a>)<br>
+    <br>
+    <a name="981529"></a></li>
+
+    <li><a name="981529"><em>c,</em> indicating that test
+    information has been corrupted<br>
+    <br></a> <a name="981531"></a></li>
+
+    <li><a name="981531"><em>C</em>, indicating that the test was
+    started or ended by a call to <em>atac_restart</em>()<br>
+    <br></a> <a name="981532"></a></li>
+
+    <li><a name="981532"><em>f</em>, indicating that execution
+    count information is missing<br>
+    <br></a> <a name="981497"></a></li>
+
+    <li><a name="981497"><em>F,</em> indicating that the process
+    called <em>fork</em> in uninstrumented code<br>
+    <br></a> <a name="981499"></a></li>
+
+    <li><a name="981499"><em>i</em>, indicating that some coverage
+    may have been lost in a signal handler routine due to
+    interruption of user level code<br>
+    <br></a> <a name="981501"></a></li>
+
+    <li><a name="981501"><em>m</em>, indicating that an
+    uncompressed trace file is missing<br>
+    <br></a> <a name="981503"></a></li>
+
+    <li><a name="981503"><em>M</em>, indicating that the process
+    ran out of memory during the test<br>
+    <br></a> <a name="981505"></a></li>
+
+    <li><a name="981505"><em>N,</em> indicating that the test was
+    started by a call to <em>fork</em><br>
+    <br></a> <a name="981507"></a></li>
+
+    <li><a name="981507"><em>O,</em> indicating that the test ended
+    by calling <em>fork</em>, or that one or more object files were
+    compiled with an obsolete version of <em>atac</em><br>
+    <br></a> <a name="981509"></a></li>
+
+    <li><a name="981509"><em>r,</em> indicating that the test is
+    apparently still running<br>
+    <br></a> <a name="981511"></a></li>
+
+    <li><a name="981511"><em>R,</em> indicating that the test
+    started or ended by receipt of a signal (Linux only, see
+    </a><em><a href="setup.html#108549">Section 4.2.2,</a></em>
+    <a href="setup.html#108549"><em>ATAC_SIGNAL</em></a>)<br>
+    <br>
+    <a name="981513"></a></li>
+
+    <li><a name="981513"><em>S,</em> indicating that the ATAC
+    runtime routine encountered errors during this test<br>
+    <br></a> <a name="981515"></a></li>
+
+    <li><a name="981515"><em>T</em>, indicating that the process
+    could not create a trace file for this test<br>
+    <br></a> <a name="981517"></a></li>
+
+    <li><a name="981517"><em>u</em>, indicating that the data for
+    this test has not been compressed<br>
+    <br></a> <a name="981521"></a></li>
+
+    <li><a name="981521"><em>V</em>, indicating that one or more
+    object files were compiled with an obsolete version of
+    atac.<br>
+    <br></a></li>
+  </ul><a name="973879">Like the other <em>atactm</em> operations,
+  test cases can be selectively listed by using the <em>-n</em> and
+  <em>-x</em> command-line options along with the <em>-l</em> or
+  <em>-L</em> options.The use of these options in selecting
+  specific test cases is discussed in</a> <a href=
+  "managing.html#973941">Section 7.2, <em>Selecting Test
+  Cases</em></a>.
+
+  <h2><a name="973941">7.2 Selecting Test Cases</a></h2><a name=
+  "973943"><em>Atactm</em> operates on the information within a
+  trace file corresponding to one or more test cases. The supported
+  operations (e.g., list, rename, delete, etc.) can be performed on
+  all tests, or selectively, on a subset of the existing tests.
+  This is achieved using the <em>-n</em> option to select the tests
+  on which the operation is to be applied. For example, assume the
+  same four tests as listed in</a> <a href=
+  "managing.html#973880">Section 7.1, <em>Listing Test
+  Cases</em></a>, have been executed against the <em>wordcount</em>
+  program. The first two of these tests are listed by entering:
+  <pre>
+<a name=
+"973944">  prompt:&gt; atactm -l -n wordcount.1 -n wordcount.2 wordcount.trace<br></a>
+</pre><a name="973945">which results in the following output:</a>
+  <pre>
+<a name="973946">  wordcount.1   wordcount.2<br></a>
+</pre><a name="973950">Notice that multiple <em>-n</em> arguments
+may be submitted on a single command-line. In such a case, the
+union of all the tests named are selected. Tests can also be named
+using wild card characters. These wild cards are the same as those
+used by the Linux-like command processor in naming files <em>(*, ?,
+[...])</em>. So, entering the appropriate command below:</a>
+  <pre>
+   prompt:&gt; atactm -l -n 'word*.[1-2]' wordcount.trace (Linux)<br>or<br>   prompt:&gt; atactm -l -n word*.[1-2] wordcount.trace (Windows)<br>
+</pre>
+
+  <p><a name="981399">results in the same listing as the previous
+  example. In some cases, quote marks may be needed to prevent the
+  shell from expanding the test names as file names.</a></p>
+
+  <p><a name="973957">Sometimes it is necessary to select all tests
+  other than those that have been named. The <em>-x</em> option is
+  used to select the compliment of all tests specified using one or
+  more instances of the<em>-n</em> option. For example,
+  entering:</a></p>
+  <pre>
+   prompt:&gt; atactm -l -x -n 'word*.[1-2]' wordcount.trace (Linux)<br>or<br>   prompt:&gt; atactm -l -x -n word*.[1-2] wordcount.trace (Windows)<br>
+</pre>
+
+  <p><a name="973953">lists the third and fourth test cases, which
+  were excluded from the output of the previous examples:</a></p>
+  <pre>
+<a name="973955">  wordcount.3   wordcount.4<br></a>
+</pre>
+
+  <h2><a name="973912">7.3 Naming Test Cases</a></h2><a name=
+  "973920">By default, tests are named <em>prog.n</em>, where
+  <em>prog</em> is the base name of the trace file and <em>n</em>
+  is a number starting at 1. Unique numeric values are appended to
+  all test names so that two tests never have the same name in a
+  given trace file. See</a> <a href="managing.html#973880">Section
+  7.1, <em>Listing Test Cases</em></a>, for an example listing of
+  default test names.
+
+  <p><a name="973931">A test can also be named explicitly by
+  setting the ATAC_TEST environment variable to the test name prior
+  to execution (see</a> <a href="setup.html#107549">Section 4.1.5,
+  <em>ATAC_TEST</em></a>). Valid test names consist of letters,
+  digits, and underscores. As with default test names, a numeric
+  suffix is added to the name automatically to make it unique (a
+  numeric suffix should not be specified in the value of
+  ATAC_TEST). For example, testing <em>wordcount</em> by
+  entering:</p>
+  <pre>
+   prompt:&gt; ATAC_TEST=empty wordcount empty (Linux)<br>or<br>   prompt:&gt; set ATAC_TEST=empty <br>   prompt:&gt; wordcount empty       (Windows)<br>
+</pre>
+
+  <p><a name="973929">results in the creation of a new test case
+  named <em>empty.1</em>, as shown by the <em>-l</em>
+  listing:</a></p>
+  <pre>
+<a name=
+"979030">  wordcount.1  wordcount.2  wordcount.3  wordcount.4  empty.1<br></a>
+</pre>
+
+  <h3><a name="973933">7.3.1 Renaming Test Cases</a></h3><a name=
+  "973919">An existing test can be renamed using the <em>-r</em>
+  option of <em>atactm</em>. For example, assume the
+  <em>wordcount</em> tests <em>wordcount.1</em> through
+  <em>wordcount.</em>4 are respectively designed to test each of
+  the legal command-line options for <em>wordcount</em>. These
+  options are <em>-w, -c, -l,</em> and <em>-?</em>. A more
+  meaningful set of test names can be provided in
+  <em>wordcount.trace</em> by entering the following series of
+  commands:</a>
+  <pre>   prompt:&gt; atactm -r w_option -n wordcount.1 wordcount.trace<br>   prompt:&gt; atactm -r c_option -n wordcount.2 wordcount.trace<br>   prompt:&gt; atactm -r l_option -n wordcount.3 wordcount.trace<br>   prompt:&gt; atactm -r q_option -n wordcount.4 wordcount.trace<br>
+</pre><a name="973942">Now listing the test cases represented in
+<em>wordcount.trace</em> results in:</a>
+  <pre>
+<a name=
+"979046">  w_option.1   c_option   l_option.1   q_option.1   empty.1<br></a>
+</pre><a name="979047">The <em>-r</em> option specifies the new
+test name, while the <em>-n</em> option selects the old test to be
+renamed. A group of tests may also be renamed using wild cards,
+multiple instances of the <em>-n</em> option, or the <em>-x</em>
+option to name the old tests (see</a> <a href=
+"managing.html#973941">Section 7.2, <em>Selecting Test
+Cases</em></a>, for more details). For example, to rename the tests
+from the last example so their names are all related, enter:
+  <pre>
+   prompt:&gt; atactm -r option_test -n '*_option.*' wordcount.trace (Linux)<br>or<br>   prompt:&gt; atactm -r option_test -n *_option.* wordcount.trace (Windows)<br>
+</pre>
+
+  <p><a name="979070">Listing the test cases represented in
+  <em>wordcount.trace</em> now results in:</a></p>
+  <pre>
+<a name="979071">   option_test.1  option_test.3  empty.1<br>   option_test.2  option_test.4<br></a>
+</pre><a name="979057">Note that, to guarantee uniqueness, a
+different <em>.n</em> suffix has been appended to the new test name
+for each test case. Make sure that only the desired test names
+match when using wild cards, otherwise multiple test cases can be
+unintentionally renamed.</a>
+
+  <h3><a name="973925">7.3.2 What's in a Name?</a></h3><a name=
+  "973972">ATAC supports the notion of a test case as a collection
+  of trace information associated with a single program execution.
+  Furthermore, ATAC provides a set of operations that can be
+  selectively applied to each test case's trace information.
+  However, ATAC has no concept of how a specific test case is
+  intended to test a program, nor does ATAC manage test case setup,
+  inputs, or outputs.</a>
+
+  <p><a name="981231">Test names are what link ATAC trace
+  information with the test plan for a program. It is important to
+  name test cases so that it is possible to identify what they are
+  designed to test, what setup is required to make them run, where
+  their inputs and outputs are located, and so on. While executing
+  tests, the tester should keep track of all the required
+  information and map it to the appropriate ATAC test names.
+  Descriptive test case names may facilitate this process. Doing so
+  will help to make tests repeatable and facilitate test set
+  minimization (see</a> <a href="xregress.html#770329">Section
+  11.2, <em>Test set minimization via a character-based user
+  interface</em></a>), both of which aid in regression testing.</p>
+
+  <h2><a name="981240">7.4 Extracting Test Cases and Merging Trace
+  Files</a></h2><a name="973963">Test cases can be selectively
+  extracted from an existing trace file and copied to a new trace
+  file using the <em>-e</em> command-line option. Extracting test
+  cases copies data to a new trace file without deleting those test
+  cases from the original trace file. For example, trace
+  information for the test case named <em>wordcount.1</em> is
+  copied from <em>wordcount.trace</em> and placed in
+  <em>new.trace</em> by entering:</a>
+  <pre>
+<a name=
+"973965">  prompt:&gt; atactm -e -n option_test.1 -o new.trace wordcount.trace<br></a>
+</pre><a name="979105">The <em>-n</em> and <em>-o</em> options are
+required in order to select the test case(s) of interest and
+specify their destination. In addition, the <em>-x</em> argument
+may optionally be used (see</a> <a href=
+"managing.html#973941">Section 7.2, <em>Selecting Test
+Cases</em></a>). Note that, if <em>new.trace</em> already exists,
+it is overwritten and will now only contain test case
+<em>wordcount.1</em>.
+
+  <p><a name="979090"><em>Atactm</em> may be used to merge trace
+  files. To merge <em>new.trace</em> and <em>wordcount.trace</em>
+  into <em>merge.trace</em> enter:</a></p>
+  <pre>
+<a name=
+"979095">  prompt:&gt; atactm -o merge.trace wordcount.trace new.trace<br></a>
+</pre><a name="979104">In this case, <em>merge.trace</em> now
+contains two copies of the first test case: the copy from
+<em>wordcount.trace</em>, which is named <em>option_test.1</em> and
+the copy from <em>new.trace</em> which has been renamed
+<em>option_test.5</em>. Note that tests with the same name are
+renumbered to ensure that two test cases do not have the same name.
+If the <em>-o</em> option is omitted, the first trace file is
+overwritten by the merged trace file.</a>
+
+  <h2><a name="973909">7.5 Deleting Test Cases</a></h2><a name=
+  "973849">From time-to-time, it may become necessary to delete
+  trace information corresponding to specific test executions. This
+  may occur if the program under test is modified (see</a> <a href=
+  "managing.html#973974">Section 7.7, <em>Dealing with Source Code
+  Modifications</em></a>).
+
+  <p><a name="973927">Deleting an entire trace file discards the
+  trace information for all tests whose executions are recorded in
+  that file. Alternatively, trace information can be selectively
+  discarded by invoking <em>atactm</em> with the <em>-d</em>
+  command-line option. For example, trace information for the test
+  case named <em>wordcount.1</em> is deleted from
+  <em>wordcount.trace</em> by entering:</a></p>
+  <pre>
+<a name=
+"973877">  prompt:&gt; atactm -d -n wordcount.1 wordcount.trace<br></a>
+</pre><a name="973966">The <em>-n</em> option is required to select
+the test case(s) to be deleted, and the <em>-x</em> argument may
+optionally be used (see</a> <a href="managing.html#973941">Section
+7.2, <em>Selecting Test Cases</em></a>). Alternatively, the result
+after deleting test <em>wordcount.1</em> from
+<em>wordcount.trace</em> is placed in <em>new.trace</em> by
+entering:
+  <pre>
+<a name=
+"973928">  prompt:&gt; atactm -d -n wordcount.1 -o new.trace wordcount.trace<br></a>
+</pre><a name="973968">When the <em>-o</em> option is used, the
+trace file <em>wordcount.trace</em> remains unchanged. If
+<em>new.trace</em> already exists, it is overwritten and will now
+contain all test cases in <em>wordcount.trace,</em> except for <em>
+  wordcount.1</em>.</a>
+
+  <h2><a name="973964">7.6 Assigning Cost to Test
+  Cases</a></h2><a name="973969">ATAC associates a cost with each
+  test case. By default, all tests are given an initial cost of
+  100. However, invoking <em>atactm</em> with the <em>-c</em>
+  command-line option allows the cost of each test to be
+  selectively reassigned any non-negative value. This value is
+  determined by the user and should reflect the relative difficulty
+  and expense of executing the test case. Depending on the nature
+  of the program under test, this may be a function of execution
+  time, tester time, test setup time, or other factors. For
+  example, assume that a large file called <em>/etc/termcap</em> is
+  submitted to the <em>wordcount</em> program and this test is
+  named <em>termcap.</em> Furthermore, assume we regard this test
+  to be twice as expensive to run as the default test case. We can
+  reassign the cost of <em>termcap</em> as 200 by entering:</a>
+  <pre>
+<a name=
+"973967">  prompt:&gt; atactm -c 200 -n termcap wordcount.trace<br></a>
+</pre><a name="973971">The <em>-n</em> option is required in order
+to select the test case(s) of interest. In addition, the
+<em>-x</em> argument may optionally be used for selection (see</a>
+<a href="managing.html#973941">Section 7.2, <em>Selecting Test
+Cases</em></a>), while the <em>-o</em> argument may optionally be
+used to place the results in a new trace file.
+
+  <p><a name="973970">The cost assignments of one or more test
+  cases can be selectively displayed by invoking <em>atactm</em>
+  using the <em>-L</em> command-line option (see</a> <a href=
+  "managing.html#973880">Section 7.1, <em>Listing Test
+  Cases</em></a>). ATAC uses these cost assignments to minimize the
+  size of a test set based upon the relative cost and coverage
+  characteristics of individual test cases (see <a href=
+  "xregress.html#770329">Section 11.2, <em>Test set minimization
+  via a character-based user interface</em></a>).</p>
+
+  <h2><a name="973974">7.7 Dealing with Source Code
+  Modifications</a></h2><a name="973932">If a source file is
+  modified while testing is underway, ATAC's list of what needs to
+  be covered within the file becomes out-of-date (see</a> <a href=
+  "overview.html#623934">Section 3.4, <em>How Does ATAC
+  Work?</em></a>). This source file must be recompiled and the
+  program under test relinked using the ATAC compiler. Furthermore,
+  test cases must be rerun because they may be out-of-date in
+  relation to the new executable program.
+
+  <p><a name="973947">It may not be convenient or cost-effective to
+  repeatedly recompile after each source code modification. If
+  recompilation is deferred pending additional changes, it is
+  suggested that you make the modifications to source file copies,
+  rather than the actual files originally compiled with ATAC. If
+  the originals are modified, ATAC may no longer be able to display
+  highlighted code fragments correctly. Warning messages signaling
+  this are issued if an attempt is made to display code fragments
+  within a file modified more recently than any of its trace
+  information. However, the highlighted code fragments are still
+  displayed in the event that minor code changes will not misalign
+  the display too much. This permits coverage testing and display
+  activities to continue prior to recompilation and in the face of
+  minor source code changes, without copying files or rerunning
+  previous test cases.</a></p>
+
+  <p><a name="979182">When you rebuild the program under test you
+  should delete the old trace file or the affected tests. If you
+  forget to do this and begin to execute tests, you should either
+  delete all test cases run prior to the rebuild (see</a> <a href=
+  "managing.html#973909">Section 7.5, <em>Deleting Test
+  Cases</em></a>) or extract all test cases run since the rebuild
+  and overwrite the trace file (see <a href=
+  "managing.html#981240">Section 7.4, <em>Extracting Test Cases and
+  Merging Trace Files</em></a>). Otherwise, ATAC tools may output
+  error messages identifying obsolete test cases. For example,
+  after <em>wordcount</em> source file <em>main.c</em> is
+  substantially modified and <em>wordcount</em> rebuilt, execution
+  of the command:</p>
+  <pre>
+<a name=
+"979157">  prompt:&gt; atac -s -n option_test.1 main.atac wordcount.trace<br></a>
+</pre><a name="979158">would result in the following message being
+printed and no output produced:</a>
+
+  <pre><a name="979159">   error: main.c differs substantially in test option_test.1
+   (6/13/10-15:25:39) from main.atac (6/14/10-13:04:38)<br></a>
+</pre>
+
+<a name="979181">If the change appears to be inconsequential,
+the error is reduced to a warning and output is produced. If the
+change only affects spaces and comments, no error or warning is
+issued.</a>
+
+  <h2><a name="973910">7.8 Concerning Trace File
+  Compression</a></h2><a name="973935">Trace file compression
+  discards all redundant trace information within a trace file. If
+  two distinct test cases overlap in terms of coverage, all trace
+  information that redundantly records this coverage for each test
+  case is consolidated and shared between the tests. This tends to
+  reduce the size of the trace file. Moreover, if trace file
+  compression is performed after each test execution, other than a
+  small entry recording that a test has been run, the trace file
+  only grows if a test case actually improves coverage.</a>
+
+  <p><a name="973936">Each time <em>atactm</em> is invoked, if any
+  options other than <em>-l</em> and <em>-L</em> are specified,
+  including no options, the trace file is automatically compressed.
+  For example, if <em>atactm</em> is invoked
+  on<em>wordcount.trace</em> as follows, compression will
+  occur:</a></p>
+  <pre>
+<a name="973937">  prompt:&gt; atactm wordcount.trace<br></a>
+</pre><a name="973939">This feature is useful, under certain
+conditions, as a means of forcing trace file compression (see</a>
+<a href="executing.html#943113">Section 6.2, <em>Trace File
+Compression</em></a>).
+  <hr>
+  <br>
+  <a href="coverpage.html">[Top]</a> <a href=
+  "executing.html">[Prev]</a> <a href="generating.html">[Next]</a>
+  <a href="sqatoolIX.html">[Index]</a> <a href=
+  "sqatoolTOC.html">[TOC]</a>
+  <hr>
+  <br>
+  </div>
+</body>
+</html>
